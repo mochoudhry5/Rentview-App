@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import HomeScreenView from './components/HomeView';
-import LoginView from './components/LoginView'
-import SignupView from './components/SignupView'
-import NearbyRentalView  from './components/NearbyRentalsView';
-import SearchRentalView from './components/SearchRentalsView'; 
+import HomeScreenView from './src/screens/HomeView';
+import LoginView from './src/screens//LoginView'
+import SignupView from './src/screens//SignupView'
+import NearbyRentalView  from './src/screens/NearbyRentalsView';
+import SearchRentalView from './src/screens//SearchRentalsView'; 
 import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
 
 

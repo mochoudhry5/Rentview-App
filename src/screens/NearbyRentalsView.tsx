@@ -3,8 +3,8 @@ import { View, StyleSheet, ActivityIndicator, TouchableOpacity, Text, TextInput 
 import MapView, { PROVIDER_DEFAULT, Marker } from 'react-native-maps';
 import Geolocation from '@react-native-community/geolocation';
 import RentalDescription from './RentalDescriptionView';
-import { calculateDistance } from '../utils/calculateDistance';
-import { sampleData } from '../utils/sampleData';
+import { calculateDistance } from '../../utils/calculateDistance';
+import { sampleData } from '../../utils/sampleData';
 
 const defaultRegion = {
   latitude: 0,
