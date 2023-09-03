@@ -1,6 +1,6 @@
 // src/components/Login.tsx
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, TouchableOpacity } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import auth from '@react-native-firebase/auth';
 
@@ -41,8 +41,12 @@ const Login:  React.FC<LoginScreenProps> = ({ navigation }) => {
         secureTextEntry
         style={styles.input}
       />
-      <Button title="Login" onPress={handleLogin} />
-      <Button title="Don't have an account? Sign up" onPress={goToSignup} />
+      <TouchableOpacity style={styles.signedUpButtonContainer} onPress={handleLogin}>
+          <Text style={styles.signedUpButtonText}>Log In</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.signedUpButtonContainer} onPress={goToSignup}>
+          <Text style={styles.signedUpButtonText}>Don't have an account? Sign up</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -59,6 +63,20 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     padding: 10,
   },
+  signedUpButtonContainer: {
+    elevation: 1,
+    backgroundColor: "#808080",
+    borderRadius: 5,
+    paddingVertical: 5,
+    paddingHorizontal: 12,
+    marginBottom:10
+  },
+  signedUpButtonText: {
+    fontSize: 14,
+    color: "#fff",
+    fontWeight: "bold",
+    alignSelf: "center",
+  }
 });
 
 export default Login;

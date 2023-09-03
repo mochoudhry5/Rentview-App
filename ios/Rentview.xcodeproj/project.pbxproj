@@ -14,7 +14,7 @@
 		4AB7CF221097CBFAE16325B7 /* Pods_Rentview_RentviewTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C77F51BC776E5ADEA9E72546 /* Pods_Rentview_RentviewTests.framework */; };
 		64D90D6971B148AB11248C38 /* Pods_Rentview.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F0A800B7938F36608E968A8 /* Pods_Rentview.framework */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
-		FD7E6AA82AA4561000041D16 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = FD7E6AA72AA4561000041D16 /* GoogleService-Info.plist */; };
+		FDDFC9A82AA4EFC4000A2718 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = FDDFC9A72AA4EFC4000A2718 /* GoogleService-Info.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -45,7 +45,7 @@
 		89C6BE57DB24E9ADA2F236DE /* Pods-Rentview-RentviewTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Rentview-RentviewTests.release.xcconfig"; path = "Target Support Files/Pods-Rentview-RentviewTests/Pods-Rentview-RentviewTests.release.xcconfig"; sourceTree = "<group>"; };
 		C77F51BC776E5ADEA9E72546 /* Pods_Rentview_RentviewTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Rentview_RentviewTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
-		FD7E6AA72AA4561000041D16 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		FDDFC9A72AA4EFC4000A2718 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -88,7 +88,7 @@
 		13B07FAE1A68108700A75B9A /* Rentview */ = {
 			isa = PBXGroup;
 			children = (
-				FD7E6AA72AA4561000041D16 /* GoogleService-Info.plist */,
+				FDDFC9A72AA4EFC4000A2718 /* GoogleService-Info.plist */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.mm */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
@@ -248,7 +248,7 @@
 			files = (
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
-				FD7E6AA82AA4561000041D16 /* GoogleService-Info.plist in Resources */,
+				FDDFC9A82AA4EFC4000A2718 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -505,6 +505,10 @@
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_BITCODE = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Pods/hermes-engine/destroot/Library/Frameworks/macosx",
+				);
 				INFOPLIST_FILE = Rentview/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -531,6 +535,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Pods/hermes-engine/destroot/Library/Frameworks/macosx",
+				);
 				INFOPLIST_FILE = Rentview/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
