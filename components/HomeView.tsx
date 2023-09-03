@@ -1,9 +1,10 @@
 import React from 'react';
 import { View, StyleSheet, Button } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
+import auth from '@react-native-firebase/auth';
 
 type HomeScreenProps = {
-  navigation?: StackNavigationProp<any>;
+  navigation: StackNavigationProp<any>;
 };
 
 const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
@@ -28,8 +29,12 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
         onPress={navigateToNearbyRentals}
       />
      <Button
-        title="Search for Rental"
+        title="Search for Rentals"
         onPress={navigateToSearchRentals}
+      />
+      <Button
+        title="Sign out"
+        onPress={() => auth().signOut()}
       />
     </View>
   );

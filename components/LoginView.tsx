@@ -14,8 +14,6 @@ const Login:  React.FC<LoginScreenProps> = ({ navigation }) => {
   const handleLogin = async () => {
     try {
       await auth().signInWithEmailAndPassword(email, password);
-      // Navigate to the Home Screen or any other screen you prefer
-      navigation.navigate('Home');
     } catch (error) {
       console.error('Login failed:', error);
     }
