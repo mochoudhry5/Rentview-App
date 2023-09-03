@@ -2,9 +2,9 @@ import React, { useEffect, useState, useRef } from 'react';
 import { View, StyleSheet, ActivityIndicator, TouchableOpacity, Text, TextInput } from 'react-native';
 import MapView, { PROVIDER_DEFAULT, Marker } from 'react-native-maps';
 import Geolocation from '@react-native-community/geolocation';
-import RentalDescription from './RentalDescriptionView';
-import { calculateDistance } from '../../utils/calculateDistance';
-import { sampleData } from '../../utils/sampleData';
+import RentalDescriptionScreen from './RentalDescriptionScreen';
+import { calculateDistance } from '../utils/calculateDistance';
+import { sampleData } from '../utils/sampleData';
 
 const defaultRegion = {
   latitude: 0,
@@ -128,7 +128,7 @@ const NearbyRentalView: React.FC = () => {
         )}
         </MapView>
           {selectedRentalIndex !== null && (
-            <RentalDescription
+            <RentalDescriptionScreen
               name={sampleData[selectedRentalIndex].name}
               rooms={sampleData[selectedRentalIndex].rooms}
               address={sampleData[selectedRentalIndex].address}
