@@ -1,21 +1,19 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, TouchableOpacity } from 'react-native';
-import { StackNavigationProp } from '@react-navigation/stack';
 import auth from '@react-native-firebase/auth';
+import { OtherStackParamList } from "../utils/types"
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
 
-type SignupScreenProps = {
-    navigation: StackNavigationProp<any>;
-};
+type SignupProps = NativeStackScreenProps<OtherStackParamList, "Signup">;
 
-const Signup: React.FC<SignupScreenProps> = ({ navigation }) => {
+
+const Signup: React.FC<SignupProps> = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   const handleSignup = async () => {
     try {
       await auth().createUserWithEmailAndPassword(email, password);
-      // Navigate to the Home Screen or any other screen you prefer
-      navigation.navigate('Home');
     } catch (error) {
       console.error('Signup failed:', error);
     }

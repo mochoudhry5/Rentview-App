@@ -1,34 +1,33 @@
 import React, { useState, useEffect } from 'react';
 import { NavigationContainer } from "@react-navigation/native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import HomeScreenView from './src/screens/HomeScreen';
+import { createStackNavigator } from "@react-navigation/stack";
 import LoginView from './src/screens/LoginScreen'
 import SignupView from './src/screens/SignupScreen'
 import NearbyRentalView  from './src/screens/NearbyRentalsScreen';
-import SearchRentalView from './src/screens/SearchRentalsScreen'; 
+import RentalDescription from './src/screens/RentalDescriptionScreen';
+import CreateReviewScreen from './src/screens/CreateReviewScreen';
 import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
+import { RootStackParamList, OtherStackParamList } from "./src/utils/types"
 
-
-const Stack = createNativeStackNavigator();
-const LoggedInStack = createNativeStackNavigator(); 
+const Stack = createStackNavigator<OtherStackParamList>();
+const LoggedInStack = createStackNavigator<RootStackParamList>(); 
 
 function LoggedInLayout(){
   return (
-      <LoggedInStack.Navigator initialRouteName="Login">
-        <LoggedInStack.Screen
-          name="Home"
-          component={HomeScreenView}
-          options={{ title: 'Home' }}
-        />
-        <LoggedInStack.Screen
-          name="NearbyRentals"
-          component={NearbyRentalView}
-          options={{ title: 'Nearby Rentals' }}
-        />
+      <LoggedInStack.Navigator initialRouteName="NearbyRentals">
         <LoggedInStack.Screen
           name="SearchRentals"
-          component={SearchRentalView}
-          options={{ title: 'Search for Rentals' }}
+          component={NearbyRentalView}
+          options={{ headerShown:false }}
+        />
+        <LoggedInStack.Screen
+          name="RentalDescription"
+          component={RentalDescription}
+          options={{headerShown:false }}
+        />
+        <LoggedInStack.Screen
+          name="CreateReview"
+          component={CreateReviewScreen}
         />
       </LoggedInStack.Navigator>
   )
@@ -48,7 +47,9 @@ const App = () => {
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Login">
         {user ? (
+          <>
           <Stack.Screen name="LoggedIn" component={LoggedInLayout} options={{headerShown:false}}/>
+          </>
         ) : (
           <>
             <Stack.Screen name="Login" component={LoginView} options={{headerShown:false}}/>

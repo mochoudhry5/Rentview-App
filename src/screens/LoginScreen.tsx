@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import auth from '@react-native-firebase/auth';
+import { OtherStackParamList } from "../utils/types"
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
 
-type LoginScreenProps = {
-    navigation: StackNavigationProp<any>;
-};
+type LoginProps = NativeStackScreenProps<OtherStackParamList, "Login">;
 
-const Login:  React.FC<LoginScreenProps> = ({ navigation }) => {
+const Login:  React.FC<LoginProps> = ( { navigation } ) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 

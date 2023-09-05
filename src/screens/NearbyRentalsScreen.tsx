@@ -1,10 +1,14 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { View, StyleSheet, ActivityIndicator, TouchableOpacity, Text, TextInput } from 'react-native';
+import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import MapView, { PROVIDER_DEFAULT, Marker } from 'react-native-maps';
 import Geolocation from '@react-native-community/geolocation';
-import RentalDescriptionScreen from './RentalDescriptionScreen';
 import { calculateDistance } from '../utils/calculateDistance';
 import { sampleData } from '../utils/sampleData';
+import { RootStackParamList } from "../utils/types"
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
+
+type SearchRentalsProps = NativeStackScreenProps<RootStackParamList, "SearchRentals">;
 
 const defaultRegion = {
   latitude: 0,
@@ -13,7 +17,7 @@ const defaultRegion = {
   longitudeDelta: 0.01, // Adjust the initial zoom level here to see streets
 };
 
-const NearbyRentalView: React.FC = () => {
+const NearbyRentalView: React.FC<SearchRentalsProps> = ({ navigation }) => {
   const [initialRegion, setInitialRegion] = useState(defaultRegion);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedRentalIndex, setSelectedRentalIndex] = useState<number | null>(null);
@@ -100,6 +104,10 @@ const NearbyRentalView: React.FC = () => {
     }
   };
 
+  const handleOnPressAddress = (data : string) => {
+    navigation.navigate("RentalDescription", { data: data });
+  }
+
   return (
     <View style={styles.container}>
       {isLoading ? (
@@ -113,35 +121,67 @@ const NearbyRentalView: React.FC = () => {
         initialRegion={initialRegion}
         showsUserLocation={true}
         >
-        {sampleData.map((rental, index) =>
-            displayedMarkers[index] ? (
-            <Marker
-                key={rental.id}
-                pinColor={'green'}
-                coordinate={{
-                latitude: initialRegion.latitude + rental.latitude,
-                longitude: initialRegion.longitude + rental.longitude,
-                }}
-            >
-            </Marker>
-            ) : null
-        )}
+          <GooglePlacesAutocomplete
+            placeholder='Search'
+            minLength={2}
+            listViewDisplayed={false} 
+            fetchDetails={true}
+            onPress={(data, details) => {
+              if(data != null){
+                handleOnPressAddress(data.structured_formatting.main_text); 
+              }
+            }}
+            query={{
+                key: 'AIzaSyDMCC2Peu8bQvTkgddfI3OhHe3zTxNoSeU',
+                language: 'en'
+            }}
+            nearbyPlacesAPI='GooglePlacesSearch'
+            debounce={300}
+            styles={{
+              textInput: {
+                height: 40,
+                color: "black",
+                fontSize: 14,
+                marginTop: 43,
+                marginLeft: 2, 
+                marginRight: 2, 
+                backgroundColor: 'white',
+                width: "90%",
+                borderWidth: 2,
+                borderColor: "black",
+                borderRadius: 10
+              },
+            }}
+          />
+          {/* {sampleData.map((rental, index) =>
+              displayedMarkers[index] ? (
+              <Marker
+                  key={rental.id}
+                  pinColor={'green'}
+                  coordinate={{
+                  latitude: initialRegion.latitude + rental.latitude,
+                  longitude: initialRegion.longitude + rental.longitude,
+                  }}
+              >
+              </Marker>
+              ) : null
+          )} */}
         </MapView>
-          {selectedRentalIndex !== null && (
+          {/* {selectedRentalIndex !== null && (
             <RentalDescriptionScreen
               name={sampleData[selectedRentalIndex].name}
               rooms={sampleData[selectedRentalIndex].rooms}
               address={sampleData[selectedRentalIndex].address}
             />
-          )}
-          <View style={styles.navigationButtons}>
+          )} */}
+          {/* <View style={styles.navigationButtons}>
             <TouchableOpacity onPress={prevRentalHome} style={styles.navigationButtons}>
               <Text style={styles.buttonText}>Previous</Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={nextRentalHome} style={styles.navigationButtons}>
               <Text style={styles.buttonText}>Next</Text>
             </TouchableOpacity>
-          </View>
+          </View> */}
         </>
       )}
     </View>
@@ -159,12 +199,12 @@ const styles = StyleSheet.create({
     navigationButtons: {
       flexDirection: 'row',
       justifyContent: 'space-between',
-      margin: 16,
+      margin: 15,
     },
     button: {
       backgroundColor: '#3498db',
       paddingVertical: 10,
-      paddingHorizontal: 20,
+      paddingHorizontal: 10,
       borderRadius: 5,
       elevation: 3,
     },
