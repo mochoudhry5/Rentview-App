@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, TouchableOpacity } from 'react-native';
-import auth from '@react-native-firebase/auth';
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "firebase/auth";
 import { OtherStackParamList } from "../utils/types"
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { auth } from "../utils/firebase"
 
 type SignupProps = NativeStackScreenProps<OtherStackParamList, "Signup">;
-
 
 const Signup: React.FC<SignupProps> = ({ navigation }) => {
   const [email, setEmail] = useState('');
@@ -13,7 +13,7 @@ const Signup: React.FC<SignupProps> = ({ navigation }) => {
 
   const handleSignup = async () => {
     try {
-      await auth().createUserWithEmailAndPassword(email, password);
+      await createUserWithEmailAndPassword(auth, email, password);
     } catch (error) {
       console.error('Signup failed:', error);
     }

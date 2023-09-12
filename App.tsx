@@ -3,42 +3,48 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import LoginView from './src/screens/LoginScreen'
 import SignupView from './src/screens/SignupScreen'
-import NearbyRentalView  from './src/screens/NearbyRentalsScreen';
-import RentalDescription from './src/screens/RentalDescriptionScreen';
-import CreateReviewScreen from './src/screens/CreateReviewScreen';
-import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
-import { RootStackParamList, OtherStackParamList } from "./src/utils/types"
+import NearbyRentalViewStack from './src/screens/NearbyRentalViewStack';
+import { OtherStackParamList } from "./src/utils/types"
+import { auth } from "./src/utils/firebase"
+import { onAuthStateChanged, User } from "firebase/auth";
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import ProfileScreen from './src/screens/ProfileScreen';
+import Icon from 'react-native-vector-icons/Ionicons';  
+
+const Tab = createBottomTabNavigator()
 
 const Stack = createStackNavigator<OtherStackParamList>();
-const LoggedInStack = createStackNavigator<RootStackParamList>(); 
 
 function LoggedInLayout(){
   return (
-      <LoggedInStack.Navigator initialRouteName="NearbyRentals">
-        <LoggedInStack.Screen
-          name="SearchRentals"
-          component={NearbyRentalView}
-          options={{ headerShown:false }}
-        />
-        <LoggedInStack.Screen
-          name="RentalDescription"
-          component={RentalDescription}
-          options={{headerShown:false }}
-        />
-        <LoggedInStack.Screen
-          name="CreateReview"
-          component={CreateReviewScreen}
-        />
-      </LoggedInStack.Navigator>
+    <Tab.Navigator
+    screenOptions={({ route }) => ({
+      tabBarIcon: ({ focused, color, size }) => {
+        let iconName : string = "";
+        if (route.name === 'Home') {
+          iconName = focused ? 'navigate-circle' : 'navigate-circle-outline';
+        }
+        else if(route.name === 'Profile'){
+          iconName = focused ? 'person-circle' : 'person-circle-outline'
+        }
+        // You can return any component that you like here!
+        return <Icon name={iconName} color= 'black' size={36}/>;
+      },
+      tabBarLabel:() => {return null},
+    })}
+  >
+        <Tab.Screen name="Home" component={NearbyRentalViewStack} options={{ headerShown:false }} />
+        <Tab.Screen name="Profile" component={ProfileScreen} options={{ headerShown:false}} />
+    </Tab.Navigator>
   )
 }
 
 const App = () => {
-  const [user, setUser] = useState<FirebaseAuthTypes.User | null>(); 
+  const [user, setUser] = useState<User | null>(); 
 
   useEffect(() => {
-    auth().onAuthStateChanged(userState => {
-      setUser(userState);
+    onAuthStateChanged(auth, (user) => {
+      setUser(user); 
     });
   }, []);
   

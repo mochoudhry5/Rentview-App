@@ -1,7 +1,7 @@
 
 export type RootStackParamList = {
     NearbyRentals: undefined;
-    RentalDescription: { data: string };
+    RentalDescription: { docId: string };
     SearchRentals: undefined;
     CreateReview: undefined; 
 };

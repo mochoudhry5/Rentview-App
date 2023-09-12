@@ -1,5 +1,5 @@
-import React, { useEffect, useState, useRef } from 'react';
-import { View, StyleSheet, ActivityIndicator, TouchableOpacity, Text, TextInput } from 'react-native';
+import React, { useEffect, useState, useRef, useMemo, useCallback } from 'react';
+import { View, StyleSheet, ActivityIndicator, SafeAreaView, Dimensions, Text } from 'react-native';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import MapView, { PROVIDER_DEFAULT, Marker } from 'react-native-maps';
 import Geolocation from '@react-native-community/geolocation';
@@ -7,6 +7,10 @@ import { calculateDistance } from '../utils/calculateDistance';
 import { sampleData } from '../utils/sampleData';
 import { RootStackParamList } from "../utils/types"
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { collection, addDoc, query, where, getDocs, QuerySnapshot, DocumentData } from "firebase/firestore";
+import { db } from '../utils/firebase';
+import { auth } from "../utils/firebase"
+import { signOut } from "firebase/auth";
 
 type SearchRentalsProps = NativeStackScreenProps<RootStackParamList, "SearchRentals">;
 
@@ -72,6 +76,16 @@ const NearbyRentalView: React.FC<SearchRentalsProps> = ({ navigation }) => {
     );
   }, []);
 
+  const handleLogout = () => {
+    signOut(auth)
+      .then(() => {
+        console.log('User logged out successfully:');
+      })
+      .catch((error) => {
+        console.log('Error', error);
+      });
+  };
+
   const nextRentalHome = () => {
     // Navigate to the next closest rental home
     if (selectedRentalIndex !== null && selectedRentalIndex < sampleData.length - 1) {
@@ -104,8 +118,37 @@ const NearbyRentalView: React.FC<SearchRentalsProps> = ({ navigation }) => {
     }
   };
 
-  const handleOnPressAddress = (data : string) => {
-    navigation.navigate("RentalDescription", { data: data });
+  async function handleOnPressAddress(data : string, postalCode : string) {
+    let docId = ""; 
+    let array = data.split(',')
+    let streetAddress = array[0]; 
+    let city = array[1]; 
+    let state = array[2]; 
+    let homeInfo = query(collection(db, "HomeReviews"), where("address.street", "==", streetAddress));
+    let homeSnapshot : QuerySnapshot<DocumentData, DocumentData> = await getDocs(homeInfo);
+
+    if(homeSnapshot.size !== 1)
+    {
+      await addDoc(collection(db, 'HomeReviews'), {
+        address: {
+          street: streetAddress, 
+          city: city, 
+          state: state, 
+          postalCode: postalCode,
+          fullAddress: data
+        },
+        avgRating: 0,
+        totalReviews: 0
+      })
+    }
+
+    homeSnapshot = await getDocs(homeInfo);
+
+    homeSnapshot.forEach(doc => {
+      docId = doc.id; 
+    });
+
+    navigation.navigate("RentalDescription", { docId: docId });
   }
 
   return (
@@ -127,8 +170,18 @@ const NearbyRentalView: React.FC<SearchRentalsProps> = ({ navigation }) => {
             listViewDisplayed={false} 
             fetchDetails={true}
             onPress={(data, details) => {
-              if(data != null){
-                handleOnPressAddress(data.structured_formatting.main_text); 
+              let postalCode = ""; 
+              if(data !== null && details !== null)
+              {
+                for (let i = 0; i < details.address_components.length; i++) {
+                
+                  if (details.address_components[i].types[0] === "postal_code") {
+                      postalCode = details.address_components[i].long_name
+                  }
+                  details.address_components[i]
+
+                }
+                handleOnPressAddress(data.description, postalCode)
               }
             }}
             query={{
@@ -184,6 +237,7 @@ const NearbyRentalView: React.FC<SearchRentalsProps> = ({ navigation }) => {
           </View> */}
         </>
       )}
+      {/* <Button onPress={handleLogout} title="log out" /> */}
     </View>
   );
 };
@@ -193,8 +247,10 @@ const styles = StyleSheet.create({
       flex: 1, 
     },
     map: {
-      flex: 1,
       width: '100%',
+      height: '100%',
+      position: 'absolute',
+      top: 0
     },
     navigationButtons: {
       flexDirection: 'row',

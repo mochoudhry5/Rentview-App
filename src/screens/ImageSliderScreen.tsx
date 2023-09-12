@@ -6,7 +6,7 @@ type ImageProps = {
 }
 
 const { width } = Dimensions.get('screen');
-const height = width * 0.8;
+const height = width * 0.9;
 
 const ImageSlider: React.FC<ImageProps> = ( { images }) => {
     const [active, setActive] = useState(0);
@@ -28,7 +28,7 @@ const ImageSlider: React.FC<ImageProps> = ( { images }) => {
                 onScroll={onScrollChange}
                 scrollEventThrottle={16}
                 showsHorizontalScrollIndicator={false}
-                style={{ width: 415, height }}>
+                style={{ width: width, height}}>
                 {images.map((image : string, index : number) => (
                     <Image
                         key={index}
@@ -40,7 +40,7 @@ const ImageSlider: React.FC<ImageProps> = ( { images }) => {
             <View style={styles.pagination}>
                 {images.map((k : React.Key) => (
                     <Text key={k} style={k == active ? styles.activeDot : styles.dot}>
-                        •
+                        ○
                     </Text>
                 ))}
             </View>
@@ -52,23 +52,24 @@ const styles = StyleSheet.create({
     pagination: {
         flexDirection: 'row',
         position: 'absolute',
-        bottom: -15,
+        bottom: 0,
         alignSelf: 'center',
     },
     dot: {
-        color: '#888',
-        fontSize: 50,
+        color: 'white',
+        fontSize: 17,
     },
     activeDot: {
-        color: '#FFF',
-        fontSize: 50,
+        color: 'black',
+        fontSize: 17,
     },
     image: {
-        width: 415,
+        width: width,
         height: height,
-        marginTop: 55,
-        marginLeft: 13,
-        borderRadius: 15,
+        borderRadius: 30,
+        borderColor: 'black',
+        borderWidth: 1,
+        marginTop: 43
     }
 });
 
