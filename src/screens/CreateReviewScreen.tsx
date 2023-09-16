@@ -1,31 +1,41 @@
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
 import React, { useState } from 'react'
 import Slider from '@react-native-community/slider';
+import { collection, doc, query, updateDoc, getDocs, QuerySnapshot, DocumentData } from "firebase/firestore";
+import { db } from '../utils/firebase';
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { RootStackParamList } from "../utils/types"
 
-const CreateReviewScreen = () => {
-    const [neighborhoodClean, setNeighborhoodClean] = useState(5); 
-    const [crime, setCrime] = useState(5);
-    const [landlordServ, setLandlordServ] = useState(5); 
+type CreateReviewProps = NativeStackScreenProps<RootStackParamList, "CreateReview">;
+
+const CreateReviewScreen: React.FC<CreateReviewProps> = ( {route, navigation}) => {
     const [houseQuality, setHouseQuality] = useState(5); 
+    const [landlordServ, setLandlordServ] = useState(5); 
+    const [recommendation, setRecommendation] = useState(5); 
+
+
+    const handleReviewSubmit = async () => {
+      let homeInfo = query(collection(db, "HomeReviews", route.params.docId, "averageRating"));
+      let homeSnapshot : QuerySnapshot<DocumentData, DocumentData> = await getDocs(homeInfo);
+      const taskDocRef = doc(db, 'HomeReviews', route.params.docId)
+      if(homeSnapshot.size < 1){
+        await updateDoc(taskDocRef, {
+          avgHomeQuality: houseQuality, 
+          avgLandlordService: landlordServ, 
+          avgRecommendation: recommendation
+        })
+      }
+    }
+
   return (
     <View style={styles.container}>
     <View style={{marginTop: '40%'}}>
-        <Text style={styles.text}>Neighborhood Cleanliness: {neighborhoodClean}/10</Text>
+        <Text style={styles.text}>House Quality: {houseQuality}/10</Text>
         <Slider
             step={1}
             style={styles.slider}
-            value={neighborhoodClean}
-            onValueChange={setNeighborhoodClean}
-            maximumValue={10}
-            minimumValue={1}
-        />
-
-        <Text style={styles.text}>Crime Occurence: {crime}/10</Text>
-        <Slider
-            step={1}
-            style={styles.slider}
-            value={crime}
-            onValueChange={setCrime}
+            value={houseQuality}
+            onValueChange={setHouseQuality}
             maximumValue={10}
             minimumValue={1}
         />
@@ -39,20 +49,19 @@ const CreateReviewScreen = () => {
             maximumValue={10}
             minimumValue={1}
         />
-
-        <Text style={styles.text}>House Quality: {houseQuality}/10</Text>
+        <Text style={styles.text}>Recommend To Others: {recommendation}/10</Text>
         <Slider
             step={1}
             style={styles.slider}
-            value={houseQuality}
-            onValueChange={setHouseQuality}
+            value={recommendation}
+            onValueChange={setRecommendation}
             maximumValue={10}
             minimumValue={1}
         />
     </View>
 
         <View style={styles.container}>
-            <TouchableOpacity style={styles.button}>
+            <TouchableOpacity style={styles.button} onPress={handleReviewSubmit}>
                 <Text>Submit review</Text>
             </TouchableOpacity>
         </View>

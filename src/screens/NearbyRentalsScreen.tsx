@@ -1,7 +1,7 @@
-import React, { useEffect, useState, useRef, useMemo, useCallback } from 'react';
-import { View, StyleSheet, ActivityIndicator, SafeAreaView, Dimensions, Text } from 'react-native';
+import React, { useEffect, useState, useRef } from 'react';
+import { View, StyleSheet, ActivityIndicator } from 'react-native';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
-import MapView, { PROVIDER_DEFAULT, Marker } from 'react-native-maps';
+import MapView, { PROVIDER_DEFAULT } from 'react-native-maps';
 import Geolocation from '@react-native-community/geolocation';
 import { calculateDistance } from '../utils/calculateDistance';
 import { sampleData } from '../utils/sampleData';
@@ -137,7 +137,9 @@ const NearbyRentalView: React.FC<SearchRentalsProps> = ({ navigation }) => {
           postalCode: postalCode,
           fullAddress: data
         },
-        avgRating: 0,
+        avgHomeQuality: -1,
+        avgLandlordService:-1,
+        avgRecommendation: -1, 
         totalReviews: 0
       })
     }

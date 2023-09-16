@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, TouchableOpacity } from 'react-native';
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "firebase/auth";
+import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
+import { createUserWithEmailAndPassword } from "firebase/auth";
 import { OtherStackParamList } from "../utils/types"
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { auth } from "../utils/firebase"

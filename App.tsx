@@ -19,7 +19,7 @@ function LoggedInLayout(){
   return (
     <Tab.Navigator
     screenOptions={({ route }) => ({
-      tabBarIcon: ({ focused, color, size }) => {
+      tabBarIcon: ({ focused }) => {
         let iconName : string = "";
         if (route.name === 'Home') {
           iconName = focused ? 'navigate-circle' : 'navigate-circle-outline';

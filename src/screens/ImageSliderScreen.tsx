@@ -1,12 +1,11 @@
 import React, { useState} from 'react';
 import { View, Image, StyleSheet, ScrollView, Dimensions, Text, NativeScrollEvent, NativeSyntheticEvent} from 'react-native';
 
+const { width } = Dimensions.get('screen');
+const height = width * 0.9;
 type ImageProps = {
     images: string[]; 
 }
-
-const { width } = Dimensions.get('screen');
-const height = width * 0.9;
 
 const ImageSlider: React.FC<ImageProps> = ( { images }) => {
     const [active, setActive] = useState(0);
@@ -57,16 +56,16 @@ const styles = StyleSheet.create({
     },
     dot: {
         color: 'white',
-        fontSize: 17,
+        fontSize: 13,
     },
     activeDot: {
         color: 'black',
-        fontSize: 17,
+        fontSize: 13,
     },
     image: {
         width: width,
         height: height,
-        borderRadius: 30,
+        borderRadius: 15,
         borderColor: 'black',
         borderWidth: 1,
         marginTop: 43
