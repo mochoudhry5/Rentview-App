@@ -69,12 +69,12 @@ const RentalDescription: React.FC<RentalDescriptionProps> = ( { route, navigatio
       <ScrollView style={{flex:1}}>
         <View style={styles.inlineContainer}>
           <View style={styles.rating1}>
-            <Text style={{textAlign: 'center', fontSize: 17 / fontScale, backgroundColor:'#8f9da6',color:'#205030', fontStyle:'italic', borderWidth:.2, fontWeight:'bold'}}>Rent Again</Text>
+            <Text style={{textAlign: 'center', fontSize: 17 / fontScale, backgroundColor:'#dddddd',color:'#205030', fontStyle:'italic', borderWidth:.2, fontWeight:'bold'}}>Rent Again</Text>
             <Text style={{textAlign: 'center', fontWeight: 'bold',fontSize: 19 / fontScale}}>86%</Text>
             <Text style={{textAlign: 'center', fontSize: 12 / fontScale}}>of people would rent this property out again</Text>
           </View>
           <View style={styles.rating1}>
-            <Text style={{textAlign: 'center', fontSize: 17 / fontScale,backgroundColor:'#8f9da6', color:'#205030', fontStyle:'italic', borderWidth:.2, fontWeight:'bold'}}>Landlord Rating</Text>
+            <Text style={{textAlign: 'center', fontSize: 17 / fontScale,backgroundColor:'#dddddd', color:'#205030', fontStyle:'italic', borderWidth:.2, fontWeight:'bold'}}>Landlord Rating</Text>
             <Text style={{textAlign: 'center', fontWeight: 'bold',fontSize: 19 / fontScale}}>3.4/5.0</Text>
             <Text style={{textAlign: 'center', fontSize: 12 / fontScale}}>rating has been given to the landlord.</Text>
           </View>
@@ -89,7 +89,7 @@ const RentalDescription: React.FC<RentalDescriptionProps> = ( { route, navigatio
                 <View style={styles.totalRentersContainer}>
                   <Text style = {styles.renters}>{"("}{totalReviews} Reviews{")"}</Text>
                   <TouchableOpacity style={styles.button} onPress={handleOnPress}>
-                    <Text style={{color: 'blue'}}>Add Review</Text>
+                    <Text style={{color: '#205030'}}>Add Review</Text>
                   </TouchableOpacity>
                 </View>
               </View>
@@ -109,7 +109,8 @@ const RentalDescription: React.FC<RentalDescriptionProps> = ( { route, navigatio
 
 const makeStyles = (fontScale:any) => StyleSheet.create({
   rootView: {
-    flex: 1
+    flex: 1,
+    backgroundColor: 'white'
   },
   bottomSheetShadow: {
     backgroundColor: 'white',
@@ -185,13 +186,6 @@ const makeStyles = (fontScale:any) => StyleSheet.create({
     borderRadius: 20
   },
   button: {
-    // alignItems: 'center',
-    // backgroundColor: 'lightblue',
-    // padding: 10,
-    // borderRadius: 4,
-    // borderWidth: 2,
-    // width: '40%',
-    // alignSelf: 'center'
     position: 'absolute',
     top: 5,
     left: 200, 
