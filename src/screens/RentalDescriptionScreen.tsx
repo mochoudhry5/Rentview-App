@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { StyleSheet, View, Text, TouchableOpacity, useWindowDimensions } from "react-native";
+import { StyleSheet, View, Text, TouchableOpacity, useWindowDimensions, Image } from "react-native";
 import ImageSlider from './ImageSliderScreen';
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../utils/types"
@@ -8,6 +8,7 @@ import { db } from '../utils/firebase';
 import { GestureHandlerRootView, ScrollView } from 'react-native-gesture-handler';
 import BottomSheet, { BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import Icon from 'react-native-vector-icons/Ionicons'; 
+import { Rating, AirbnbRating } from 'react-native-elements';
 
 const images = [
   "https://source.unsplash.com/1024x768/?house",
@@ -25,9 +26,7 @@ const RentalDescription: React.FC<RentalDescriptionProps> = ( { route, navigatio
     const [city, setCity] = useState(""); 
     const [state, setState] = useState(""); 
     const [postalCode, setPostalCode] = useState(""); 
-    const {fontScale} = useWindowDimensions();
     const [allReviews, setAllReviews] = useState<DocumentData[]>([]); 
-    const styles = makeStyles(fontScale); 
     const sheetRef = useRef<BottomSheet>(null);
     const snapPoints = ["3%","10%", "90%"];
     const docRef = doc(db, "HomeReviews", route.params.docId);
@@ -95,14 +94,14 @@ const RentalDescription: React.FC<RentalDescriptionProps> = ( { route, navigatio
           </View>
           <View style={styles.inlineContainer}>
             <View style={styles.rating1}>
-              <Text style={{textAlign: 'center', fontSize: 17 / fontScale, backgroundColor:'#dddddd',color:'#205030', fontStyle:'italic', borderWidth:.2, fontWeight:'bold'}}>Rent Again</Text>
-              <Text style={{textAlign: 'center', fontWeight: 'bold',fontSize: 19 / fontScale}}>86%</Text>
-              <Text style={{textAlign: 'center', fontSize: 12 / fontScale}}>of people would rent this property out again</Text>
+              <Text style={{textAlign: 'center', fontSize: 17, backgroundColor:'#dddddd',color:'#205030', fontStyle:'italic', borderWidth:.2, fontWeight:'bold'}}>Rent Again</Text>
+              <Text style={{textAlign: 'center', fontWeight: 'bold',fontSize: 19}}>86%</Text>
+              <Text style={{textAlign: 'center', fontSize: 12}}>of people would rent this property out again</Text>
             </View>
             <View style={styles.rating1}>
-              <Text style={{textAlign: 'center', fontSize: 17 / fontScale,backgroundColor:'#dddddd', color:'#205030', fontStyle:'italic', borderWidth:.2, fontWeight:'bold'}}>Landlord Rating</Text>
-              <Text style={{textAlign: 'center', fontWeight: 'bold',fontSize: 19 / fontScale}}>3.4/5.0</Text>
-              <Text style={{textAlign: 'center', fontSize: 12 / fontScale}}>rating has been given to the landlord.</Text>
+              <Text style={{textAlign: 'center', fontSize: 17, backgroundColor:'#dddddd', color:'#205030', fontStyle:'italic', borderWidth:.2, fontWeight:'bold'}}>Landlord Rating</Text>
+              <Text style={{textAlign: 'center', fontWeight: 'bold',fontSize: 19}}>3.4/5.0</Text>
+              <Text style={{textAlign: 'center', fontSize: 12}}>rating has been given to the landlord.</Text>
             </View>
           </View>
         </ScrollView>
@@ -115,7 +114,7 @@ const RentalDescription: React.FC<RentalDescriptionProps> = ( { route, navigatio
                   <Icon name='star' color= 'black' size={28}/>
                 </>
               ) : (
-                <Text style={[styles.rating, {fontSize: 20 / fontScale}]}>No Ratings Yet</Text>
+                <Text style={[styles.rating, {fontSize: 20}]}>No Ratings Yet</Text>
               )}
               <View style={styles.inlineContainer}>
                 <View style={styles.totalRentersContainer}>
@@ -128,15 +127,48 @@ const RentalDescription: React.FC<RentalDescriptionProps> = ( { route, navigatio
                   </>
                   ) : (
                     <TouchableOpacity style={styles.button} onPress={handleOnPress}>
-                    <Text style={{position: 'absolute', right: -10, top: -10, color: 'blue'}}>Add Review</Text>
-                  </TouchableOpacity>
+                      <Text style={{position: 'absolute', right: '2%', top:-10, color: 'blue'}}>Add Review</Text>
+                    </TouchableOpacity>
                   )}
                 </View>
               </View>
             </View>
+            <View style={{paddingTop:'10%', paddingLeft:'2%', paddingRight:'2%'}}>
+              <View style={{flexDirection:'row', alignItems:'center'}}>
+                <Image
+                style={{
+                  width: 30,
+                  height: 30,
+                  borderRadius: 50,
+                  marginTop:'1%'}}
+                  source={require('../utils/profilePicture.jpg')}
+                />
+                <Text style={{paddingLeft:'1%', fontWeight:'bold', fontSize:14}}>Johnny Applebee</Text>
+              </View>
+              <View style={{flexDirection:'row', paddingLeft:'0%', alignItems:'center'}}>
+                <AirbnbRating 
+                  showRating={false} 
+                  selectedColor="black" 
+                  defaultRating={3}
+                  size={10}
+                />
+                <Text style={{color:'gray', fontSize: 11, paddingLeft:'2%'}}>5 months ago</Text>
+              </View>
+            <Text>
+              The house was amazing and was able to enjoy my privacy! 
+              Hopefully I can rent out this property again once I return from Europe.
+            </Text>
+            <View
+              style={{
+                borderBottomColor: 'gray',
+                borderBottomWidth: .5,
+                paddingTop:'5%'
+              }}
+            />
+            </View>
             {allReviews.map(review => (
                 <>
-                <Text style={{marginTop: 10}}>House Quality Rating: {review.houseQualityRating}</Text>
+              <Text style={{marginTop: 10}}>House Quality Rating: {review.houseQualityRating}</Text>
               <Text>Landlord Service Rating: {review.landlordServiceRating}</Text>
               <Text>Recommendation Rating: {review.recommendHouseRating}</Text>
               <Text>-----------------------------------------------------------</Text>
@@ -150,11 +182,10 @@ const RentalDescription: React.FC<RentalDescriptionProps> = ( { route, navigatio
   );       
 };
 
-const makeStyles = (fontScale:any) => StyleSheet.create({
+const styles = StyleSheet.create({
   rootView: {
     flex: 1,
     backgroundColor: 'white',
-
   },
   bottomSheetShadow: {
     backgroundColor: 'white',
@@ -173,7 +204,7 @@ const makeStyles = (fontScale:any) => StyleSheet.create({
     borderRadius: 20
   },
   rating: {
-    fontSize: 30 / fontScale,
+    fontSize: 30,
     paddingLeft: '5%',
     fontWeight: '600',
   },
@@ -184,10 +215,10 @@ const makeStyles = (fontScale:any) => StyleSheet.create({
     marginLeft: '5%',
     marginRight: '5%',
     marginTop: '3%',
-    fontSize: 14 / fontScale
+    fontSize: 14
   },
   renters: {
-    fontSize: 20 / fontScale,
+    fontSize: 20,
     marginLeft: '2%'
   },
   reviewsSection: {
@@ -210,13 +241,13 @@ const makeStyles = (fontScale:any) => StyleSheet.create({
     textAlign: 'center',
     color: 'black',
     fontWeight: 'bold',
-    fontSize: 22 / fontScale,
+    fontSize: 22,
     
   },
   addressLine2: {
     textAlign: 'center',
     color: 'gray',
-    fontSize: 14 / fontScale,
+    fontSize: 14,
   },
   rating1: {
     backgroundColor: '#FAFAFA',
