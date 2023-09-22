@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, Button, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, Button, Image, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import { auth } from "../utils/firebase"
 import { signOut } from "firebase/auth";
 
@@ -15,19 +15,38 @@ const ProfileScreen = () => {
       });
   };
 
+  const settingsOptions = [
+    {title: 'Profile', subTitle: 'Manage your RentView profile', onPress: () => {}},
+    {title: 'Notifications', subTitle: 'Turn on/off Notifications', onPress: () => {}},
+    {title: 'Activity', subTitle: 'Manage your reviews', onPress: () => {},},
+    {title: 'Logout', subTitle: 'Get out of RentView', onPress : handleLogout},
+  ];
+
   return (
     <View style={styles.container}>
       <Image source={{ uri: "https://source.unsplash.com/1024x768/?male" }} style={styles.profilePicture} />
       <Text style={styles.userName}>Momin Choudhry</Text>
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity onPress={handleLogout}>
-          <Text style={styles.logoutText}>Logout</Text>
-        </TouchableOpacity>
-        {/* <TouchableOpacity style={styles.button}>
-          <Text style={styles.buttonText}>Activity</Text>
-        </TouchableOpacity> */}
-      </View>
-      <View style={{}}></View>
+      <ScrollView style={{width:'100%'}}>
+        {settingsOptions.map(({title, subTitle, onPress}, index) => (
+          <TouchableOpacity key={title} onPress={onPress}>
+            <View
+              style={{
+                paddingHorizontal: '5%',
+                paddingBottom: '5%',
+                paddingTop: '5%',
+              }}>
+              <Text style={{fontSize: 17}}>{title}</Text>
+              {subTitle && (
+                <Text style={{fontSize: 14, opacity: 0.5, paddingTop: 5}}>
+                  {subTitle}
+                </Text>
+              )}
+            </View>
+
+            <View style={{height: 0.5, backgroundColor: 'gray'}} />
+          </TouchableOpacity>
+        ))}
+      </ScrollView>
     </View>
   );
 };
