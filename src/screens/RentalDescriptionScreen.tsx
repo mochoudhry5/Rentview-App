@@ -29,7 +29,7 @@ const RentalDescription: React.FC<RentalDescriptionProps> = ( { route, navigatio
     const [allReviews, setAllReviews] = useState<DocumentData[]>([]); 
     const styles = makeStyles(fontScale); 
     const sheetRef = useRef<BottomSheet>(null);
-    const snapPoints = ["3%", "9%", "90%"];
+    const snapPoints = ["3%","10%", "90%"];
     const docRef = doc(db, "HomeReviews", route.params.docId);
     const docRefSecond = query(collection(db, "HomeReviews", route.params.docId, "IndividualRatings"));
 
@@ -85,27 +85,27 @@ const RentalDescription: React.FC<RentalDescriptionProps> = ( { route, navigatio
   
   return (
     <GestureHandlerRootView style={styles.rootView}>
-      <ImageSlider images={images} />
-        <View>
-          <View style={styles.addressLines}>
-            <Text style={styles.addressLine1}>{street}</Text>
-            <Text style={styles.addressLine2}>{city},{state} {postalCode}</Text>
+      <ScrollView>
+        <ImageSlider images={images} />
+          <View>
+            <View style={styles.addressLines}>
+              <Text style={styles.addressLine1}>{street}</Text>
+              <Text style={styles.addressLine2}>{city},{state} {postalCode}</Text>
+            </View>
           </View>
-        </View>
-      <ScrollView style={{flex:1}}>
-        <View style={styles.inlineContainer}>
-          <View style={styles.rating1}>
-            <Text style={{textAlign: 'center', fontSize: 17 / fontScale, backgroundColor:'#dddddd',color:'#205030', fontStyle:'italic', borderWidth:.2, fontWeight:'bold'}}>Rent Again</Text>
-            <Text style={{textAlign: 'center', fontWeight: 'bold',fontSize: 19 / fontScale}}>86%</Text>
-            <Text style={{textAlign: 'center', fontSize: 12 / fontScale}}>of people would rent this property out again</Text>
+          <View style={styles.inlineContainer}>
+            <View style={styles.rating1}>
+              <Text style={{textAlign: 'center', fontSize: 17 / fontScale, backgroundColor:'#dddddd',color:'#205030', fontStyle:'italic', borderWidth:.2, fontWeight:'bold'}}>Rent Again</Text>
+              <Text style={{textAlign: 'center', fontWeight: 'bold',fontSize: 19 / fontScale}}>86%</Text>
+              <Text style={{textAlign: 'center', fontSize: 12 / fontScale}}>of people would rent this property out again</Text>
+            </View>
+            <View style={styles.rating1}>
+              <Text style={{textAlign: 'center', fontSize: 17 / fontScale,backgroundColor:'#dddddd', color:'#205030', fontStyle:'italic', borderWidth:.2, fontWeight:'bold'}}>Landlord Rating</Text>
+              <Text style={{textAlign: 'center', fontWeight: 'bold',fontSize: 19 / fontScale}}>3.4/5.0</Text>
+              <Text style={{textAlign: 'center', fontSize: 12 / fontScale}}>rating has been given to the landlord.</Text>
+            </View>
           </View>
-          <View style={styles.rating1}>
-            <Text style={{textAlign: 'center', fontSize: 17 / fontScale,backgroundColor:'#dddddd', color:'#205030', fontStyle:'italic', borderWidth:.2, fontWeight:'bold'}}>Landlord Rating</Text>
-            <Text style={{textAlign: 'center', fontWeight: 'bold',fontSize: 19 / fontScale}}>3.4/5.0</Text>
-            <Text style={{textAlign: 'center', fontSize: 12 / fontScale}}>rating has been given to the landlord.</Text>
-          </View>
-        </View>
-      </ScrollView>
+        </ScrollView>
       <BottomSheet style={styles.bottomSheetShadow} ref={sheetRef} snapPoints={snapPoints} index={1}>
           <BottomSheetScrollView>
             <View style={styles.inlineContainer}>
@@ -115,7 +115,7 @@ const RentalDescription: React.FC<RentalDescriptionProps> = ( { route, navigatio
                   <Icon name='star' color= 'black' size={28}/>
                 </>
               ) : (
-                <Text style={[styles.rating, {fontSize: 20}]}>No Ratings Yet</Text>
+                <Text style={[styles.rating, {fontSize: 20 / fontScale}]}>No Ratings Yet</Text>
               )}
               <View style={styles.inlineContainer}>
                 <View style={styles.totalRentersContainer}>
@@ -137,10 +137,10 @@ const RentalDescription: React.FC<RentalDescriptionProps> = ( { route, navigatio
             {allReviews.map(review => (
                 <>
                 <Text style={{marginTop: 10}}>House Quality Rating: {review.houseQualityRating}</Text>
-               <Text>Landlord Service Rating: {review.landlordServiceRating}</Text>
-               <Text>Recommendation Rating: {review.recommendHouseRating}</Text>
-               <Text>-----------------------------------------------------------</Text>
-               </> )
+              <Text>Landlord Service Rating: {review.landlordServiceRating}</Text>
+              <Text>Recommendation Rating: {review.recommendHouseRating}</Text>
+              <Text>-----------------------------------------------------------</Text>
+              </> )
               
             )}
 
@@ -153,7 +153,8 @@ const RentalDescription: React.FC<RentalDescriptionProps> = ( { route, navigatio
 const makeStyles = (fontScale:any) => StyleSheet.create({
   rootView: {
     flex: 1,
-    backgroundColor: 'white'
+    backgroundColor: 'white',
+
   },
   bottomSheetShadow: {
     backgroundColor: 'white',

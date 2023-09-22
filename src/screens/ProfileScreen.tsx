@@ -23,31 +23,30 @@ const ProfileScreen = () => {
   ];
 
   return (
-    <View style={styles.container}>
+    <ScrollView>
+      <View style={styles.container}>
       <Image source={{ uri: "https://source.unsplash.com/1024x768/?male" }} style={styles.profilePicture} />
       <Text style={styles.userName}>Momin Choudhry</Text>
-      <ScrollView style={{width:'100%'}}>
-        {settingsOptions.map(({title, subTitle, onPress}, index) => (
-          <TouchableOpacity key={title} onPress={onPress}>
-            <View
-              style={{
-                paddingHorizontal: '5%',
-                paddingBottom: '5%',
-                paddingTop: '5%',
-              }}>
-              <Text style={{fontSize: 17}}>{title}</Text>
-              {subTitle && (
-                <Text style={{fontSize: 14, opacity: 0.5, paddingTop: 5}}>
-                  {subTitle}
-                </Text>
-              )}
-            </View>
-
-            <View style={{height: 0.5, backgroundColor: 'gray'}} />
-          </TouchableOpacity>
-        ))}
-      </ScrollView>
-    </View>
+      {settingsOptions.map(({title, subTitle, onPress}, index) => (
+        <TouchableOpacity key={title} onPress={onPress} style={{width:'100%'}}>
+          <View
+            style={{
+              paddingHorizontal: '5%',
+              paddingBottom: '5%',
+              paddingTop: '5%',
+            }}>
+            <Text style={{fontSize: 17}}>{title}</Text>
+            {subTitle && (
+              <Text style={{fontSize: 14, opacity: 0.5, paddingTop: '2%'}}>
+                {subTitle}
+              </Text>
+            )}
+          </View>
+          <View style={{height: 0.5, backgroundColor: 'gray'}} />
+        </TouchableOpacity>
+      ))}
+      </View>
+    </ScrollView>
   );
 };
 
@@ -56,37 +55,17 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-start', // Start from the top
     alignItems: 'center',
-    paddingTop: 50, // Add paddingTop to push the content down from the top
+    paddingTop: '15%', // Add paddingTop to push the content down from the top
   },
   profilePicture: {
     width: 100,
     height: 100,
     borderRadius: 50,
-    marginBottom: 20,
+    marginBottom: '3%',
   },
   userName: {
     fontSize: 24,
     marginBottom: 20,
-  },
-  button: {
-    backgroundColor: '#007bff',
-    paddingVertical: 10,
-    paddingHorizontal: 15,
-    borderRadius: 5,
-    marginVertical: 5,
-  },
-  buttonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  logoutText: {
-    color: 'red',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  buttonContainer: {
-    flexDirection: 'row', // Arrange buttons horizontally
   },
 });
 

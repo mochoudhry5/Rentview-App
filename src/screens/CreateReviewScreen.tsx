@@ -1,116 +1,169 @@
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
+import { View, Text, StyleSheet, TouchableOpacity, TextInput, useWindowDimensions, KeyboardAvoidingView } from 'react-native'
 import React, { useState } from 'react'
 import Slider from '@react-native-community/slider';
-import { collection, doc, query, updateDoc, getDoc, DocumentReference, DocumentData, addDoc } from "firebase/firestore";
+import { collection, doc, query, updateDoc, getDocs, QuerySnapshot, DocumentData } from "firebase/firestore";
 import { db } from '../utils/firebase';
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../utils/types"
+import Icon from 'react-native-vector-icons/Ionicons'; 
+import { ScrollView } from 'react-native-gesture-handler';
 
 type CreateReviewProps = NativeStackScreenProps<RootStackParamList, "CreateReview">;
 
 const CreateReviewScreen: React.FC<CreateReviewProps> = ( {route, navigation}) => {
-    const [houseQuality, setHouseQuality] = useState(5); 
-    const [landlordServ, setLandlordServ] = useState(5); 
-    const [recommendation, setRecommendation] = useState(5); 
+
+    const [overallRating, setOverallRating] = useState(5); 
+    const [landlordRating, setLandlordRating] = useState(5); 
+    const [text, onChangeText] = React.useState('');
+    const {fontScale} = useWindowDimensions();
+    const styles = makeStyles(fontScale); 
 
 
     const handleReviewSubmit = async () => {
-      const docRef = doc(db, "HomeReviews", route.params.docId);
-      let homeSnapshot = await getDoc(docRef);
+      let homeInfo = query(collection(db, "HomeReviews", route.params.docId, "averageRating"));
+      let homeSnapshot : QuerySnapshot<DocumentData, DocumentData> = await getDocs(homeInfo);
       const taskDocRef = doc(db, 'HomeReviews', route.params.docId)
-
-      if(homeSnapshot.exists()){
+      if(homeSnapshot.size < 1){
         await updateDoc(taskDocRef, {
-          avgHomeQuality: houseQuality, 
-          avgLandlordService: landlordServ, 
-          avgRecommendation: recommendation,
-          totalReviews: homeSnapshot.data().totalReviews + 1, 
-        })
-
-        await addDoc(collection(db, 'HomeReviews', route.params.docId, "IndividualRatings"), {
-          houseQualityRating: houseQuality,
-          landlordServiceRating: landlordServ,
-          recommendHouseRating: recommendation
+          avgOverallRating: overallRating, 
+          avgLandlordRating: landlordRating, 
         })
       }
     }
 
   return (
-    <View style={styles.container}>
-    <View style={{marginTop: '40%'}}>
-        <Text style={styles.text}>House Quality: {houseQuality}/10</Text>
-        <Slider
-            step={1}
-            style={styles.slider}
-            value={houseQuality}
-            onValueChange={setHouseQuality}
-            maximumValue={10}
-            minimumValue={1}
-        />
-
-        <Text style={styles.text}>Landlord Service: {landlordServ}/10</Text>
-        <Slider
-            step={1}
-            style={styles.slider}
-            value={landlordServ}
-            onValueChange={setLandlordServ}
-            maximumValue={10}
-            minimumValue={1}
-        />
-        <Text style={styles.text}>Recommend To Others: {recommendation}/10</Text>
-        <Slider
-            step={1}
-            style={styles.slider}
-            value={recommendation}
-            onValueChange={setRecommendation}
-            maximumValue={10}
-            minimumValue={1}
-        />
-    </View>
-
+    <ScrollView style={{flex:1, backgroundColor:'white'}}>
+      <View style={styles.container}> 
+        <View style={[styles.card, styles.shadowProp]}>
+          <View>
+            <View style={{backgroundColor: '#FAFAFA'}}>
+              <Text style={styles.heading}>Overall Rating:</Text>
+              <Text style={styles.text}>{overallRating}/5</Text>
+              <Slider
+                  step={1}
+                  style={styles.slider}
+                  value={overallRating}
+                  onValueChange={setOverallRating}
+                  maximumValue={5}
+                  minimumValue={1}
+                  thumbTintColor='#205030'
+                  minimumTrackTintColor='gray'
+              />
+            </View>
+          </View>
+        </View>
+        <View style={[styles.card, styles.shadowProp]}>
+          <View>
+            <View style={{backgroundColor: '#FAFAFA'}}>
+              <Text style={styles.heading}>Landlord Rating:</Text>
+              <Text style={styles.text}>{landlordRating}/5</Text>
+              <Slider
+                  step={1}
+                  style={styles.slider}
+                  value={landlordRating}
+                  onValueChange={setLandlordRating}
+                  maximumValue={5}
+                  minimumValue={1}
+                  thumbTintColor='#205030'
+                  minimumTrackTintColor='gray'
+              />
+            </View>
+          </View>
+        </View>
+        <View style={[styles.card, styles.shadowProp]}>
+          <View>
+            <View style={{backgroundColor: '#FAFAFA'}}>
+              <Text style={styles.heading}>Rent Again:</Text>
+              <View style ={{flexDirection:"row", justifyContent: 'center', paddingBottom:'5%'}}>
+                <View style={{paddingRight:'5%', width:'35%'}}>
+                  <TouchableOpacity style={styles.yesButton}>
+                    <Text style={{color:'white', fontWeight:'bold', fontSize: 18 / fontScale}}>Yes</Text>
+                  </TouchableOpacity>
+                </View>
+                <View style={{width:'30%'}}>
+                <TouchableOpacity style={styles.noButton}>
+                  <Text style={{color:'white', fontWeight:'bold', fontSize: 18 / fontScale}}>No</Text>
+                </TouchableOpacity>
+                </View>
+              </View>
+            </View>
+          </View>
+        </View>
         <View style={styles.container}>
-            <TouchableOpacity style={styles.button} onPress={handleReviewSubmit}>
-                <Text>Submit review</Text>
+            <TouchableOpacity style={styles.submitButton}>
+                <Text style={{fontWeight:'bold', color:'#205030'}}>Publish Review</Text>
             </TouchableOpacity>
         </View>
-    </View>
+      </View>
+    </ScrollView>
   )
 }
 
-const styles = StyleSheet.create({
-    writeAReview: {
-        fontFamily: "comic-sans-ms-regular",
-        fontSize: 16,
-        color: "black",
-      },
-    button: {
-        alignItems: 'center',
-        backgroundColor: 'lightblue',
-        padding: 10,
-        borderRadius: 4,
-        borderWidth: 2,
-        width: '40%',
-        alignSelf: 'center'
+const makeStyles = (fontScale:any) => StyleSheet.create({
+    card: {
+      width: '80%',
+      height:'15%',
+      marginVertical: '7%',
+      alignSelf:'center',
+    },
+    shadowProp: {
+      shadowColor: '#171717',
+      shadowOffset: {width: -2, height: 4},
+      shadowOpacity: .5,
+      shadowRadius: 5,
     },
     container: {
         flex: 1,
         justifyContent: 'center',
-        backgroundColor: '#fff',
+        alignItems:'center',
+        width: '100%',
       },
     slider: {
         width: '70%',
         opacity: 1,
-        marginTop: 3,
         alignSelf: 'center',
-        marginBottom: 25,
       },
       text: {
-        fontSize: 14,
+        fontSize: 16 / fontScale,
         textAlign: 'center',
-        fontWeight: '500',
+        fontWeight: 'bold',
         margin: 0,
       },
-})
+      input: {
+        height: '20%',
+        width:'90%',
+        borderWidth: 1,
+      },
+      submitButton: {
+        alignItems: 'center',
+        backgroundColor: '#dddddd',
+        borderWidth: 1,
+        width: '40%',
+        height: '25%',
+        alignSelf: 'center',
+        justifyContent: 'center',
+    },
+      yesButton: {
+        backgroundColor: '#205030',
+        height:'55%',
+        alignItems: 'center',
+        justifyContent: 'center',
+      },
+      noButton: {
+        backgroundColor: '#6f112b',
+        height:'55%',
+        alignItems: 'center',
+        justifyContent: 'center',
+      },
+      heading: {
+        fontSize: 18 / fontScale,
+        fontWeight: '600',
+        marginBottom: 13,
+        paddingLeft: '2%',
+        paddingTop: '2%'
+
+      },
+});
 
 export default CreateReviewScreen
 

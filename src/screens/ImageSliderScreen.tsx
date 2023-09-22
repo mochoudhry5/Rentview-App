@@ -50,8 +50,6 @@ const ImageSlider: React.FC<ImageProps> = ( { images }) => {
 const styles = StyleSheet.create({
     pagination: {
         flexDirection: 'row',
-        position: 'absolute',
-        bottom: 0,
         alignSelf: 'center',
     },
     dot: {
@@ -65,10 +63,8 @@ const styles = StyleSheet.create({
     image: {
         width: width,
         height: height,
-        borderRadius: 15,
         borderColor: 'black',
         borderWidth: 1,
-        marginTop: 43
     }
 });
 
