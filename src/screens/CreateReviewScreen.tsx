@@ -1,7 +1,7 @@
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
 import React, { useState } from 'react'
 import Slider from '@react-native-community/slider';
-import { collection, doc, query, updateDoc, getDocs, QuerySnapshot, DocumentData } from "firebase/firestore";
+import { collection, doc, query, updateDoc, getDoc, DocumentReference, DocumentData, addDoc } from "firebase/firestore";
 import { db } from '../utils/firebase';
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../utils/types"
@@ -15,14 +15,22 @@ const CreateReviewScreen: React.FC<CreateReviewProps> = ( {route, navigation}) =
 
 
     const handleReviewSubmit = async () => {
-      let homeInfo = query(collection(db, "HomeReviews", route.params.docId, "averageRating"));
-      let homeSnapshot : QuerySnapshot<DocumentData, DocumentData> = await getDocs(homeInfo);
+      const docRef = doc(db, "HomeReviews", route.params.docId);
+      let homeSnapshot = await getDoc(docRef);
       const taskDocRef = doc(db, 'HomeReviews', route.params.docId)
-      if(homeSnapshot.size < 1){
+
+      if(homeSnapshot.exists()){
         await updateDoc(taskDocRef, {
           avgHomeQuality: houseQuality, 
           avgLandlordService: landlordServ, 
-          avgRecommendation: recommendation
+          avgRecommendation: recommendation,
+          totalReviews: homeSnapshot.data().totalReviews + 1, 
+        })
+
+        await addDoc(collection(db, 'HomeReviews', route.params.docId, "IndividualRatings"), {
+          houseQualityRating: houseQuality,
+          landlordServiceRating: landlordServ,
+          recommendHouseRating: recommendation
         })
       }
     }

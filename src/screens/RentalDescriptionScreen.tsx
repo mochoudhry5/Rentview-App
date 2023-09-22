@@ -3,7 +3,7 @@ import { StyleSheet, View, Text, TouchableOpacity, useWindowDimensions } from "r
 import ImageSlider from './ImageSliderScreen';
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../utils/types"
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, query, onSnapshot, collection, DocumentData} from "firebase/firestore";
 import { db } from '../utils/firebase';
 import { GestureHandlerRootView, ScrollView } from 'react-native-gesture-handler';
 import BottomSheet, { BottomSheetScrollView } from '@gorhom/bottom-sheet';
@@ -26,39 +26,65 @@ const RentalDescription: React.FC<RentalDescriptionProps> = ( { route, navigatio
     const [state, setState] = useState(""); 
     const [postalCode, setPostalCode] = useState(""); 
     const {fontScale} = useWindowDimensions();
+    const [allReviews, setAllReviews] = useState<DocumentData[]>([]); 
     const styles = makeStyles(fontScale); 
     const sheetRef = useRef<BottomSheet>(null);
-    const snapPoints = ["15%", "90%"];
-    
+    const snapPoints = ["3%", "9%", "90%"];
+    const docRef = doc(db, "HomeReviews", route.params.docId);
+    const docRefSecond = query(collection(db, "HomeReviews", route.params.docId, "IndividualRatings"));
+
     useEffect(() => {
-      const docRef = doc(db, "HomeReviews", route.params.docId);
-      if(route.params.docId !== '') {
-        const unsubscribe = async () => {
-          try {
-            const docSnap = await getDoc(docRef);
-            if (docSnap.exists()) {
-              const data = docSnap.data()
-              setAvgRating(data.avgRating);
-              setTotalReviews(data.totalReviews); 
-              setStreet(data.address.street);
-              setCity(data.address.city); 
-              setState(data.address.state); 
-              setPostalCode(data.address.postalCode); 
-            }
-          } catch(error) {
-            console.log(error)
-          }
+      const subscriber = onSnapshot(docRef, (docSnapshot) => {
+        if(docSnapshot.exists()){
+          setTotalReviews(docSnapshot.data().totalReviews);
         }
-        unsubscribe();
+        getData(); 
+      });
+
+      const getData = () => {
+        onSnapshot(docRefSecond, (docSnapshot) => {
+          if(docSnapshot.size > 1){
+            setAllReviews([]);
+            docSnapshot.forEach((doc) => {
+              setAllReviews((prevArr) => ([...prevArr, doc.data()]));
+            });
+          }
+      
+      })};
+
+      return () => subscriber();
+
+    }, [route.params.docId]);
+
+    useEffect(() => {
+
+      const fetchData = async () => {
+        try {
+          const docSnap = await getDoc(docRef);
+          if (docSnap.exists()) {
+            const data = docSnap.data()
+            setAvgRating(data.avgRating);
+            setTotalReviews(data.totalReviews); 
+            setStreet(data.address.street);
+            setCity(data.address.city); 
+            setState(data.address.state); 
+            setPostalCode(data.address.postalCode); 
+          }
+        } catch(error) {
+          console.log(error)
+        }
       }
-      }, [route.params.docId]);
+
+      fetchData(); 
+
+    }, []);
 
     const handleOnPress = () => {
       navigation.navigate("CreateReview", {docId: route.params.docId});
     }
   
   return (
-<GestureHandlerRootView style={styles.rootView}>
+    <GestureHandlerRootView style={styles.rootView}>
       <ImageSlider images={images} />
         <View>
           <View style={styles.addressLines}>
@@ -80,27 +106,44 @@ const RentalDescription: React.FC<RentalDescriptionProps> = ( { route, navigatio
           </View>
         </View>
       </ScrollView>
-      <BottomSheet style={styles.bottomSheetShadow} ref={sheetRef} snapPoints={snapPoints}>
+      <BottomSheet style={styles.bottomSheetShadow} ref={sheetRef} snapPoints={snapPoints} index={1}>
           <BottomSheetScrollView>
             <View style={styles.inlineContainer}>
-              <Text style={styles.rating}>4.6</Text>
-              <Icon name='star' color= 'black' size={28}/>
+              {totalReviews > 0 ? (
+                <>
+                  <Text style={styles.rating}>4.6</Text>
+                  <Icon name='star' color= 'black' size={28}/>
+                </>
+              ) : (
+                <Text style={[styles.rating, {fontSize: 20}]}>No Ratings Yet</Text>
+              )}
               <View style={styles.inlineContainer}>
                 <View style={styles.totalRentersContainer}>
-                  <Text style = {styles.renters}>{"("}{totalReviews} Reviews{")"}</Text>
-                  <TouchableOpacity style={styles.button} onPress={handleOnPress}>
-                    <Text style={{color: 'blue'}}>Add Review</Text>
+                  {totalReviews > 0 ? (
+                    <>
+                    <Text style = {styles.renters}>{"("}{totalReviews} Reviews{")"}</Text>
+                    <TouchableOpacity style={styles.button} onPress={handleOnPress}>
+                      <Text style={{ color: 'blue'}}>Add Review</Text>
+                    </TouchableOpacity>
+                  </>
+                  ) : (
+                    <TouchableOpacity style={styles.button} onPress={handleOnPress}>
+                    <Text style={{position: 'absolute', right: -10, top: -10, color: 'blue'}}>Add Review</Text>
                   </TouchableOpacity>
+                  )}
                 </View>
               </View>
             </View>
-            {totalReviews > 0 ? (
-              <Text style={styles.reviewDescription}>Read reviews from previous tenants.</Text>
-            ) : (
-              <View style={styles.reviewsSection}>
-                <Text style={styles.reviewsSection}>No Reviews Found</Text>
-              </View>
+            {allReviews.map(review => (
+                <>
+                <Text style={{marginTop: 10}}>House Quality Rating: {review.houseQualityRating}</Text>
+               <Text>Landlord Service Rating: {review.landlordServiceRating}</Text>
+               <Text>Recommendation Rating: {review.recommendHouseRating}</Text>
+               <Text>-----------------------------------------------------------</Text>
+               </> )
+              
             )}
+
           </BottomSheetScrollView>
         </BottomSheet>
     </GestureHandlerRootView>
@@ -131,10 +174,6 @@ const makeStyles = (fontScale:any) => StyleSheet.create({
     fontSize: 30 / fontScale,
     paddingLeft: '5%',
     fontWeight: '600',
-  },
-  star: {
-    width: 25 / fontScale,
-    height: 25 / fontScale,
   },
   totalRentersContainer: {
     flex: 1,
@@ -185,13 +224,6 @@ const makeStyles = (fontScale:any) => StyleSheet.create({
     borderRadius: 20
   },
   button: {
-    // alignItems: 'center',
-    // backgroundColor: 'lightblue',
-    // padding: 10,
-    // borderRadius: 4,
-    // borderWidth: 2,
-    // width: '40%',
-    // alignSelf: 'center'
     position: 'absolute',
     top: 5,
     left: 200, 
