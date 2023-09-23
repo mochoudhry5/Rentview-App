@@ -1,10 +1,15 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { signInWithEmailAndPassword, signInWithCredential, GoogleAuthProvider } from "firebase/auth";
 import { OtherStackParamList } from "../utils/types"
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { auth } from "../utils/firebase"
+import { GoogleSignin } from "@react-native-google-signin/google-signin";
 
+GoogleSignin.configure({
+  webClientId: '795551030882-3mrb1u5bp15jvsmi97rp2kq42frc20gb.apps.googleusercontent.com',
+  offlineAccess: true,
+})
 type LoginProps = NativeStackScreenProps<OtherStackParamList, "Login">;
 
 const Login:  React.FC<LoginProps> = ( { navigation } ) => {
@@ -18,6 +23,15 @@ const Login:  React.FC<LoginProps> = ( { navigation } ) => {
       console.error('Login failed:', error);
     }
   };
+
+  async function signinWithGoogle() {
+    // Get the users ID token
+    const { idToken } = await GoogleSignin.signIn();
+    // Create a Google credential with the token
+    const googleCredential = GoogleAuthProvider.credential(idToken);
+    // Sign-in the user with the credential
+    return signInWithCredential(auth, googleCredential);
+  }
 
   const goToSignup = () => {
     navigation.navigate('Signup');
@@ -41,8 +55,20 @@ const Login:  React.FC<LoginProps> = ( { navigation } ) => {
       <TouchableOpacity style={styles.signedUpButtonContainer} onPress={handleLogin}>
           <Text style={styles.signedUpButtonText}>Log In</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.signedUpButtonContainer} onPress={goToSignup}>
-          <Text style={styles.signedUpButtonText}>Don't have an account? Sign up</Text>
+      <View style={{flexDirection: 'row', alignItems: 'center', marginBottom: 10}}>
+      <View style={{flex: 1, height: 1, backgroundColor: 'black'}} />
+      <View>
+        <Text style={{width: 50, textAlign: 'center'}}>or</Text>
+      </View>
+      <View style={{flex: 1, height: 1, backgroundColor: 'black'}} />
+</View>
+      <TouchableOpacity style={styles.googleButton} onPress={signinWithGoogle}>
+        <Image
+        style={styles.googleIcon}
+        source={{
+          uri: "https://i.ibb.co/j82DCcR/search.png",
+        }}/>
+        <Text style={styles.googleButtonText}>Continue with Google</Text>
       </TouchableOpacity>
     </View>
   );
@@ -73,7 +99,25 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontWeight: "bold",
     alignSelf: "center",
-  }
+  },
+  googleButton: {
+    backgroundColor: "white",
+    borderRadius: 4,
+    paddingHorizontal: 34,
+    paddingVertical: 10,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center'
+   },
+   googleButtonText: {
+    marginLeft: 16,
+    fontSize: 18,
+    fontWeight: '600'
+   },
+   googleIcon: {
+    height: 24,
+    width: 24
+   }
 });
 
 export default Login;
