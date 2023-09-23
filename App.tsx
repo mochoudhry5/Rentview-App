@@ -8,8 +8,8 @@ import { OtherStackParamList } from "./src/utils/types"
 import { auth } from "./src/utils/firebase"
 import { onAuthStateChanged, User } from "firebase/auth";
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import ProfileScreen from './src/screens/ProfileScreen';
 import Icon from 'react-native-vector-icons/Ionicons';  
+import OtherStack from './src/screens/OtherStack';
 
 const Tab = createBottomTabNavigator()
 
@@ -34,7 +34,7 @@ function LoggedInLayout(){
     })}
   >
         <Tab.Screen name="Home" component={NearbyRentalViewStack} options={{ headerShown:false }} />
-        <Tab.Screen name="Profile" component={ProfileScreen} options={{ headerShown:false}} />
+        <Tab.Screen name="Profile" component={OtherStack} options={{ headerShown:false}} />
     </Tab.Navigator>
   )
 }

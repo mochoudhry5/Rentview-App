@@ -137,10 +137,27 @@ const NearbyRentalView: React.FC<SearchRentalsProps> = ({ navigation }) => {
           postalCode: postalCode,
           fullAddress: data
         },
-        avgHomeQuality: -1,
-        avgLandlordService:-1,
-        avgRecommendation: -1, 
-        totalReviews: 0
+        landlordService: {
+          oneStar: 0, 
+          twoStar: 0, 
+          threeStar: 0, 
+          fourStar: 0, 
+          fiveStar: 0,
+          avgLandlordServiceRating: 0
+        },
+        wouldRecommend: {
+          yes: 0, 
+          no: 0, 
+        }, 
+        overallRating : {
+          oneStar: 0, 
+          twoStar: 0, 
+          threeStar: 0, 
+          fourStar: 0, 
+          fiveStar: 0,
+          avgOverallRating: 0,
+        },
+        totalReviews: 0,
       })
     }
 

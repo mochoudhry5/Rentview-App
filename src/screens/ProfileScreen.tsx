@@ -1,9 +1,17 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, Button, Image, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import { auth } from "../utils/firebase"
 import { signOut } from "firebase/auth";
+import { collection, doc, query, updateDoc, getDoc, DocumentReference, DocumentData, onSnapshot } from "firebase/firestore";
+import { db } from '../utils/firebase';
+import { RootStackParamList } from "../utils/types"
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
 
-const ProfileScreen = () => {
+type ProfileProps = NativeStackScreenProps<RootStackParamList, "ProfileScreen">;
+
+const ProfileScreen : React.FC<ProfileProps> = ({ navigation }) => {
+  const user = auth.currentUser;
+  const [allReviews, setAllReviews] = useState<DocumentData[]>([]); 
 
   const handleLogout = () => {
     signOut(auth)
@@ -15,10 +23,28 @@ const ProfileScreen = () => {
       });
   };
 
+  const handleActivity = async () => {
+    if(user){
+      let email = user.email ? user.email : "No User"
+      console.log(email)
+      const docRefSecond = query(collection(db, "UserReviews", email, "Reviews"));
+
+      onSnapshot(docRefSecond, (docSnapshot) => {
+        setAllReviews([]);
+        if(docSnapshot.size >= 1){
+          docSnapshot.forEach((doc) => {
+            setAllReviews((prevArr) => ([...prevArr, doc.data()]));
+          });
+        }
+      });
+      navigation.navigate("ActivityScreen", {reviews: allReviews});
+    }
+  }
+
   const settingsOptions = [
     {title: 'Profile', subTitle: 'Manage your RentView profile', onPress: () => {}},
     {title: 'Notifications', subTitle: 'Turn on/off Notifications', onPress: () => {}},
-    {title: 'Activity', subTitle: 'Manage your reviews', onPress: () => {},},
+    {title: 'Activity', subTitle: 'Manage your reviews', onPress : handleActivity},
     {title: 'Logout', subTitle: 'Get out of RentView', onPress : handleLogout},
   ];
 
