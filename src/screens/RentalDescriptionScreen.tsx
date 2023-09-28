@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { StyleSheet, View, Text, TouchableOpacity, useWindowDimensions, Image } from "react-native";
+import { StyleSheet, View, Text, TouchableOpacity, Image } from "react-native";
 import ImageSlider from './ImageSliderScreen';
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../utils/types"
@@ -158,7 +158,7 @@ const RentalDescription: React.FC<RentalDescriptionProps> = ( { route, navigatio
                 marginTop:'1%'}}
                 source={{ uri: "https://source.unsplash.com/1024x768/?user" }}
               />
-              <Text style={{paddingLeft:'1%', fontWeight:'bold', fontSize:14}}>{user?.email}</Text>
+              <Text style={{paddingLeft:'1%', fontWeight:'bold', fontSize:14}}>{review.reviewerEmail}</Text>
             </View>
             <View style={{flexDirection:'row', paddingLeft:'0%', alignItems:'center'}}>
               <AirbnbRating 
