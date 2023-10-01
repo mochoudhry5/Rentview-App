@@ -1,22 +1,29 @@
 import React from 'react'
 import { createStackNavigator } from "@react-navigation/stack";
 import { RootStackParamList } from "../utils/types"
-import ProfileScreen from './ProfileScreen';
+import AccountScreen from './AccountScreen';
 import ActivityScreen from './ActivityScreen';
+import ProfileScreen from './ProfileScreen';
 
 const LoggedInStack = createStackNavigator<RootStackParamList>(); 
 
 const OtherStack = () => {
   return (
-    <LoggedInStack.Navigator initialRouteName="ProfileScreen">
+    <LoggedInStack.Navigator initialRouteName="AccountScreen">
         <LoggedInStack.Screen
-          name="ProfileScreen"
-          component={ProfileScreen}
-          options={{ headerShown:false, title: "Profile"}}
+          name="AccountScreen"
+          component={AccountScreen}
+          options={{ headerShown:false, title: "Account"}}
         />
         <LoggedInStack.Screen
           name="ActivityScreen"
           component={ActivityScreen}
+          options={{title: "Activity"}}
+        />
+        <LoggedInStack.Screen
+          name="ProfileScreen"
+          component={ProfileScreen}
+          options={{title: "Profile"}}
         />
     </LoggedInStack.Navigator>
   )

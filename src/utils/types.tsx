@@ -7,6 +7,7 @@ export type RootStackParamList = {
     SearchRentals: undefined;
     CreateReview: {docId: string}; 
     ActivityScreen: {reviews: DocumentData[]}
+    AccountScreen: undefined;
     ProfileScreen: undefined; 
 };
 
