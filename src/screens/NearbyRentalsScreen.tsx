@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { View, StyleSheet, ActivityIndicator } from 'react-native';
+import { View, StyleSheet, ActivityIndicator, Text } from 'react-native';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import MapView, { PROVIDER_DEFAULT } from 'react-native-maps';
 import Geolocation from '@react-native-community/geolocation';
@@ -9,8 +9,7 @@ import { RootStackParamList } from "../utils/types"
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { collection, addDoc, query, where, getDocs, QuerySnapshot, DocumentData } from "firebase/firestore";
 import { db } from '../utils/firebase';
-import { auth } from "../utils/firebase"
-import { signOut } from "firebase/auth";
+import BottomSheet, { BottomSheetScrollView } from '@gorhom/bottom-sheet';
 
 type SearchRentalsProps = NativeStackScreenProps<RootStackParamList, "SearchRentals">;
 
@@ -26,6 +25,8 @@ const NearbyRentalView: React.FC<SearchRentalsProps> = ({ navigation }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [selectedRentalIndex, setSelectedRentalIndex] = useState<number | null>(null);
   const [displayedMarkers, setDisplayedMarkers] = useState<boolean[]>([]);
+  const sheetRef = useRef<BottomSheet>(null);
+  const snapPoints = ["1%","10%", "90%"];
   const mapRef = useRef<MapView | null>(null);
 
   useEffect(() => {
@@ -75,16 +76,6 @@ const NearbyRentalView: React.FC<SearchRentalsProps> = ({ navigation }) => {
       { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
     );
   }, []);
-
-  const handleLogout = () => {
-    signOut(auth)
-      .then(() => {
-        console.log('User logged out successfully:');
-      })
-      .catch((error) => {
-        console.log('Error', error);
-      });
-  };
 
   const nextRentalHome = () => {
     // Navigate to the next closest rental home
@@ -176,13 +167,14 @@ const NearbyRentalView: React.FC<SearchRentalsProps> = ({ navigation }) => {
         <ActivityIndicator size="large" color="#0000ff" />
       ) : (
         <>
-        <MapView
-        ref={mapRef}
-        provider={PROVIDER_DEFAULT}
-        style={styles.map}
-        initialRegion={initialRegion}
-        showsUserLocation={true}
-        >
+          <MapView
+          ref={mapRef}
+          provider={PROVIDER_DEFAULT}
+          style={styles.map}
+          initialRegion={initialRegion}
+          showsUserLocation={true}
+          />
+          
           <GooglePlacesAutocomplete
             placeholder='Search'
             minLength={2}
@@ -225,38 +217,44 @@ const NearbyRentalView: React.FC<SearchRentalsProps> = ({ navigation }) => {
               },
             }}
           />
-          {/* {sampleData.map((rental, index) =>
-              displayedMarkers[index] ? (
-              <Marker
-                  key={rental.id}
-                  pinColor={'green'}
-                  coordinate={{
-                  latitude: initialRegion.latitude + rental.latitude,
-                  longitude: initialRegion.longitude + rental.longitude,
-                  }}
-              >
-              </Marker>
-              ) : null
-          )} */}
-        </MapView>
-          {/* {selectedRentalIndex !== null && (
-            <RentalDescriptionScreen
-              name={sampleData[selectedRentalIndex].name}
-              rooms={sampleData[selectedRentalIndex].rooms}
-              address={sampleData[selectedRentalIndex].address}
-            />
-          )} */}
-          {/* <View style={styles.navigationButtons}>
-            <TouchableOpacity onPress={prevRentalHome} style={styles.navigationButtons}>
-              <Text style={styles.buttonText}>Previous</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={nextRentalHome} style={styles.navigationButtons}>
-              <Text style={styles.buttonText}>Next</Text>
-            </TouchableOpacity>
-          </View> */}
+
+          <BottomSheet style={styles.bottomSheetShadow} ref={sheetRef} snapPoints={snapPoints} index={0}>
+            <BottomSheetScrollView>
+              <View style={styles.inlineContainer}>
+                <Text>No results</Text>
+              </View>
+            </BottomSheetScrollView>
+          </BottomSheet>
+            {/* {sampleData.map((rental, index) =>
+                displayedMarkers[index] ? (
+                <Marker
+                    key={rental.id}
+                    pinColor={'green'}
+                    coordinate={{
+                    latitude: initialRegion.latitude + rental.latitude,
+                    longitude: initialRegion.longitude + rental.longitude,
+                    }}
+                >
+                </Marker>
+                ) : null
+            )} */}
+            {/* {selectedRentalIndex !== null && (
+              <RentalDescriptionScreen
+                name={sampleData[selectedRentalIndex].name}
+                rooms={sampleData[selectedRentalIndex].rooms}
+                address={sampleData[selectedRentalIndex].address}
+              />
+            )} */}
+            {/* <View style={styles.navigationButtons}>
+              <TouchableOpacity onPress={prevRentalHome} style={styles.navigationButtons}>
+                <Text style={styles.buttonText}>Previous</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={nextRentalHome} style={styles.navigationButtons}>
+                <Text style={styles.buttonText}>Next</Text>
+              </TouchableOpacity>
+            </View> */}
         </>
       )}
-      {/* <Button onPress={handleLogout} title="log out" /> */}
     </View>
   );
 };
@@ -287,6 +285,79 @@ const styles = StyleSheet.create({
       color: 'black',
       fontSize: 16,
       fontWeight: 'bold',
+    },
+    rootView: {
+      flex: 1,
+      backgroundColor: 'white',
+    },
+    bottomSheetShadow: {
+      backgroundColor: 'white',
+      shadowColor: "#000",
+      shadowOffset: {
+        width: 0,
+        height: 12,
+      },
+      shadowOpacity: 0.58,
+      shadowRadius: 16.00,
+      elevation: 24,
+    },
+    inlineContainer: {
+      flexDirection:'row',
+      alignItems: 'center',
+      borderRadius: 20
+    },
+    rating: {
+      fontSize: 30,
+      paddingLeft: '5%',
+      fontWeight: '600',
+    },
+    totalRentersContainer: {
+      flex: 1,
+    },
+    reviewDescription: {
+      marginLeft: '5%',
+      marginRight: '5%',
+      marginTop: '3%',
+      fontSize: 14
+    },
+    renters: {
+      fontSize: 20,
+      marginLeft: '2%'
+    },
+    reviewsSection: {
+      marginTop: '2.5%',
+      textAlign: 'center',
+    },
+    houseImage: {
+      width: '100%',
+      height: '35%',
+      top: 0, 
+      alignItems: 'center',
+      justifyContent:'center',
+    },
+    addressLines: {
+      backgroundColor: '#FAFAFA',
+      width: '100%',
+      marginBottom: '1%'
+    },
+    addressLine1: {
+      textAlign: 'center',
+      color: 'black',
+      fontWeight: 'bold',
+      fontSize: 22,
+      
+    },
+    addressLine2: {
+      textAlign: 'center',
+      color: 'gray',
+      fontSize: 14,
+    },
+    rating1: {
+      backgroundColor: '#FAFAFA',
+      width: '40%',
+      marginLeft: '6%',
+      borderWidth: .2,
+      borderRadius: 20
     },
   });
 

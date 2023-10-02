@@ -3,13 +3,13 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import LoginView from './src/screens/LoginScreen'
 import SignupView from './src/screens/SignupScreen'
-import NearbyRentalViewStack from './src/screens/NearbyRentalViewStack';
+import NearbyRentalViewStack from './src/utils/NearbyRentalViewStack';
 import { OtherStackParamList } from "./src/utils/types"
 import { auth } from "./src/utils/firebase"
 import { onAuthStateChanged, User } from "firebase/auth";
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/Ionicons';  
-import OtherStack from './src/screens/OtherStack';
+import OtherStack from './src/utils/OtherStack';
 
 const Tab = createBottomTabNavigator()
 

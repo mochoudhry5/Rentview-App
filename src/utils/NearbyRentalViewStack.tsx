@@ -1,9 +1,9 @@
 import React from 'react'
 import { createStackNavigator } from "@react-navigation/stack";
-import { RootStackParamList } from "../utils/types"
-import RentalDescriptionScreen from './RentalDescriptionScreen';
-import CreateReviewScreen from './CreateReviewScreen';
-import NearbyRentalView  from './NearbyRentalsScreen';
+import { RootStackParamList } from "./types"
+import RentalDescriptionScreen from '../screens/RentalDescriptionScreen';
+import CreateReviewScreen from '../screens/CreateReviewScreen';
+import NearbyRentalView  from '../screens/NearbyRentalsScreen';
 
 const LoggedInStack = createStackNavigator<RootStackParamList>(); 
 

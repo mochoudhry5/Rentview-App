@@ -55,7 +55,6 @@ const RentalDescription: React.FC<RentalDescriptionProps> = ( { route, navigatio
               setAllReviews((prevArr) => ([...prevArr, doc.data()]));
             });
           }
-      
       })};
 
       return () => subscriber();
@@ -63,7 +62,6 @@ const RentalDescription: React.FC<RentalDescriptionProps> = ( { route, navigatio
     }, [route.params.docId]);
 
     useEffect(() => {
-
       const fetchData = async () => {
         try {
           const docSnap = await getDoc(docRef);
@@ -79,110 +77,108 @@ const RentalDescription: React.FC<RentalDescriptionProps> = ( { route, navigatio
           console.log(error)
         }
       }
-
       fetchData(); 
-
     }, []);
 
     const handleOnPress = () => {
       navigation.navigate("CreateReview", {docId: route.params.docId});
     }
   
-  return (
-    <GestureHandlerRootView style={styles.rootView}>
-      <ScrollView>
-        <ImageSlider images={images} />
-          <View>
-            <View style={styles.addressLines}>
-              <Text style={styles.addressLine1}>{street}</Text>
-              <Text style={styles.addressLine2}>{city},{state} {postalCode}</Text>
-            </View>
-          </View>
-          <View style={styles.inlineContainer}>
-            <View style={styles.rating1}>
-              <Text style={{textAlign: 'center', fontSize: 17, backgroundColor:'#dddddd',color:'#205030', fontStyle:'italic', borderWidth:.2, fontWeight:'bold'}}>Rent Again</Text>
-              {totalReviews > 0 ? (
-                <>
-                  <Text style={{textAlign: 'center', fontWeight: 'bold',fontSize: 19}}>{((yesRecommendation/totalReviews) * 100).toFixed(0)}%</Text>
-                  <Text style={{textAlign: 'center', fontSize: 12}}>of people would rent this property out again</Text>
-                </>
-              ) : (<Text style={{textAlign: 'center', fontWeight: 'bold', fontSize: 19, paddingBottom:27}}>N/A</Text>)}
-            </View>
-            <View style={styles.rating1}>
-              <Text style={{textAlign: 'center', fontSize: 17, backgroundColor:'#dddddd', color:'#205030', fontStyle:'italic', borderWidth:.2, fontWeight:'bold'}}>Landlord Rating</Text>
-              {totalReviews > 0 && landlordRating > 0 ? (
-                <>
-                  <Text style={{textAlign: 'center', fontWeight: 'bold',fontSize: 19}}>{landlordRating.toFixed(1)}/5.0</Text>
-                  <Text style={{textAlign: 'center', fontSize: 12}}>rating has been given to the landlord.</Text>
-                </>
-              ) : (<Text style={{textAlign: 'center', fontWeight: 'bold',fontSize: 19, paddingBottom:27}}>N/A</Text>)}
-            </View>
-          </View>
-      </ScrollView>
-      <BottomSheet style={styles.bottomSheetShadow} ref={sheetRef} snapPoints={snapPoints} index={1}>
-        <BottomSheetScrollView>
-          <View style={styles.inlineContainer}>
-            {totalReviews > 0 && overallRating > 0 ? (
-              <>
-                <Text style={styles.rating}>{overallRating.toFixed(1)}</Text>
-                <Icon name='star' color= 'black' size={28}/>
-              </>
-            ) : (
-              <Text style={[styles.rating, {fontSize: 20}]}>No Ratings Yet</Text>
-            )}
-            <View style={styles.inlineContainer}>
-              <View style={styles.totalRentersContainer}>
-                {totalReviews > 0 ? (
-                  <>
-                  <Text style = {styles.renters}>{"("}{totalReviews} Reviews{")"}</Text>
-                  <TouchableOpacity style={styles.button} onPress={handleOnPress}>
-                    <Text style={{ color: 'blue'}}>Add Review</Text>
-                  </TouchableOpacity>
-                </>
-                ) : (
-                  <TouchableOpacity style={styles.button} onPress={handleOnPress}>
-                    <Text style={{position: 'absolute', right: '2%', top:-10, color: 'blue'}}>Add Review</Text>
-                  </TouchableOpacity>
-                )}
+    return (
+      <GestureHandlerRootView style={styles.rootView}>
+        <ScrollView>
+          <ImageSlider images={images} />
+            <View>
+              <View style={styles.addressLines}>
+                <Text style={styles.addressLine1}>{street}</Text>
+                <Text style={styles.addressLine2}>{city},{state} {postalCode}</Text>
               </View>
             </View>
-          </View>
-          {allReviews.map(review => (
-          <View style={{paddingTop:'5%', paddingLeft:'2%', paddingRight:'2%'}}>
-            <View style={{flexDirection:'row', alignItems:'center'}}>
-              <Image
-              style={{
-                width: 30,
-                height: 30,
-                borderRadius: 50,
-                marginTop:'1%'}}
-                source={{ uri: "https://source.unsplash.com/1024x768/?user" }}
-              />
-              <Text style={{paddingLeft:'1%', fontWeight:'bold', fontSize:14}}>{review.reviewerEmail}</Text>
+            <View style={styles.inlineContainer}>
+              <View style={styles.rating1}>
+                <Text style={{textAlign: 'center', fontSize: 17, backgroundColor:'#dddddd',color:'#205030', fontStyle:'italic', borderWidth:.2, fontWeight:'bold'}}>Rent Again</Text>
+                {totalReviews > 0 ? (
+                  <>
+                    <Text style={{textAlign: 'center', fontWeight: 'bold',fontSize: 19}}>{((yesRecommendation/totalReviews) * 100).toFixed(0)}%</Text>
+                    <Text style={{textAlign: 'center', fontSize: 12}}>of people would rent this property out again</Text>
+                  </>
+                ) : (<Text style={{textAlign: 'center', fontWeight: 'bold', fontSize: 19, paddingBottom:27}}>N/A</Text>)}
+              </View>
+              <View style={styles.rating1}>
+                <Text style={{textAlign: 'center', fontSize: 17, backgroundColor:'#dddddd', color:'#205030', fontStyle:'italic', borderWidth:.2, fontWeight:'bold'}}>Landlord Rating</Text>
+                {totalReviews > 0 && landlordRating > 0 ? (
+                  <>
+                    <Text style={{textAlign: 'center', fontWeight: 'bold',fontSize: 19}}>{landlordRating.toFixed(1)}/5.0</Text>
+                    <Text style={{textAlign: 'center', fontSize: 12}}>rating has been given to the landlord.</Text>
+                  </>
+                ) : (<Text style={{textAlign: 'center', fontWeight: 'bold',fontSize: 19, paddingBottom:27}}>N/A</Text>)}
+              </View>
             </View>
-            <View style={{flexDirection:'row', paddingLeft:'0%', alignItems:'center'}}>
-              <AirbnbRating 
-                showRating={false} 
-                selectedColor="black" 
-                defaultRating={review.overallRating}
-                size={10}
-              />
-              <Text style={{color:'gray', fontSize: 11, paddingLeft:'2%'}}>{review.dateOfReview}</Text>
+        </ScrollView>
+        <BottomSheet style={styles.bottomSheetShadow} ref={sheetRef} snapPoints={snapPoints} index={1}>
+          <BottomSheetScrollView>
+            <View style={styles.inlineContainer}>
+              {totalReviews > 0 && overallRating > 0 ? (
+                <>
+                  <Text style={styles.rating}>{overallRating.toFixed(1)}</Text>
+                  <Icon name='star' color= 'black' size={28}/>
+                </>
+              ) : (
+                <Text style={[styles.rating, {fontSize: 20}]}>No Ratings Yet</Text>
+              )}
+              <View style={styles.inlineContainer}>
+                <View style={styles.totalRentersContainer}>
+                  {totalReviews > 0 ? (
+                    <>
+                    <Text style = {styles.renters}>{"("}{totalReviews} Reviews{")"}</Text>
+                    <TouchableOpacity style={styles.button} onPress={handleOnPress}>
+                      <Text style={{ color: 'blue'}}>Add Review</Text>
+                    </TouchableOpacity>
+                  </>
+                  ) : (
+                    <TouchableOpacity style={styles.button} onPress={handleOnPress}>
+                      <Text style={{position: 'absolute', right: '2%', top:-10, color: 'blue'}}>Add Review</Text>
+                    </TouchableOpacity>
+                  )}
+                </View>
+              </View>
             </View>
-            <Text>{review.additionalComment}</Text>
-            <View
-              style={{
-                borderBottomColor: 'gray',
-                borderBottomWidth: .5,
-                paddingTop:'5%'
-              }}
-            />
-          </View>
-          ))}
-        </BottomSheetScrollView>
-      </BottomSheet>
-    </GestureHandlerRootView>
-  );       
+            {allReviews.map(review => (
+            <View style={{paddingTop:'5%', paddingLeft:'2%', paddingRight:'2%'}}>
+              <View style={{flexDirection:'row', alignItems:'center'}}>
+                <Image
+                style={{
+                  width: 30,
+                  height: 30,
+                  borderRadius: 50,
+                  marginTop:'1%'}}
+                  source={{ uri: "https://source.unsplash.com/1024x768/?user" }}
+                />
+                <Text style={{paddingLeft:'1%', fontWeight:'bold', fontSize:14}}>{review.reviewerEmail}</Text>
+              </View>
+              <View style={{flexDirection:'row', paddingLeft:'0%', alignItems:'center'}}>
+                <AirbnbRating 
+                  showRating={false} 
+                  selectedColor="black" 
+                  defaultRating={review.overallRating}
+                  size={10}
+                />
+                <Text style={{color:'gray', fontSize: 11, paddingLeft:'2%'}}>{review.dateOfReview}</Text>
+              </View>
+              <Text>{review.additionalComment}</Text>
+              <View
+                style={{
+                  borderBottomColor: 'gray',
+                  borderBottomWidth: .5,
+                  paddingTop:'5%'
+                }}
+              />
+            </View>
+            ))}
+          </BottomSheetScrollView>
+        </BottomSheet>
+      </GestureHandlerRootView>
+    );       
 };
 
 const styles = StyleSheet.create({

@@ -1,8 +1,8 @@
 import React from 'react'
 import { createStackNavigator } from "@react-navigation/stack";
-import { RootStackParamList } from "../utils/types"
-import ProfileScreen from './ProfileScreen';
-import ActivityScreen from './ActivityScreen';
+import { RootStackParamList } from "./types"
+import ProfileScreen from '../screens/ProfileScreen';
+import ActivityScreen from '../screens/ActivityScreen';
 
 const LoggedInStack = createStackNavigator<RootStackParamList>(); 
 
