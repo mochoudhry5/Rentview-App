@@ -42,6 +42,7 @@
 		3B8753FE08D2FF82A332AB40 /* Pods_Rentview_RentviewTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Rentview_RentviewTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		72A3548DC0E0FC96E26166CE /* Pods_Rentview.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Rentview.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = Rentview/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		8959F0672AC56A340030E9DB /* MaterialCommunityIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = MaterialCommunityIcons.ttf; path = ../../../Downloads/MaterialCommunityIcons.ttf; sourceTree = "<group>"; };
 		D21496D98A363A2C9CB22F67 /* Pods-Rentview-RentviewTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Rentview-RentviewTests.release.xcconfig"; path = "Target Support Files/Pods-Rentview-RentviewTests/Pods-Rentview-RentviewTests.release.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		ED320077E126DC66DFB0B7D0 /* Pods-Rentview-RentviewTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Rentview-RentviewTests.debug.xcconfig"; path = "Target Support Files/Pods-Rentview-RentviewTests/Pods-Rentview-RentviewTests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -156,6 +157,7 @@
 		FDDE71142AAE558200962EA3 /* Fonts */ = {
 			isa = PBXGroup;
 			children = (
+				8959F0672AC56A340030E9DB /* MaterialCommunityIcons.ttf */,
 				FD7D320F2AAE58060049EB0C /* Ionicons.ttf */,
 			);
 			name = Fonts;

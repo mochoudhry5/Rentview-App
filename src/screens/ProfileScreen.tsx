@@ -1,98 +1,112 @@
-import React, { useState } from 'react';
-import { View, Text, Button, Image, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
-import { auth } from "../utils/firebase"
-import { signOut } from "firebase/auth";
-import { collection, doc, query, updateDoc, getDoc, DocumentReference, DocumentData, onSnapshot } from "firebase/firestore";
-import { db } from '../utils/firebase';
+import React from 'react';
+import { Image, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
 import { RootStackParamList } from "../utils/types"
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { ScrollView } from 'react-native-gesture-handler';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 type ProfileProps = NativeStackScreenProps<RootStackParamList, "ProfileScreen">;
 
 const ProfileScreen : React.FC<ProfileProps> = ({ navigation }) => {
-  const user = auth.currentUser;
-  const [allReviews, setAllReviews] = useState<DocumentData[]>([]); 
 
-  const handleLogout = () => {
-    signOut(auth)
-      .then(() => {
-        console.log('User logged out successfully:');
-      })
-      .catch((error) => {
-        console.log('Error', error);
-      });
-  };
-
-  const handleActivity = async () => {
-    if(user){
-      let email = user.email ? user.email : "No User"
-      console.log(email)
-      const docRefSecond = query(collection(db, "UserReviews", email, "Reviews"));
-
-      onSnapshot(docRefSecond, (docSnapshot) => {
-        setAllReviews([]);
-        if(docSnapshot.size >= 1){
-          docSnapshot.forEach((doc) => {
-            setAllReviews((prevArr) => ([...prevArr, doc.data()]));
-          });
-        }
-      });
-      navigation.navigate("ActivityScreen", {reviews: allReviews});
-    }
-  }
-
-  const settingsOptions = [
-    {title: 'Profile', subTitle: 'Manage your RentView profile', onPress: () => {}},
-    {title: 'Notifications', subTitle: 'Turn on/off Notifications', onPress: () => {}},
-    {title: 'Activity', subTitle: 'Manage your reviews', onPress : handleActivity},
-    {title: 'Logout', subTitle: 'Get out of RentView', onPress : handleLogout},
-  ];
+    const [fullName, onChangeFullName] = React.useState('Zane Choudhry');
+    const [email, onChangeEmail] = React.useState('zanechoudhry@gmail.com');
+    const [phoneNumber, onChangePhoneNumber] = React.useState('9165023590');
+    const [currentPassword, onChangeCurrentPassword] = React.useState('Chicostate1');
+    const [newPassword, onChangeNewPassword] = React.useState('Chicostate1@');
 
   return (
-    <ScrollView>
-      <View style={styles.container}>
-      <Image source={{ uri: "https://source.unsplash.com/1024x768/?male" }} style={styles.profilePicture} />
-      <Text style={styles.userName}>Momin Choudhry</Text>
-      {settingsOptions.map(({title, subTitle, onPress}, index) => (
-        <TouchableOpacity key={title} onPress={onPress} style={{width:'100%'}}>
-          <View
-            style={{
-              paddingHorizontal: '5%',
-              paddingBottom: '5%',
-              paddingTop: '5%',
-            }}>
-            <Text style={{fontSize: 17}}>{title}</Text>
-            {subTitle && (
-              <Text style={{fontSize: 14, opacity: 0.5, paddingTop: '2%'}}>
-                {subTitle}
-              </Text>
-            )}
-          </View>
-          <View style={{height: 0.5, backgroundColor: 'gray'}} />
-        </TouchableOpacity>
-      ))}
-      </View>
-    </ScrollView>
+    <View style={{flex:1,paddingTop:'5%', backgroundColor:'white'}}>
+        <ScrollView>
+            <View style={{alignItems:'center', marginBottom:'5%'}}>
+                <Image source={{ uri: "https://source.unsplash.com/1024x768/?male" }} style={styles.profilePicture}/>
+            </View>
+            <Text style={{fontSize:20, fontWeight:'bold', marginLeft:'5%',marginBottom:'3%'}}>Basic Information</Text>
+            <Text style={{marginLeft:'5%', color:'#969696'}}>Full Name</Text>
+            <TextInput
+                style={styles.nameInput}
+                onChangeText={onChangeFullName}
+                value={fullName}
+                maxLength={20}
+            />
+            <Text style={{marginLeft:'5%', marginTop:'5%', color:'#969696'}}>Email</Text>
+            <TextInput
+                style={styles.nameInput}
+                onChangeText={onChangeEmail}
+                value={email}
+                maxLength={20}
+            />
+            <Text style={{marginLeft:'5%', marginTop:'5%', color:'#969696'}}>Phone Number</Text>
+            <TextInput
+                style={styles.nameInput}
+                onChangeText={onChangePhoneNumber}
+                value={phoneNumber}
+                maxLength={10}
+                keyboardType='numeric'
+            />
+            <Text style={{fontSize:20, fontWeight:'bold',marginTop:'10%', marginLeft:'5%', marginBottom:'3%'}}>Change Password</Text>
+            <Text style={{marginLeft:'5%', color:'#969696'}}>Current Password</Text>
+            <TextInput
+                style={styles.nameInput}
+                onChangeText={onChangeCurrentPassword}
+                value={currentPassword}
+                maxLength={20}
+            />
+            <Text style={{marginLeft:'5%', marginTop:'5%', color:'#969696'}}>New Password</Text>
+            <TextInput
+                style={styles.nameInput}
+                onChangeText={onChangeNewPassword}
+                value={newPassword}
+                maxLength={10}
+                keyboardType='numeric'
+            />
+        </ScrollView>
+        <View style={{flexDirection:'row', justifyContent:'space-evenly'}}>
+            <TouchableOpacity style={styles.cancelButton}>
+                <Text style={{fontWeight:'bold', color:'#424242'}}>Cancel</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.saveButton}>
+                <Text style={{fontWeight:'bold', color:'white'}}>Save</Text>
+            </TouchableOpacity>
+        </View>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'flex-start', // Start from the top
-    alignItems: 'center',
-    paddingTop: '15%', // Add paddingTop to push the content down from the top
-  },
   profilePicture: {
     width: 100,
     height: 100,
     borderRadius: 50,
     marginBottom: '3%',
   },
-  userName: {
-    fontSize: 24,
-    marginBottom: 20,
+  nameInput: {
+    height: '7%',
+    marginLeft:'5%',
+    marginRight:'5%',
+    borderBottomWidth:.3,
+    fontSize:16
   },
-});
+  cancelButton: {
+    alignItems: 'center',
+    backgroundColor: 'white',
+    borderWidth: 1,
+    width:'30%',
+    height:30,
+    alignSelf: 'center',
+    justifyContent: 'center',
+    borderRadius:20
+},
+saveButton: {
+    alignItems: 'center',
+    backgroundColor: '#1f3839',
+    borderWidth: 1,
+    width:'30%',
+    height:30,
+    alignSelf: 'center',
+    justifyContent: 'center',
+    borderRadius:20
+},
 
+});
 export default ProfileScreen;

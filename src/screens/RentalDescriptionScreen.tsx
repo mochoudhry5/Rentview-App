@@ -7,9 +7,11 @@ import { doc, getDoc, query, onSnapshot, collection, DocumentData} from "firebas
 import { db } from '../utils/firebase';
 import { GestureHandlerRootView, ScrollView } from 'react-native-gesture-handler';
 import BottomSheet, { BottomSheetScrollView } from '@gorhom/bottom-sheet';
-import Icon from 'react-native-vector-icons/Ionicons'; 
-import { Rating, AirbnbRating } from 'react-native-elements';
+import { AirbnbRating } from 'react-native-elements';
 import { auth } from "../utils/firebase"
+import Icon from 'react-native-vector-icons/Ionicons';
+import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { ListItem } from '@rneui/themed';
 
 const images = [
   "https://source.unsplash.com/1024x768/?house",
@@ -35,6 +37,10 @@ const RentalDescription: React.FC<RentalDescriptionProps> = ( { route, navigatio
     const docRef = doc(db, "HomeReviews", route.params.docId);
     const docRefSecond = query(collection(db, "HomeReviews", route.params.docId, "IndividualRatings"));
     const user = auth.currentUser;
+    const [expandedPropertyInfo, setExpandedPropertyInfo] = React.useState(false);
+    const [expandedOwnerInfo, setExpandedOwnerInfo] = React.useState(false);
+    const handlePressPropertyInfo = () => setExpandedPropertyInfo(!expandedPropertyInfo);
+    const handlePressOwnerInfo = () => setExpandedOwnerInfo(!expandedOwnerInfo);
 
     useEffect(() => {
       const subscriber = onSnapshot(docRef, (docSnapshot) => {
@@ -84,101 +90,147 @@ const RentalDescription: React.FC<RentalDescriptionProps> = ( { route, navigatio
       navigation.navigate("CreateReview", {docId: route.params.docId});
     }
   
-    return (
-      <GestureHandlerRootView style={styles.rootView}>
-        <ScrollView>
-          <ImageSlider images={images} />
-            <View>
-              <View style={styles.addressLines}>
-                <Text style={styles.addressLine1}>{street}</Text>
-                <Text style={styles.addressLine2}>{city},{state} {postalCode}</Text>
+  return (
+    <GestureHandlerRootView style={styles.rootView}>
+      <ScrollView>
+        <ImageSlider images={images} />
+        <View>
+          <View style={styles.addressLines}>
+            <Text style={styles.addressLine1}>{street}</Text>
+            <Text style={styles.addressLine2}>{city},{state} {postalCode}</Text>
+          </View>
+        </View>
+        <ListItem.Accordion
+          content={
+            <>
+              <ListItem.Content>
+                <ListItem.Title style={{fontWeight:'bold'}}>What's Inside?</ListItem.Title>
+              </ListItem.Content>
+            </>
+          }
+          isExpanded={expandedPropertyInfo}
+          onPress={() => {
+            setExpandedPropertyInfo(!expandedPropertyInfo);
+          }}
+        >
+          <ListItem style={{marginTop:-10}}>
+            <ListItem.Content style={{flexDirection: 'row',justifyContent: 'space-evenly'}}>
+              <View style={{flexDirection:'row', alignItems:'center'}}>
+                <Text style={{fontSize:18}}>2,424</Text>
+                <MaterialIcon name="ruler" size={30}/>
               </View>
-            </View>
+              <View style={{flexDirection:'row', alignItems:'center'}}>
+                <Text style={{fontSize:18}}>1</Text>
+                <MaterialIcon name="toilet" size={30}/>
+              </View>
+              <View style={{flexDirection:'row', alignItems:'center'}}>
+                <Text style={{fontSize:18, paddingRight:'1%'}}>2</Text>
+                <MaterialIcon name="bed" size={30}/>
+              </View>
+            </ListItem.Content>
+          </ListItem>
+        </ListItem.Accordion>
+        <ListItem.Accordion
+          content={
+            <>
+              <ListItem.Content>
+                <ListItem.Title style={{fontWeight:'bold'}}>Owner Information</ListItem.Title>
+              </ListItem.Content>
+              
+            </>
+          }
+          isExpanded={expandedOwnerInfo}
+          onPress={() => {
+            setExpandedOwnerInfo(!expandedOwnerInfo);
+          }}
+        >
+          <ListItem style={{marginTop:-10}}>
+            <ListItem.Content>
+              <Text>PLACEHOLDER</Text>
+            </ListItem.Content>
+          </ListItem>
+        </ListItem.Accordion>
+      </ScrollView>
+      <BottomSheet style={styles.bottomSheetShadow} ref={sheetRef} snapPoints={snapPoints} index={1}>
+        <BottomSheetScrollView>
+          <View style={styles.inlineContainer}>
+            {totalReviews > 0 && overallRating > 0 ? (
+              <>
+                <Text style={styles.rating}>{overallRating.toFixed(1)}</Text>
+                <Icon name='star' color= 'black' size={28}/>
+              </>
+            ) : (
+              <Text style={[styles.rating, {fontSize: 20}]}>No Ratings Yet</Text>
+            )}
             <View style={styles.inlineContainer}>
-              <View style={styles.rating1}>
-                <Text style={{textAlign: 'center', fontSize: 17, backgroundColor:'#dddddd',color:'#205030', fontStyle:'italic', borderWidth:.2, fontWeight:'bold'}}>Rent Again</Text>
+              <View style={styles.totalRentersContainer}>
                 {totalReviews > 0 ? (
                   <>
-                    <Text style={{textAlign: 'center', fontWeight: 'bold',fontSize: 19}}>{((yesRecommendation/totalReviews) * 100).toFixed(0)}%</Text>
-                    <Text style={{textAlign: 'center', fontSize: 12}}>of people would rent this property out again</Text>
-                  </>
-                ) : (<Text style={{textAlign: 'center', fontWeight: 'bold', fontSize: 19, paddingBottom:27}}>N/A</Text>)}
+                  <Text style = {styles.renters}>{"("}{totalReviews} Reviews{")"}</Text>
+                  <TouchableOpacity style={styles.button} onPress={handleOnPress}>
+                    <Text style={{ color: 'blue'}}>Add Review</Text>
+                  </TouchableOpacity>
+                </>
+                ) : (
+                  <TouchableOpacity style={styles.button} onPress={handleOnPress}>
+                    <Text style={{position: 'absolute', right: '2%', top:-10, color: 'blue'}}>Add Review</Text>
+                  </TouchableOpacity>
+                )}
+              </View>
+            </View>
+          </View>
+          <View style={styles.miscRating}>
+            <View style={styles.inlineContainer}>
+              <View style={styles.rating1}>
+                <Text style={{textAlign: 'center', fontSize: 14,color:'#205030', fontStyle:'italic', fontWeight:'bold', width:'60%'}}>Rent Again</Text>
+                {totalReviews > 0 ? (
+                <Text style={{fontWeight: 'bold',fontSize: 12}}>{((yesRecommendation/totalReviews) * 100).toFixed(0)}%</Text>
+                ) : (<Text style={{textAlign: 'center', fontWeight: 'bold', fontSize: 12}}>N/A</Text>)}
               </View>
               <View style={styles.rating1}>
-                <Text style={{textAlign: 'center', fontSize: 17, backgroundColor:'#dddddd', color:'#205030', fontStyle:'italic', borderWidth:.2, fontWeight:'bold'}}>Landlord Rating</Text>
+                <Text style={{textAlign: 'center', fontSize: 14,color:'#205030', fontStyle:'italic', fontWeight:'bold', width:'80%'}}>Landlord Rating</Text>
                 {totalReviews > 0 && landlordRating > 0 ? (
-                  <>
-                    <Text style={{textAlign: 'center', fontWeight: 'bold',fontSize: 19}}>{landlordRating.toFixed(1)}/5.0</Text>
-                    <Text style={{textAlign: 'center', fontSize: 12}}>rating has been given to the landlord.</Text>
-                  </>
-                ) : (<Text style={{textAlign: 'center', fontWeight: 'bold',fontSize: 19, paddingBottom:27}}>N/A</Text>)}
+                <Text style={{textAlign: 'center', fontWeight: 'bold',fontSize: 12}}>{landlordRating.toFixed(1)}</Text>
+                ) : (<Text style={{textAlign: 'center', fontWeight: 'bold',fontSize: 12}}>N/A</Text>)}
               </View>
             </View>
-        </ScrollView>
-        <BottomSheet style={styles.bottomSheetShadow} ref={sheetRef} snapPoints={snapPoints} index={1}>
-          <BottomSheetScrollView>
-            <View style={styles.inlineContainer}>
-              {totalReviews > 0 && overallRating > 0 ? (
-                <>
-                  <Text style={styles.rating}>{overallRating.toFixed(1)}</Text>
-                  <Icon name='star' color= 'black' size={28}/>
-                </>
-              ) : (
-                <Text style={[styles.rating, {fontSize: 20}]}>No Ratings Yet</Text>
-              )}
-              <View style={styles.inlineContainer}>
-                <View style={styles.totalRentersContainer}>
-                  {totalReviews > 0 ? (
-                    <>
-                    <Text style = {styles.renters}>{"("}{totalReviews} Reviews{")"}</Text>
-                    <TouchableOpacity style={styles.button} onPress={handleOnPress}>
-                      <Text style={{ color: 'blue'}}>Add Review</Text>
-                    </TouchableOpacity>
-                  </>
-                  ) : (
-                    <TouchableOpacity style={styles.button} onPress={handleOnPress}>
-                      <Text style={{position: 'absolute', right: '2%', top:-10, color: 'blue'}}>Add Review</Text>
-                    </TouchableOpacity>
-                  )}
-                </View>
-              </View>
-            </View>
-            {allReviews.map(review => (
-            <View style={{paddingTop:'5%', paddingLeft:'2%', paddingRight:'2%'}}>
-              <View style={{flexDirection:'row', alignItems:'center'}}>
-                <Image
-                style={{
-                  width: 30,
-                  height: 30,
-                  borderRadius: 50,
-                  marginTop:'1%'}}
-                  source={{ uri: "https://source.unsplash.com/1024x768/?user" }}
-                />
-                <Text style={{paddingLeft:'1%', fontWeight:'bold', fontSize:14}}>{review.reviewerEmail}</Text>
-              </View>
-              <View style={{flexDirection:'row', paddingLeft:'0%', alignItems:'center'}}>
-                <AirbnbRating 
-                  showRating={false} 
-                  selectedColor="black" 
-                  defaultRating={review.overallRating}
-                  size={10}
-                />
-                <Text style={{color:'gray', fontSize: 11, paddingLeft:'2%'}}>{review.dateOfReview}</Text>
-              </View>
-              <Text>{review.additionalComment}</Text>
-              <View
-                style={{
-                  borderBottomColor: 'gray',
-                  borderBottomWidth: .5,
-                  paddingTop:'5%'
-                }}
+          </View>
+          {allReviews.map(review => (
+          <View style={{paddingTop:'5%', paddingLeft:'2%', paddingRight:'2%'}}>
+            <View style={{flexDirection:'row', alignItems:'center'}}>
+              <Image
+              style={{
+                width: 30,
+                height: 30,
+                borderRadius: 50,
+                marginTop:'1%'}}
+                source={{ uri: "https://source.unsplash.com/1024x768/?user" }}
               />
+              <Text style={{paddingLeft:'1%', fontWeight:'bold', fontSize:14}}>{review.reviewerEmail}</Text>
             </View>
-            ))}
-          </BottomSheetScrollView>
-        </BottomSheet>
-      </GestureHandlerRootView>
-    );       
+            <View style={{flexDirection:'row', alignItems:'center'}}>
+              <AirbnbRating 
+                showRating={false} 
+                selectedColor="black" 
+                defaultRating={review.overallRating}
+                size={10}
+              />
+              <Text style={{color:'gray', fontSize: 11, paddingLeft:'2%'}}>{review.dateOfReview}</Text>
+            </View>
+            <Text style={{paddingLeft:'1%', paddingRight:'1%'}}>{review.additionalComment}</Text>
+            <View
+              style={{
+                borderBottomColor: 'gray',
+                borderBottomWidth: .5,
+                paddingTop:'5%'
+              }}
+            />
+          </View>
+          ))}
+        </BottomSheetScrollView>
+      </BottomSheet>
+    </GestureHandlerRootView>
+  );       
 };
 
 const styles = StyleSheet.create({
@@ -201,6 +253,10 @@ const styles = StyleSheet.create({
     flexDirection:'row',
     alignItems: 'center',
     borderRadius: 20
+  },
+  iconContainer: {
+    flexDirection:'row',
+    alignItems:'center'
   },
   rating: {
     fontSize: 30,
@@ -232,7 +288,6 @@ const styles = StyleSheet.create({
     justifyContent:'center',
   },
   addressLines: {
-    backgroundColor: '#FAFAFA',
     width: '100%',
     marginBottom: '1%'
   },
@@ -249,17 +304,19 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   rating1: {
-    backgroundColor: '#FAFAFA',
     width: '40%',
     marginLeft: '6%',
-    borderWidth: .2,
-    borderRadius: 20
+    flexDirection:'row',
+    alignItems: 'center',
   },
   button: {
     position: 'absolute',
     top: 5,
     left: 200, 
     color: 'blue', 
+  },
+  miscRating: {
+    marginTop:'5%'
   },
 
 });
