@@ -8,7 +8,7 @@ import { sampleData } from '../utils/sampleData';
 import { RootStackParamList } from "../utils/types"
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { collection, addDoc, query, where, getDocs, QuerySnapshot, DocumentData } from "firebase/firestore";
-import { db } from '../utils/firebase';
+import { db } from '../config/firebase';
 import BottomSheet, { BottomSheetScrollView } from '@gorhom/bottom-sheet';
 
 type SearchRentalsProps = NativeStackScreenProps<RootStackParamList, "SearchRentals">;

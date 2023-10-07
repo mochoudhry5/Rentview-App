@@ -3,10 +3,10 @@ import { View, Text, TextInput, StyleSheet, TouchableOpacity, Image } from 'reac
 import { signInWithEmailAndPassword, signInWithCredential, GoogleAuthProvider } from "firebase/auth";
 import { OtherStackParamList } from "../utils/types"
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { auth } from "../utils/firebase"
+import { auth } from "../config/firebase"
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import { collection, doc, query, updateDoc, getDoc, DocumentReference,setDoc, DocumentData, addDoc, where, QuerySnapshot, getDocs } from "firebase/firestore";
-import { db } from '../utils/firebase';
+import { db } from '../config/firebase';
 
 GoogleSignin.configure({
   webClientId: '795551030882-3mrb1u5bp15jvsmi97rp2kq42frc20gb.apps.googleusercontent.com',

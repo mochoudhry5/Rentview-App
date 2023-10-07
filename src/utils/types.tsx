@@ -1,6 +1,5 @@
 import { DocumentData } from "firebase/firestore";
 
-
 export type RootStackParamList = {
     NearbyRentals: undefined;
     RentalDescription: { docId: string };

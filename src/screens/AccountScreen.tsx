@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
-import { auth } from "../utils/firebase"
+import { auth } from "../config/firebase"
 import { signOut } from "firebase/auth";
 import { collection, getDoc, doc, query, DocumentData, getDocs } from "firebase/firestore";
-import { db } from '../utils/firebase';
+import { db } from '../config/firebase';
 import { RootStackParamList } from "../utils/types"
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 

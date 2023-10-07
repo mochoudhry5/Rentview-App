@@ -1,10 +1,10 @@
 import { View, Text, StyleSheet, TouchableOpacity, useWindowDimensions, ScrollView, TextInput, Pressable } from 'react-native'
 import React, { useState } from 'react'
 import { collection, doc, updateDoc, getDoc, addDoc, setDoc } from "firebase/firestore";
-import { db } from '../utils/firebase';
+import { db } from '../config/firebase';
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../utils/types"
-import { auth } from "../utils/firebase"
+import { auth } from "../config/firebase"
 import { AirbnbRating } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/Ionicons';
 

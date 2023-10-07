@@ -3,7 +3,7 @@ import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-nativ
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { OtherStackParamList } from "../utils/types"
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { auth } from "../utils/firebase"
+import { auth } from "../config/firebase"
 
 type SignupProps = NativeStackScreenProps<OtherStackParamList, "Signup">;
 

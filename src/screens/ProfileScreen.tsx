@@ -4,8 +4,8 @@ import { RootStackParamList } from "../utils/types"
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { ScrollView } from 'react-native-gesture-handler';
 import { collection, doc, getDoc, getDocs, limit, query, updateDoc, where } from "firebase/firestore";
-import { db } from '../utils/firebase';
-import { auth } from "../utils/firebase"
+import { db } from '../config/firebase';
+import { auth } from "../config/firebase"
 
 type ProfileProps = NativeStackScreenProps<RootStackParamList, "ProfileScreen">;
 

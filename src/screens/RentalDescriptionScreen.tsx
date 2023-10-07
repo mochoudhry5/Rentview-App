@@ -4,11 +4,11 @@ import ImageSlider from './ImageSliderScreen';
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../utils/types"
 import { doc, getDoc, query, onSnapshot, collection, DocumentData} from "firebase/firestore";
-import { db } from '../utils/firebase';
+import { db } from '../config/firebase';
 import { GestureHandlerRootView, ScrollView } from 'react-native-gesture-handler';
 import BottomSheet, { BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import { AirbnbRating } from 'react-native-elements';
-import { auth } from "../utils/firebase"
+import { auth } from "../config/firebase"
 import Icon from 'react-native-vector-icons/Ionicons';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { ListItem } from '@rneui/themed';

@@ -5,7 +5,7 @@ import LoginView from './src/screens/LoginScreen'
 import SignupView from './src/screens/SignupScreen'
 import HomeStack from './src/utils/HomeStack';
 import { OtherStackParamList } from "./src/utils/types"
-import { auth } from "./src/utils/firebase"
+import { auth } from "./src/config/firebase"
 import { onAuthStateChanged, User } from "firebase/auth";
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/Ionicons';  
