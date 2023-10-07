@@ -1,14 +1,12 @@
 import { View, Text, StyleSheet, TouchableOpacity, useWindowDimensions, ScrollView, TextInput, Pressable } from 'react-native'
 import React, { useState } from 'react'
-import Slider from '@react-native-community/slider';
-import { collection, doc, query, updateDoc, getDoc, DocumentReference, DocumentData, addDoc, setDoc } from "firebase/firestore";
+import { collection, doc, updateDoc, getDoc, addDoc, setDoc } from "firebase/firestore";
 import { db } from '../utils/firebase';
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../utils/types"
 import { auth } from "../utils/firebase"
 import { AirbnbRating } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/Ionicons';
-import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 type CreateReviewProps = NativeStackScreenProps<RootStackParamList, "CreateReview">;
 
@@ -19,8 +17,8 @@ const CreateReviewScreen: React.FC<CreateReviewProps> = ( {route, navigation}) =
   const [userOverallRating, setUserOverallRating] = useState(5); 
   const [userLandlordRating, setUserLandlordRating] = useState(5); 
   const [text, onChangeText] = useState('');
-  const [thumbsUp,setThumbsUp] = useState ('thumbs-up-outline');
-  const [thumbsDown,setThumbsDown] = useState ('thumbs-down-outline');
+  const [thumbsUp, setThumbsUp] = useState ('thumbs-up-outline');
+  const [thumbsDown, setThumbsDown] = useState ('thumbs-down-outline');
   const styles = makeStyles(fontScale); 
   const user = auth.currentUser;
 
@@ -101,10 +99,10 @@ const CreateReviewScreen: React.FC<CreateReviewProps> = ( {route, navigation}) =
       }
 
       rating.avgOverallRating = ((1 * rating.oneStar)   + 
-                                (2 * rating.twoStar)   +
-                                (3 * rating.threeStar) + 
-                                (4 * rating.fourStar)  +
-                                (5 * rating.fiveStar)) / totalReviews;
+                                 (2 * rating.twoStar)   +
+                                 (3 * rating.threeStar) + 
+                                 (4 * rating.fourStar)  +
+                                 (5 * rating.fiveStar)) / totalReviews;
 
       landlordRating.avgLandlordService = ((1 * landlordRating.oneStar)   + 
                                            (2 * landlordRating.twoStar)   +
@@ -120,18 +118,6 @@ const CreateReviewScreen: React.FC<CreateReviewProps> = ( {route, navigation}) =
       })
 
       if(user && docSnap.exists()){ 
-
-        // await addDoc(collection(db, 'HomeReviews', route.params.docId, "IndividualRatings", user.uid ? user.uid : "NULL"), {
-        //   landlordServiceRating: userLandlordRating,
-        //   recommendHouseRating: userRecommend,
-        //   overallRating: userOverallRating,
-        //   additionalComment: text,
-        //   dateOfReview: month + "/" + day + "/" + year, 
-        //   reviewer: {
-        //     email: user.email,
-        //     fullName: ""
-        //   }
-        // })
 
         await setDoc(doc(db, 'HomeReviews', route.params.docId, "IndividualRatings", user.uid ? user.uid : "NULL"), {
           landlordServiceRating: userLandlordRating,
