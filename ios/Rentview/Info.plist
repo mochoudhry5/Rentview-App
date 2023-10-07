@@ -47,7 +47,9 @@
 		</dict>
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+	<string>Rentview would like to access your location</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Rentview would like to access your camera roll</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>MaterialCommunityIcons.ttf</string>

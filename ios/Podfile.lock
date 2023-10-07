@@ -1222,6 +1222,15 @@ PODS:
   - RNGoogleSignin (10.0.1):
     - GoogleSignIn (~> 7.0)
     - React-Core
+  - RNImageCropPicker (0.40.0):
+    - React-Core
+    - React-RCTImage
+    - RNImageCropPicker/QBImagePickerController (= 0.40.0)
+    - TOCropViewController
+  - RNImageCropPicker/QBImagePickerController (0.40.0):
+    - React-Core
+    - React-RCTImage
+    - TOCropViewController
   - RNReanimated (3.4.2):
     - DoubleConversion
     - FBLazyVector
@@ -1259,6 +1268,7 @@ PODS:
   - RNVectorIcons (10.0.0):
     - React-Core
   - SocketRocket (0.6.1)
+  - TOCropViewController (2.6.1)
   - Yoga (1.14.0)
 
 DEPENDENCIES:
@@ -1313,6 +1323,7 @@ DEPENDENCIES:
   - "RNFBFirestore (from `../node_modules/@react-native-firebase/firestore`)"
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - "RNGoogleSignin (from `../node_modules/@react-native-google-signin/google-signin`)"
+  - RNImageCropPicker (from `../node_modules/react-native-image-crop-picker`)
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
   - RNSVG (from `../node_modules/react-native-svg`)
@@ -1343,6 +1354,7 @@ SPEC REPOS:
     - PromisesObjC
     - RecaptchaInterop
     - SocketRocket
+    - TOCropViewController
 
 EXTERNAL SOURCES:
   boost:
@@ -1444,6 +1456,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-gesture-handler"
   RNGoogleSignin:
     :path: "../node_modules/@react-native-google-signin/google-signin"
+  RNImageCropPicker:
+    :path: "../node_modules/react-native-image-crop-picker"
   RNReanimated:
     :path: "../node_modules/react-native-reanimated"
   RNScreens:
@@ -1526,11 +1540,13 @@ SPEC CHECKSUMS:
   RNFBFirestore: 8bbf230c05f1cfc41fb52ff33b64fc3547174e5f
   RNGestureHandler: c0d04458598fcb26052494ae23dda8f8f5162b13
   RNGoogleSignin: ccaa4a81582cf713eea562c5dd9dc1961a715fd0
+  RNImageCropPicker: 486e2f7e2b0461ce24321f751410dce1b3b49e6d
   RNReanimated: 726395a2fa2f04cea340274ba57a4e659bc0d9c1
   RNScreens: 85d3880b52d34db7b8eeebe2f1a0e807c05e69fa
   RNSVG: ed492aaf3af9ca01bc945f7a149d76d62e73ec82
   RNVectorIcons: 8b5bb0fa61d54cd2020af4f24a51841ce365c7e9
   SocketRocket: f32cd54efbe0f095c4d7594881e52619cfe80b17
+  TOCropViewController: edfd4f25713d56905ad1e0b9f5be3fbe0f59c863
   Yoga: 3efc43e0d48686ce2e8c60f99d4e6bd349aff981
 
 PODFILE CHECKSUM: 22738ecea1f4831bd363606abe81d51699ee354b

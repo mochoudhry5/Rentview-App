@@ -8,7 +8,7 @@ export type RootStackParamList = {
     ActivityScreen: {reviews: DocumentData[]}
     AccountScreen: undefined;
     ProfileScreen: {userId: string}; 
-    RentalPostScreen: undefined; 
+    RentalPostScreen: undefined;
 };
 
 export type OtherStackParamList = {
