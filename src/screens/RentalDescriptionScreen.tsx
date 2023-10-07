@@ -193,13 +193,13 @@ const RentalDescription: React.FC<RentalDescriptionProps> = ( { route, navigatio
           <View style={styles.miscRating}>
             <View style={styles.inlineContainer}>
               <View style={styles.rating1}>
-                <Text style={{textAlign: 'center', fontSize: 14,color:'#205030', fontStyle:'italic', fontWeight:'bold', width:'60%'}}>Rent Again</Text>
+                <Text style={{textAlign: 'center', fontSize: 14,color:'#1f3839', fontStyle:'italic', fontWeight:'bold', width:'60%'}}>Rent Again</Text>
                 {totalReviews > 0 ? (
                 <Text style={{fontWeight: 'bold',fontSize: 12}}>{((yesRecommendation/totalReviews) * 100).toFixed(0)}%</Text>
                 ) : (<Text style={{textAlign: 'center', fontWeight: 'bold', fontSize: 12}}>N/A</Text>)}
               </View>
               <View style={styles.rating1}>
-                <Text style={{textAlign: 'center', fontSize: 14,color:'#205030', fontStyle:'italic', fontWeight:'bold', width:'80%'}}>Landlord Rating</Text>
+                <Text style={{textAlign: 'center', fontSize: 14,color:'#1f3839', fontStyle:'italic', fontWeight:'bold', width:'80%'}}>Landlord Rating</Text>
                 {totalReviews > 0 && landlordRating > 0 ? (
                 <Text style={{textAlign: 'center', fontWeight: 'bold',fontSize: 12}}>{landlordRating.toFixed(1)}</Text>
                 ) : (<Text style={{textAlign: 'center', fontWeight: 'bold',fontSize: 12}}>N/A</Text>)}
@@ -225,6 +225,7 @@ const RentalDescription: React.FC<RentalDescriptionProps> = ( { route, navigatio
                 selectedColor="black" 
                 defaultRating={review.overallRating}
                 size={10}
+                isDisabled={true}
               />
               <Text style={{color:'gray', fontSize: 11, paddingLeft:'2%'}}>{review.dateOfReview}</Text>
             </View>
