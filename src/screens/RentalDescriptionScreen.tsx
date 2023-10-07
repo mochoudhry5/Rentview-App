@@ -62,7 +62,6 @@ const RentalDescription: React.FC<RentalDescriptionProps> = ( { route, navigatio
               if(doc.data().reviewerEmail === user?.email){
                 setCurrentUserReviewed(true); 
               }
-              console.log(doc.data());
               setAllReviews((prevArr) => ([...prevArr, doc.data()]));
             });
           }
