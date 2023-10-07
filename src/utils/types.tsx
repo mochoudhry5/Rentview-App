@@ -8,7 +8,7 @@ export type RootStackParamList = {
     CreateReview: {docId: string}; 
     ActivityScreen: {reviews: DocumentData[]}
     AccountScreen: undefined;
-    ProfileScreen: undefined; 
+    ProfileScreen: {userId: string}; 
 };
 
 export type OtherStackParamList = {

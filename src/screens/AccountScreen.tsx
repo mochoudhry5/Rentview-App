@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { View, Text, Button, Image, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, Image, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import { auth } from "../utils/firebase"
 import { signOut } from "firebase/auth";
-import { collection, doc, query, updateDoc, getDoc, DocumentReference, DocumentData, onSnapshot } from "firebase/firestore";
+import { collection, getDoc, doc, query, DocumentData, getDocs } from "firebase/firestore";
 import { db } from '../utils/firebase';
 import { RootStackParamList } from "../utils/types"
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
@@ -10,7 +10,7 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 type AccountProps = NativeStackScreenProps<RootStackParamList, "AccountScreen">;
 
 const AccountScreen : React.FC<AccountProps> = ({ navigation }) => {
-  const user = auth.currentUser;
+  const userId = auth.currentUser ? auth.currentUser.uid : "";
   const [allReviews, setAllReviews] = useState<DocumentData[]>([]); 
 
   const handleLogout = () => {
@@ -19,29 +19,30 @@ const AccountScreen : React.FC<AccountProps> = ({ navigation }) => {
         console.log('User logged out successfully:');
       })
       .catch((error) => {
-        console.log('Error', error);
+        console.log('Error logging out: ', error);
       });
   };
 
   const handleActivity = async () => {
-    if(user){
-      let email = user.email ? user.email : "No User"
-      console.log(email)
-      const docRefSecond = query(collection(db, "UserReviews", email, "Reviews"));
+    const allReviewsRef = query(collection(db, "UserReviews", userId, "Reviews"));
+    const querySnapshot = await getDocs(allReviewsRef);
 
-      onSnapshot(docRefSecond, (docSnapshot) => {
-        setAllReviews([]);
-        if(docSnapshot.size >= 1){
-          docSnapshot.forEach((doc) => {
-            setAllReviews((prevArr) => ([...prevArr, doc.data()]));
-          });
-        }
-      });
-    }
-    navigation.navigate("ActivityScreen", {reviews: allReviews});
+    setAllReviews([]);
+
+    querySnapshot.forEach((doc) => {
+      setAllReviews((prevArr) => ([...prevArr, doc.data()]));
+    });
+
+    navigation.navigate("ActivityScreen", { reviews: allReviews });
   }
+
   const handleProfile = async () => {
-    navigation.navigate("ProfileScreen");
+    const docRef = doc(db, "UserReviews", userId);
+    const docSnap = await getDoc(docRef);
+
+    if(docSnap.exists()){
+      navigation.navigate("ProfileScreen", { userId : docRef.id });
+    }
   }
 
   const settingsOptions = [
@@ -54,7 +55,7 @@ const AccountScreen : React.FC<AccountProps> = ({ navigation }) => {
   return (
     <ScrollView>
       <View style={styles.container}>
-      <Image source={{ uri: "https://source.unsplash.com/1024x768/?male" }} style={styles.profilePicture} />
+      <Image source={{ uri: "https://source.unsplash.com/1024x768/?rent" }} style={styles.profilePicture} />
       <Text style={styles.userName}>Momin Choudhry</Text>
       {settingsOptions.map(({title, subTitle, onPress}, index) => (
         <TouchableOpacity key={title} onPress={onPress} style={{width:'100%'}}>
@@ -82,9 +83,9 @@ const AccountScreen : React.FC<AccountProps> = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'flex-start', // Start from the top
+    justifyContent: 'flex-start',
     alignItems: 'center',
-    paddingTop: '15%', // Add paddingTop to push the content down from the top
+    paddingTop: '15%',
   },
   profilePicture: {
     width: 100,

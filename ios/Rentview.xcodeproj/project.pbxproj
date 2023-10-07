@@ -42,12 +42,12 @@
 		3B8753FE08D2FF82A332AB40 /* Pods_Rentview_RentviewTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Rentview_RentviewTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		72A3548DC0E0FC96E26166CE /* Pods_Rentview.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Rentview.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = Rentview/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		8959F0672AC56A340030E9DB /* MaterialCommunityIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = MaterialCommunityIcons.ttf; path = ../../../Downloads/MaterialCommunityIcons.ttf; sourceTree = "<group>"; };
 		D21496D98A363A2C9CB22F67 /* Pods-Rentview-RentviewTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Rentview-RentviewTests.release.xcconfig"; path = "Target Support Files/Pods-Rentview-RentviewTests/Pods-Rentview-RentviewTests.release.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		ED320077E126DC66DFB0B7D0 /* Pods-Rentview-RentviewTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Rentview-RentviewTests.debug.xcconfig"; path = "Target Support Files/Pods-Rentview-RentviewTests/Pods-Rentview-RentviewTests.debug.xcconfig"; sourceTree = "<group>"; };
 		FD7D320F2AAE58060049EB0C /* Ionicons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Ionicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Ionicons.ttf"; sourceTree = "<group>"; };
 		FDEDA17B2ABF548400166187 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
+		FDEDA17D2ACB7D9E00166187 /* MaterialCommunityIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = MaterialCommunityIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialCommunityIcons.ttf"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -157,7 +157,7 @@
 		FDDE71142AAE558200962EA3 /* Fonts */ = {
 			isa = PBXGroup;
 			children = (
-				8959F0672AC56A340030E9DB /* MaterialCommunityIcons.ttf */,
+				FDEDA17D2ACB7D9E00166187 /* MaterialCommunityIcons.ttf */,
 				FD7D320F2AAE58060049EB0C /* Ionicons.ttf */,
 			);
 			name = Fonts;
@@ -216,7 +216,8 @@
 		83CBB9F71A601CBA00E9B192 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 1210;
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
 				TargetAttributes = {
 					00E356ED1AD99517003FC87E = {
 						CreatedOnToolsVersion = 6.2;
@@ -462,6 +463,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = ED320077E126DC66DFB0B7D0 /* Pods-Rentview-RentviewTests.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -489,6 +491,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = D21496D98A363A2C9CB22F67 /* Pods-Rentview-RentviewTests.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
 				INFOPLIST_FILE = RentviewTests/Info.plist;
@@ -516,6 +519,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = U6NGP845T2;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -552,6 +556,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = U6NGP845T2;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Pods/hermes-engine/destroot/Library/Frameworks/macosx",

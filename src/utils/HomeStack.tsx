@@ -7,7 +7,7 @@ import NearbyRentalView  from '../screens/NearbyRentalsScreen';
 
 const LoggedInStack = createStackNavigator<RootStackParamList>(); 
 
-const NearbyRentalViewStack = () => {
+const HomeStack = () => {
   return (
     <LoggedInStack.Navigator initialRouteName="NearbyRentals">
         <LoggedInStack.Screen
@@ -29,4 +29,4 @@ const NearbyRentalViewStack = () => {
   )
 }
 
-export default NearbyRentalViewStack
+export default HomeStack;

@@ -33,7 +33,7 @@ const RentalDescription: React.FC<RentalDescriptionProps> = ( { route, navigatio
     const [postalCode, setPostalCode] = useState(""); 
     const [allReviews, setAllReviews] = useState<DocumentData[]>([]); 
     const sheetRef = useRef<BottomSheet>(null);
-    const snapPoints = ["3%","10%", "90%"];
+    const snapPoints = ["3%","15%", "90%"];
     const docRef = doc(db, "HomeReviews", route.params.docId);
     const docRefSecond = query(collection(db, "HomeReviews", route.params.docId, "IndividualRatings"));
     const user = auth.currentUser;
@@ -41,6 +41,7 @@ const RentalDescription: React.FC<RentalDescriptionProps> = ( { route, navigatio
     const [expandedOwnerInfo, setExpandedOwnerInfo] = React.useState(false);
     const handlePressPropertyInfo = () => setExpandedPropertyInfo(!expandedPropertyInfo);
     const handlePressOwnerInfo = () => setExpandedOwnerInfo(!expandedOwnerInfo);
+    const [currentUserReviewed, setCurrentUserReviewed] = useState(false);
 
     useEffect(() => {
       const subscriber = onSnapshot(docRef, (docSnapshot) => {
@@ -55,9 +56,13 @@ const RentalDescription: React.FC<RentalDescriptionProps> = ( { route, navigatio
 
       const getData = () => {
         onSnapshot(docRefSecond, (docSnapshot) => {
-          if(docSnapshot.size > 1){
+          if(docSnapshot.size >= 1){
             setAllReviews([]);
             docSnapshot.forEach((doc) => {
+              if(doc.data().reviewerEmail === user?.email){
+                setCurrentUserReviewed(true); 
+              }
+              console.log(doc.data());
               setAllReviews((prevArr) => ([...prevArr, doc.data()]));
             });
           }
@@ -65,7 +70,7 @@ const RentalDescription: React.FC<RentalDescriptionProps> = ( { route, navigatio
 
       return () => subscriber();
 
-    }, [route.params.docId]);
+    }, []);
 
     useEffect(() => {
       const fetchData = async () => {
@@ -167,9 +172,15 @@ const RentalDescription: React.FC<RentalDescriptionProps> = ( { route, navigatio
                 {totalReviews > 0 ? (
                   <>
                   <Text style = {styles.renters}>{"("}{totalReviews} Reviews{")"}</Text>
-                  <TouchableOpacity style={styles.button} onPress={handleOnPress}>
-                    <Text style={{ color: 'blue'}}>Add Review</Text>
-                  </TouchableOpacity>
+                  {currentUserReviewed ? (
+                    <TouchableOpacity disabled style={styles.alreadyReviewButton}>
+                      <Text style={{ color: 'green', fontSize: 12}}>Already Reviewed ✔</Text>
+                    </TouchableOpacity>
+                  ) : (
+                    <TouchableOpacity style={styles.button} onPress={handleOnPress}>
+                      <Text style={{ color: 'blue'}}>Add Review</Text>
+                    </TouchableOpacity>
+                  )}
                 </>
                 ) : (
                   <TouchableOpacity style={styles.button} onPress={handleOnPress}>
@@ -196,7 +207,7 @@ const RentalDescription: React.FC<RentalDescriptionProps> = ( { route, navigatio
             </View>
           </View>
           {allReviews.map(review => (
-          <View style={{paddingTop:'5%', paddingLeft:'2%', paddingRight:'2%'}}>
+          <View key={review.reviewerEmail} style={{paddingTop:'5%', paddingLeft:'2%', paddingRight:'2%'}}>
             <View style={{flexDirection:'row', alignItems:'center'}}>
               <Image
               style={{
@@ -206,7 +217,7 @@ const RentalDescription: React.FC<RentalDescriptionProps> = ( { route, navigatio
                 marginTop:'1%'}}
                 source={{ uri: "https://source.unsplash.com/1024x768/?user" }}
               />
-              <Text style={{paddingLeft:'1%', fontWeight:'bold', fontSize:14}}>{review.reviewerEmail}</Text>
+              <Text style={{paddingLeft:'1%', fontWeight:'bold', fontSize:14}}>{review.reviewerFullName !== null && review.reviewerFullName !== "" ? review.reviewerFullName : review.reviewerEmail}</Text>
             </View>
             <View style={{flexDirection:'row', alignItems:'center'}}>
               <AirbnbRating 
@@ -313,6 +324,12 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 5,
     left: 200, 
+    color: 'blue', 
+  },
+  alreadyReviewButton: {
+    position: 'absolute',
+    top: 5,
+    left: 170, 
     color: 'blue', 
   },
   miscRating: {

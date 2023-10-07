@@ -3,13 +3,13 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import LoginView from './src/screens/LoginScreen'
 import SignupView from './src/screens/SignupScreen'
-import NearbyRentalViewStack from './src/utils/NearbyRentalViewStack';
+import HomeStack from './src/utils/HomeStack';
 import { OtherStackParamList } from "./src/utils/types"
 import { auth } from "./src/utils/firebase"
 import { onAuthStateChanged, User } from "firebase/auth";
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/Ionicons';  
-import OtherStack from './src/utils/OtherStack';
+import AccountStack from './src/utils/AccountStack';
 
 const Tab = createBottomTabNavigator()
 
@@ -33,8 +33,8 @@ function LoggedInLayout(){
       tabBarLabel:() => {return null},
     })}
   >
-        <Tab.Screen name="Home" component={NearbyRentalViewStack} options={{ headerShown:false }} />
-        <Tab.Screen name="Profile" component={OtherStack} options={{ headerShown:false}} />
+        <Tab.Screen name="Home" component={HomeStack} options={{ headerShown:false }} />
+        <Tab.Screen name="Profile" component={AccountStack} options={{ headerShown:false}} />
     </Tab.Navigator>
   )
 }

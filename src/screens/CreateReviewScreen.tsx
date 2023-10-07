@@ -1,7 +1,7 @@
 import { View, Text, StyleSheet, TouchableOpacity, useWindowDimensions, ScrollView, TextInput } from 'react-native'
 import React, { useState } from 'react'
 import Slider from '@react-native-community/slider';
-import { collection, doc, query, updateDoc, getDoc, DocumentReference, DocumentData, addDoc } from "firebase/firestore";
+import { collection, doc, query, updateDoc, getDoc, DocumentReference, DocumentData, addDoc, setDoc } from "firebase/firestore";
 import { db } from '../utils/firebase';
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../utils/types"
@@ -15,7 +15,7 @@ const CreateReviewScreen: React.FC<CreateReviewProps> = ( {route, navigation}) =
   const {fontScale} = useWindowDimensions();
   const [userOverallRating, setUserOverallRating] = useState(5); 
   const [userLandlordRating, setUserLandlordRating] = useState(5); 
-  const [text, onChangeText] = React.useState('');
+  const [text, onChangeText] = useState('');
   const styles = makeStyles(fontScale); 
   const user = auth.currentUser;
 
@@ -23,7 +23,8 @@ const CreateReviewScreen: React.FC<CreateReviewProps> = ( {route, navigation}) =
   const handleReviewSubmit = async () => {
     const docRef = doc(db, "HomeReviews", route.params.docId);
     let homeSnapshot = await getDoc(docRef);
-    const taskDocRef = doc(db, 'HomeReviews', route.params.docId)
+    const userRef = doc(db, "UserReviews", user ? user.uid : "NULL");
+    const docSnap = await getDoc(userRef);
 
     if(homeSnapshot.exists()){
       const date = new Date();
@@ -107,25 +108,38 @@ const CreateReviewScreen: React.FC<CreateReviewProps> = ( {route, navigation}) =
                                            (4 * landlordRating.fourStar)  +
                                            (5 * landlordRating.fiveStar)) / totalReviews;
       
-      await updateDoc(taskDocRef, {
+      await updateDoc(docRef, {
         landlordService: landlordRating, 
         wouldRecommend: recommendation,
         totalReviews: totalReviews, 
         overallRating: rating
       })
 
-      if(user){ 
+      if(user && docSnap.exists()){ 
 
-        await addDoc(collection(db, 'HomeReviews', route.params.docId, "IndividualRatings"), {
+        // await addDoc(collection(db, 'HomeReviews', route.params.docId, "IndividualRatings", user.uid ? user.uid : "NULL"), {
+        //   landlordServiceRating: userLandlordRating,
+        //   recommendHouseRating: userRecommend,
+        //   overallRating: userOverallRating,
+        //   additionalComment: text,
+        //   dateOfReview: month + "/" + day + "/" + year, 
+        //   reviewer: {
+        //     email: user.email,
+        //     fullName: ""
+        //   }
+        // })
+
+        await setDoc(doc(db, 'HomeReviews', route.params.docId, "IndividualRatings", user.uid ? user.uid : "NULL"), {
           landlordServiceRating: userLandlordRating,
           recommendHouseRating: userRecommend,
           overallRating: userOverallRating,
           additionalComment: text,
           dateOfReview: month + "/" + day + "/" + year, 
           reviewerEmail: user.email,
+          reviewerFullName: docSnap.data().fullName
         })
 
-        await addDoc(collection(db, 'UserReviews', user.email ? user.email : "No User", "Reviews"), {
+        await addDoc(collection(db, 'UserReviews', user.uid ? user.uid : "NULL", "Reviews"), {
           homeId: route.params.docId,
           landlordServiceRating: userLandlordRating,
           overallRating: userOverallRating,
@@ -135,6 +149,7 @@ const CreateReviewScreen: React.FC<CreateReviewProps> = ( {route, navigation}) =
         })
       }
     }
+    navigation.navigate("RentalDescription", {docId: route.params.docId});
   }
 
   const handleYesClick = () => {

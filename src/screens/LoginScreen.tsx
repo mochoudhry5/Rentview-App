@@ -5,6 +5,8 @@ import { OtherStackParamList } from "../utils/types"
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { auth } from "../utils/firebase"
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
+import { collection, doc, query, updateDoc, getDoc, DocumentReference,setDoc, DocumentData, addDoc, where, QuerySnapshot, getDocs } from "firebase/firestore";
+import { db } from '../utils/firebase';
 
 GoogleSignin.configure({
   webClientId: '795551030882-3mrb1u5bp15jvsmi97rp2kq42frc20gb.apps.googleusercontent.com',
@@ -19,6 +21,8 @@ const Login:  React.FC<LoginProps> = ( { navigation } ) => {
   const handleLogin = async () => {
     try {
       await signInWithEmailAndPassword(auth, email, password);
+      await addUserToDb(); 
+      
     } catch (error) {
       console.error('Login failed:', error);
     }
@@ -29,13 +33,26 @@ const Login:  React.FC<LoginProps> = ( { navigation } ) => {
     const { idToken } = await GoogleSignin.signIn();
     // Create a Google credential with the token
     const googleCredential = GoogleAuthProvider.credential(idToken);
-    // Sign-in the user with the credential
-    return signInWithCredential(auth, googleCredential);
+
+    await signInWithCredential(auth, googleCredential);
+
+    if(auth.currentUser !== null){
+      await addUserToDb(); 
+    }
   }
 
-  const goToSignup = () => {
-    navigation.navigate('Signup');
-  };
+  async function addUserToDb(){
+    const docRef = doc(db, "UserReviews", auth.currentUser ? auth.currentUser.uid : "");
+    const docSnap = await getDoc(docRef);
+
+    if(!docSnap.exists()){
+      await setDoc(doc(db, 'UserReviews', auth.currentUser ? auth.currentUser.uid : ""), {
+        fullName: null,
+        email: auth.currentUser?.email,
+        phoneNumber: null
+      })
+    }
+  }
 
   return (
     <View style={styles.container}>

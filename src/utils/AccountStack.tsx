@@ -7,7 +7,7 @@ import ActivityScreen from '../screens/ActivityScreen';
 
 const LoggedInStack = createStackNavigator<RootStackParamList>(); 
 
-const OtherStack = () => {
+const AccountStack = () => {
   return (
     <LoggedInStack.Navigator initialRouteName="AccountScreen">
         <LoggedInStack.Screen
@@ -29,4 +29,4 @@ const OtherStack = () => {
   )
 }
 
-export default OtherStack
+export default AccountStack;
