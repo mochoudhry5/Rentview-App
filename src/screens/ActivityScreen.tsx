@@ -10,7 +10,8 @@ const MyReviews : React.FC<MyReviewProps> = ({route, navigation}) => {
   return (
     <ScrollView>
       {route.params.reviews.map(review => (
-      <><View style={{ paddingTop: '5%', paddingLeft: '2%', paddingRight: '2%' }}>
+      <View key={review.homeId}>
+        <View style={{ paddingTop: '5%', paddingLeft: '2%', paddingRight: '2%' }}>
           <View style={{ flexDirection: 'row', paddingLeft: '0%', alignItems: 'center' }}>
             <AirbnbRating
               showRating={false}
@@ -24,13 +25,15 @@ const MyReviews : React.FC<MyReviewProps> = ({route, navigation}) => {
             <Text>Landlord Rating: {review.landlordServiceRating}</Text>
             <Text>Rent Again: {review.recommendHouseRating ? "Yes" : "No"}</Text>
           </View>
+          <Text>HomeId: {review.homeId}</Text>
           <View
             style={{
               borderBottomColor: 'gray',
               borderBottomWidth: .5,
               paddingTop: '5%'
             }} />
-        </View></> )
+        </View>
+      </View> )
       )}
     </ScrollView>
   )
