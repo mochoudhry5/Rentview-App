@@ -10,6 +10,7 @@ import { onAuthStateChanged, User } from "firebase/auth";
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/Ionicons';  
 import AccountStack from './src/utils/AccountStack';
+import PostStack from './src/utils/PostStack'; 
 
 const Tab = createBottomTabNavigator()
 
@@ -27,6 +28,9 @@ function LoggedInLayout(){
         else if(route.name === 'Profile'){
           iconName = focused ? 'person-circle' : 'person-circle-outline'
         }
+        else {
+          iconName = focused ? 'add-circle' : 'add-circle-outline'
+        }
         // You can return any component that you like here!
         return <Icon name={iconName} color= 'black' size={36}/>;
       },
@@ -34,6 +38,7 @@ function LoggedInLayout(){
     })}
   >
         <Tab.Screen name="Home" component={HomeStack} options={{ headerShown:false }} />
+        <Tab.Screen name="Post" component={PostStack} options={{ headerShown:false }} />
         <Tab.Screen name="Profile" component={AccountStack} options={{ headerShown:false}} />
     </Tab.Navigator>
   )
