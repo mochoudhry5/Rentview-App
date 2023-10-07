@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, TouchableOpacity, useWindowDimensions, ScrollView, TextInput } from 'react-native'
+import { View, Text, StyleSheet, TouchableOpacity, useWindowDimensions, ScrollView, TextInput, Pressable } from 'react-native'
 import React, { useState } from 'react'
 import Slider from '@react-native-community/slider';
 import { collection, doc, query, updateDoc, getDoc, DocumentReference, DocumentData, addDoc } from "firebase/firestore";
@@ -6,6 +6,9 @@ import { db } from '../utils/firebase';
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../utils/types"
 import { auth } from "../utils/firebase"
+import { AirbnbRating } from 'react-native-elements';
+import Icon from 'react-native-vector-icons/Ionicons';
+import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 type CreateReviewProps = NativeStackScreenProps<RootStackParamList, "CreateReview">;
 
@@ -16,9 +19,10 @@ const CreateReviewScreen: React.FC<CreateReviewProps> = ( {route, navigation}) =
   const [userOverallRating, setUserOverallRating] = useState(5); 
   const [userLandlordRating, setUserLandlordRating] = useState(5); 
   const [text, onChangeText] = React.useState('');
+  let [thumbsUp,setThumbsUp] = useState ('thumbs-up-outline');
+  let [thumbsDown,setThumbsDown] = useState ('thumbs-down-outline');
   const styles = makeStyles(fontScale); 
   const user = auth.currentUser;
-
 
   const handleReviewSubmit = async () => {
     const docRef = doc(db, "HomeReviews", route.params.docId);
@@ -138,102 +142,124 @@ const CreateReviewScreen: React.FC<CreateReviewProps> = ( {route, navigation}) =
   }
 
   const handleYesClick = () => {
-    setUserRecommend(true); 
+    if(thumbsUp == 'thumbs-up-outline'){
+      setThumbsDown('thumbs-down-outline');
+      setThumbsUp('thumbs-up');
+      setUserRecommend(true); 
+    }
+    else{
+      setThumbsUp('thumbs-up-outline');
+      setUserRecommend(false);
+    }
   }
 
   const handleNoClick = () => {
-    setUserRecommend(false); 
+    if(thumbsDown == 'thumbs-down-outline'){
+      setThumbsDown('thumbs-down');
+      setThumbsUp('thumbs-up-outline');
+      setUserRecommend(false);
+    }
+    else{
+      setThumbsDown('thumbs-down-outline');
+      setUserRecommend(false);
+    }
   }
-
+  
   return (
-    <ScrollView style={{flex:1, backgroundColor:'white'}}>
-    <View style={styles.container}> 
-      <View style={[styles.card, styles.shadowProp]}>
+    <View style={{flex:1, backgroundColor:'white'}}>
+      <ScrollView>
+      <View> 
         <View>
-          <View style={{backgroundColor: '#FAFAFA', borderRadius: 10}}>
-            <Text style={styles.heading}>Overall Rating:</Text>
-            <Text style={styles.text}>{userOverallRating}/5</Text>
-            <Slider
-                step={1}
-                style={styles.slider}
-                value={userOverallRating}
-                onValueChange={setUserOverallRating}
-                maximumValue={5}
-                minimumValue={1}
-                thumbTintColor='#205030'
-                minimumTrackTintColor='gray'
-            />
-          </View>
-        </View>
-      </View>
-      <View style={[styles.card, styles.shadowProp]}>
-        <View>
-          <View style={{backgroundColor: '#FAFAFA', borderRadius: 10}}>
-            <Text style={styles.heading}>Landlord Rating:</Text>
-            <Text style={styles.text}>{userLandlordRating}/5</Text>
-            <Slider
-                step={1}
-                style={styles.slider}
-                value={userLandlordRating}
-                onValueChange={setUserLandlordRating}
-                maximumValue={5}
-                minimumValue={1}
-                thumbTintColor='#205030'
-                minimumTrackTintColor='gray'
-            />
-          </View>
-        </View>
-      </View>
-      <View style={[styles.card, styles.shadowProp]}>
-        <View>
-          <View style={{backgroundColor: '#FAFAFA', borderRadius: 10}}>
-            <Text style={styles.heading}>House Rating:</Text>
-            <Text style={styles.text}>{houseQuality}/5</Text>
-            <Slider
-                step={1}
-                style={styles.slider}
-                value={houseQuality}
-                onValueChange={setHouseQuality}
-                maximumValue={5}
-                minimumValue={1}
-                thumbTintColor='#205030'
-                minimumTrackTintColor='gray'
-            />
-          </View>
-        </View>
-      </View>
-      <View style={[styles.card, styles.shadowProp]}>
-        <View>
-          <View style={{backgroundColor: '#FAFAFA', borderRadius: 10}}>
-            <Text style={styles.heading}>Rent Again:</Text>
-            <View style ={{flexDirection:"row", justifyContent: 'center', paddingBottom:'5%'}}>
-              <View style={{paddingRight:'5%', width:'35%'}}>
-                <TouchableOpacity style={styles.yesButton} onPress={handleYesClick}>
-                  <Text style={{color:'white', fontWeight:'bold', fontSize: 18 / fontScale}}>Yes</Text>
-                </TouchableOpacity>
-              </View>
-              <View style={{width:'30%'}}>
-              <TouchableOpacity style={styles.noButton} onPress={handleNoClick}>
-                <Text style={{color:'white', fontWeight:'bold', fontSize: 18 / fontScale}}>No</Text>
-              </TouchableOpacity>
-              </View>
+          <View style={{flexDirection: 'row', alignItems: 'center', paddingTop:'5%'}}>
+            <View style={{flex: 1, height: 1, backgroundColor: '#DEDEDE'}} />
+            <View>
+              <Text style={{fontFamily: 'Iowan Old Style', fontWeight:'bold', fontSize:20,textAlign: 'center', paddingLeft:'2%', paddingRight:'2%'}}>Overall Rating</Text>
             </View>
+            <View style={{flex: 1, height: 1, backgroundColor: '#DEDEDE'}} />
           </View>
+          <AirbnbRating 
+            showRating={true} 
+            selectedColor="black" 
+            defaultRating={userOverallRating}
+            onFinishRating={setUserOverallRating}
+            size={20}
+            reviewColor='gray'
+            reviewSize={13}
+          />
         </View>
-      </View>
-      <View style={styles.container}>
+        <View>
+          <View style={{flexDirection: 'row', alignItems: 'center', paddingTop:'5%'}}>
+            <View style={{flex: 1, height: 1, backgroundColor: '#DEDEDE'}} />
+            <View>
+              <Text style={{fontFamily: 'Iowan Old Style', fontWeight:'bold', fontSize:20,textAlign: 'center', paddingLeft:'2%', paddingRight:'2%'}}>Landlord Rating</Text>
+            </View>
+            <View style={{flex: 1, height: 1, backgroundColor: '#DEDEDE'}} />
+          </View>
+          <AirbnbRating 
+            showRating={true} 
+            selectedColor="black" 
+            defaultRating={userLandlordRating}
+            onFinishRating={setUserLandlordRating}
+            size={20}
+            reviewColor='gray'
+            reviewSize={13}
+          />
+        </View>
+        <View>
+          <View style={{flexDirection: 'row', alignItems: 'center', paddingTop:'5%'}}>
+            <View style={{flex: 1, height: 1, backgroundColor: '#DEDEDE'}} />
+            <View>
+              <Text style={{fontFamily: 'Iowan Old Style', fontWeight:'bold', fontSize:20,textAlign: 'center', paddingLeft:'2%', paddingRight:'2%'}}>House Quality</Text>
+            </View>
+            <View style={{flex: 1, height: 1, backgroundColor: '#DEDEDE'}} />
+          </View>
+          <AirbnbRating 
+            showRating={true} 
+            selectedColor="black" 
+            defaultRating={houseQuality}
+            onFinishRating={setHouseQuality}
+            size={20}
+            reviewColor='gray'
+            reviewSize={13}
+          />
+        </View>
+        <View style={{flexDirection: 'row', alignItems: 'center', paddingTop:'5%'}}>
+          <View style={{flex: 1, height: 1, backgroundColor: '#DEDEDE'}} />
+          <View>
+            <Text style={{fontFamily: 'Iowan Old Style', fontWeight:'bold', fontSize:20,textAlign: 'center', paddingLeft:'2%', paddingRight:'2%'}}>Rent Again</Text>
+          </View>
+          <View style={{flex: 1, height: 1, backgroundColor: '#DEDEDE'}} />
+        </View>
+        <View style ={{flexDirection:"row", justifyContent:'center', paddingTop:'3%'}}>
+          <TouchableOpacity style={styles.yesButton} onPress={handleYesClick}>
+            <Icon name={thumbsUp} size={30} style={{color:'#538c50'}}/>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.noButton} onPress={handleNoClick}>
+            <Icon name={thumbsDown} size={30} style={{color:'#FF5147'}}/>
+          </TouchableOpacity>
+        </View>
+        <View style={{top:-100}}>
+          <View style={{flexDirection: 'row', alignItems: 'center', paddingTop:'5%'}}>
+            <View style={{flex: 1, height: 1, backgroundColor: '#DEDEDE'}} />
+            <View>
+              <Text style={{fontFamily: 'Iowan Old Style', fontWeight:'bold', fontSize:20,textAlign: 'center', paddingLeft:'2%', paddingRight:'2%'}}>Write a Comment</Text>
+            </View>
+            <View style={{flex: 1, height: 1, backgroundColor: '#DEDEDE'}} />
+          </View>
           <TextInput
             style={styles.input}
+            multiline={true}
             onChangeText={onChangeText}
             value={text}
-            placeholder="Additional comments..."
+            placeholder="The house/landlord were..."
           />
-          <TouchableOpacity style={styles.submitButton} onPress={handleReviewSubmit}>
-              <Text style={{fontWeight:'bold', color:'#205030'}}>Publish Review</Text>
-          </TouchableOpacity>
+        </View>
       </View>
-    </View>
-  </ScrollView>
+    </ScrollView>
+    <TouchableOpacity style={styles.submitButton} onPress={handleReviewSubmit}>
+      <Text style={{fontSize:16,fontWeight:'bold', color:'white'}}>Publish Review</Text>
+    </TouchableOpacity>
+  </View>
 )
 }
 
@@ -245,9 +271,8 @@ const makeStyles = (fontScale:any) => StyleSheet.create({
     alignSelf:'center',
   },
   shadowProp: {
-    shadowColor: '#171717',
     shadowOffset: {width: -2, height: 4},
-    shadowOpacity: .5,
+    shadowOpacity: .1,
     shadowRadius: 5,
   },
   container: {
@@ -268,28 +293,32 @@ const makeStyles = (fontScale:any) => StyleSheet.create({
       margin: 0,
     },
     input: {
-      height: '20%',
-      width:'90%',
+      height:150,
+      margin:20,
       borderWidth: 1,
+      borderRadius:10,
+      textAlignVertical:'top',
+      padding:5,
+      marginBottom:80
     },
     submitButton: {
       alignItems: 'center',
-      backgroundColor: '#dddddd',
+      backgroundColor: '#1f3839',
       borderWidth: 1,
-      width: '40%',
-      height: '25%',
+      width: '100%',
+      height: '7%',
       alignSelf: 'center',
       justifyContent: 'center',
   },
     yesButton: {
-      backgroundColor: '#205030',
-      height:'55%',
+      height:'35%',
+      width:'30%',
       alignItems: 'center',
       justifyContent: 'center',
     },
     noButton: {
-      backgroundColor: '#6f112b',
-      height:'55%',
+      height:'35%',
+      width:'30%',
       alignItems: 'center',
       justifyContent: 'center',
     },
@@ -297,8 +326,9 @@ const makeStyles = (fontScale:any) => StyleSheet.create({
       fontSize: 18 / fontScale,
       fontWeight: '600',
       marginBottom: 13,
-      paddingLeft: '2%',
+      paddingLeft: '5%',
       paddingTop: '2%',
+      textAlign:'center'
     },
 });
 
