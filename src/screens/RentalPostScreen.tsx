@@ -25,10 +25,6 @@ const bedAndBath = [
 
 const RentalPostScreen = () => {
   const [fullName, onChangeFullName] = useState('');
-  const [currentPassword, onChangeCurrentPassword] = useState('');
-  const [newPassword, onChangeNewPassword] = useState('');
-  const [selectedCountry, setSelectedCountry] = useState();
-  const [selectedState, setSelectedState] = useState();
   const [countries, setCountries] = useState<Array<RegionDataType>>([{label: "United States", value: "US"}]); 
   const [cities, setCities] = useState<Array<RegionDataType>>([{label: "", value: ""}]); 
   const [states, setStates] = useState<Array<RegionDataType>>([{label: "", value: ""}]);
@@ -38,8 +34,6 @@ const RentalPostScreen = () => {
   const [totalBedrooms, setTotalBedrooms] = useState(""); 
   const [totalBathrooms, setTotalBathrooms] = useState(""); 
 
-
-  
   return (
     <View style={{flex: 1, paddingTop:'2%', backgroundColor:'white'}}>
         <ScrollView>

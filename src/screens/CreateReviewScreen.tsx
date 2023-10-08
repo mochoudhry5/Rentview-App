@@ -1,14 +1,15 @@
-import { View, Text, StyleSheet, TouchableOpacity, useWindowDimensions, ScrollView, TextInput, Pressable } from 'react-native'
-import React, { useState } from 'react'
+import { View, Text, StyleSheet, TouchableOpacity, useWindowDimensions, ScrollView, TextInput } from 'react-native'
+import React, { useEffect, useState } from 'react'
 import { collection, doc, updateDoc, getDoc, addDoc, setDoc } from "firebase/firestore";
 import { db } from '../config/firebase';
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { RootStackParamList } from "../utils/types"
+import { HomeStackParamList } from "../utils/types"
 import { auth } from "../config/firebase"
 import { AirbnbRating } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { onAuthStateChanged, User } from 'firebase/auth';
 
-type CreateReviewProps = NativeStackScreenProps<RootStackParamList, "CreateReview">;
+type CreateReviewProps = NativeStackScreenProps<HomeStackParamList, "CreateReview">;
 
 const CreateReviewScreen: React.FC<CreateReviewProps> = ( {route, navigation}) => {
   const [houseQuality, setHouseQuality] = useState(5); 
@@ -20,12 +21,20 @@ const CreateReviewScreen: React.FC<CreateReviewProps> = ( {route, navigation}) =
   const [thumbsUp, setThumbsUp] = useState ('thumbs-up-outline');
   const [thumbsDown, setThumbsDown] = useState ('thumbs-down-outline');
   const styles = makeStyles(fontScale); 
-  const user = auth.currentUser;
+  const [user, setUser] = useState<User>();
+
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      if(user){
+        setUser(user); 
+      }
+    });
+  }, []);
 
   const handleReviewSubmit = async () => {
     const docRef = doc(db, "HomeReviews", route.params.docId);
     let homeSnapshot = await getDoc(docRef);
-    const userRef = doc(db, "UserReviews", user ? user.uid : "NULL");
+    const userRef = doc(db, "UserReviews", user ? user.uid : "");
     const docSnap = await getDoc(userRef);
 
     if(homeSnapshot.exists()){
@@ -119,7 +128,7 @@ const CreateReviewScreen: React.FC<CreateReviewProps> = ( {route, navigation}) =
 
       if(user && docSnap.exists()){ 
 
-        await setDoc(doc(db, 'HomeReviews', route.params.docId, "IndividualRatings", user.uid ? user.uid : "NULL"), {
+        await setDoc(doc(db, 'HomeReviews', route.params.docId, "IndividualRatings", user ? user.uid : ""), {
           landlordServiceRating: userLandlordRating,
           recommendHouseRating: userRecommend,
           overallRating: userOverallRating,
@@ -129,7 +138,7 @@ const CreateReviewScreen: React.FC<CreateReviewProps> = ( {route, navigation}) =
           reviewerFullName: docSnap.data().fullName
         })
 
-        await addDoc(collection(db, 'UserReviews', user.uid ? user.uid : "NULL", "Reviews"), {
+        await addDoc(collection(db, 'UserReviews', user ? user.uid : ""), {
           homeId: route.params.docId,
           landlordServiceRating: userLandlordRating,
           overallRating: userOverallRating,

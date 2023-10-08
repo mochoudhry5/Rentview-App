@@ -1,19 +1,19 @@
 import React from 'react'
 import { createStackNavigator } from "@react-navigation/stack";
-import { RootStackParamList } from "./types"
+import { RentalPostStackParamList } from "../utils/types"
 import RentalPostScreen from '../screens/RentalPostScreen';
 
-const LoggedInStack = createStackNavigator<RootStackParamList>(); 
+const Stack = createStackNavigator<RentalPostStackParamList>(); 
 
 const AccountStack = () => {
   return (
-    <LoggedInStack.Navigator initialRouteName="RentalPostScreen">
-        <LoggedInStack.Screen
+    <Stack.Navigator initialRouteName="RentalPostScreen">
+        <Stack.Screen
           name="RentalPostScreen"
           component={RentalPostScreen}
           options={{title: "Post Rental"}}
         />
-    </LoggedInStack.Navigator>
+    </Stack.Navigator>
   )
 }
 

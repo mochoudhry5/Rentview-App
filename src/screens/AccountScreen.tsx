@@ -4,10 +4,10 @@ import { auth } from "../config/firebase"
 import { signOut } from "firebase/auth";
 import { collection, getDoc, doc, query, DocumentData, getDocs } from "firebase/firestore";
 import { db } from '../config/firebase';
-import { RootStackParamList } from "../utils/types"
+import { AccountStackParamList } from "../utils/types"
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 
-type AccountProps = NativeStackScreenProps<RootStackParamList, "AccountScreen">;
+type AccountProps = NativeStackScreenProps<AccountStackParamList, "AccountScreen">;
 
 const AccountScreen : React.FC<AccountProps> = ({ navigation }) => {
   const userId = auth.currentUser ? auth.currentUser.uid : "";

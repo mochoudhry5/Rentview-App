@@ -3,14 +3,14 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import LoginView from './src/screens/LoginScreen'
 import SignupView from './src/screens/SignupScreen'
-import HomeStack from './src/utils/HomeStack';
+import HomeStack from './src/navigation/HomeStack';
 import { OtherStackParamList } from "./src/utils/types"
 import { auth } from "./src/config/firebase"
 import { onAuthStateChanged, User } from "firebase/auth";
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/Ionicons';  
-import AccountStack from './src/utils/AccountStack';
-import PostStack from './src/utils/PostStack'; 
+import AccountStack from './src/navigation/AccountStack';
+import PostStack from './src/navigation/PostStack'; 
 
 const Tab = createBottomTabNavigator()
 
@@ -31,12 +31,11 @@ function LoggedInLayout(){
         else {
           iconName = focused ? 'add-circle' : 'add-circle-outline'
         }
-        // You can return any component that you like here!
         return <Icon name={iconName} color= 'black' size={36}/>;
       },
       tabBarLabel:() => {return null},
     })}
-  >
+    >
         <Tab.Screen name="Home" component={HomeStack} options={{ headerShown:false }} />
         <Tab.Screen name="Post" component={PostStack} options={{ headerShown:false }} />
         <Tab.Screen name="Profile" component={AccountStack} options={{ headerShown:false}} />
@@ -58,9 +57,7 @@ const App = () => {
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Login">
         {user ? (
-          <>
-          <Stack.Screen name="LoggedIn" component={LoggedInLayout} options={{headerShown:false}}/>
-          </>
+            <Stack.Screen name="LoggedIn" component={LoggedInLayout} options={{headerShown:false}}/>
         ) : (
           <>
             <Stack.Screen name="Login" component={LoginView} options={{headerShown:false}}/>

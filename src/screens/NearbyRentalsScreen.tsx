@@ -5,13 +5,13 @@ import MapView, { PROVIDER_DEFAULT } from 'react-native-maps';
 import Geolocation from '@react-native-community/geolocation';
 import { calculateDistance } from '../utils/calculateDistance';
 import { sampleData } from '../utils/sampleData';
-import { RootStackParamList } from "../utils/types"
+import { HomeStackParamList } from "../utils/types"
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { collection, addDoc, query, where, getDocs, QuerySnapshot, DocumentData } from "firebase/firestore";
 import { db } from '../config/firebase';
 import BottomSheet, { BottomSheetScrollView } from '@gorhom/bottom-sheet';
 
-type SearchRentalsProps = NativeStackScreenProps<RootStackParamList, "SearchRentals">;
+type SearchRentalsProps = NativeStackScreenProps<HomeStackParamList, "SearchRentals">;
 
 const defaultRegion = {
   latitude: 0,

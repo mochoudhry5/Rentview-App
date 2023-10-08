@@ -5,7 +5,7 @@ import { OtherStackParamList } from "../utils/types"
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { auth } from "../config/firebase"
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
-import { collection, doc, query, updateDoc, getDoc, DocumentReference,setDoc, DocumentData, addDoc, where, QuerySnapshot, getDocs } from "firebase/firestore";
+import { doc, getDoc,setDoc } from "firebase/firestore";
 import { db } from '../config/firebase';
 
 GoogleSignin.configure({

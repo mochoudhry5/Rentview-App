@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { StyleSheet, View, Text, TouchableOpacity, Image } from "react-native";
 import ImageSlider from './ImageSliderScreen';
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { RootStackParamList } from "../utils/types"
+import { HomeStackParamList } from "../utils/types"
 import { doc, getDoc, query, onSnapshot, collection, DocumentData} from "firebase/firestore";
 import { db } from '../config/firebase';
 import { GestureHandlerRootView, ScrollView } from 'react-native-gesture-handler';
@@ -20,7 +20,7 @@ const images = [
   "https://source.unsplash.com/1024x768/?garage"
 ];
 
-type RentalDescriptionProps = NativeStackScreenProps<RootStackParamList, "RentalDescription">;
+type RentalDescriptionProps = NativeStackScreenProps<HomeStackParamList, "RentalDescription">;
 
 const RentalDescription: React.FC<RentalDescriptionProps> = ( { route, navigation } ) => {  
     const [totalReviews, setTotalReviews] = useState(0); 
@@ -33,7 +33,7 @@ const RentalDescription: React.FC<RentalDescriptionProps> = ( { route, navigatio
     const [postalCode, setPostalCode] = useState(""); 
     const [allReviews, setAllReviews] = useState<DocumentData[]>([]); 
     const sheetRef = useRef<BottomSheet>(null);
-    const snapPoints = ["3%","15%", "90%"];
+    const snapPoints = ["3%","14%", "90%"];
     const docRef = doc(db, "HomeReviews", route.params.docId);
     const docRefSecond = query(collection(db, "HomeReviews", route.params.docId, "IndividualRatings"));
     const user = auth.currentUser;

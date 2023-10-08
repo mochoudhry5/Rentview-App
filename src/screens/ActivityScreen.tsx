@@ -1,10 +1,10 @@
-import { View, Text, Image, ScrollView } from 'react-native'
+import { View, Text, ScrollView } from 'react-native'
 import React from 'react'
-import { RootStackParamList } from "../utils/types"
+import { AccountStackParamList } from "../utils/types"
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { AirbnbRating } from 'react-native-elements';
 
-type MyReviewProps = NativeStackScreenProps<RootStackParamList, "ActivityScreen">;
+type MyReviewProps = NativeStackScreenProps<AccountStackParamList, "ActivityScreen">;
 
 const MyReviews : React.FC<MyReviewProps> = ({route, navigation}) => {
   return (

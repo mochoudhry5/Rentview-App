@@ -1,31 +1,31 @@
 import React from 'react'
 import { createStackNavigator } from "@react-navigation/stack";
-import { RootStackParamList } from "./types"
+import { AccountStackParamList } from "../utils/types"
 import ProfileScreen from '../screens/ProfileScreen';
 import AccountScreen from '../screens/AccountScreen';
 import ActivityScreen from '../screens/ActivityScreen';
 
-const LoggedInStack = createStackNavigator<RootStackParamList>(); 
+const Stack = createStackNavigator<AccountStackParamList>(); 
 
 const AccountStack = () => {
   return (
-    <LoggedInStack.Navigator initialRouteName="AccountScreen">
-        <LoggedInStack.Screen
+    <Stack.Navigator initialRouteName="AccountScreen">
+        <Stack.Screen
           name="AccountScreen"
           component={AccountScreen}
           options={{ headerShown:false, title: "Account"}}
         />
-        <LoggedInStack.Screen
+        <Stack.Screen
           name="ActivityScreen"
           component={ActivityScreen}
           options={{title: "Activity"}}
         />
-        <LoggedInStack.Screen
+        <Stack.Screen
           name="ProfileScreen"
           component={ProfileScreen}
           options={{title: "Profile"}}
         />
-    </LoggedInStack.Navigator>
+    </Stack.Navigator>
   )
 }
 
