@@ -38,11 +38,11 @@ const ImageCarousel = (props : any) => {
         <View style={styles.container}>
             {images.length > 0 ? (
             <TouchableOpacity onPress={openCameraRoll}>
-                <Image source={{ uri: "https://media.istockphoto.com/id/1248723171/vector/camera-photo-upload-icon-on-isolated-white-background-eps-10-vector.jpg?s=612x612&w=0&k=20&c=e-OBJ2jbB-W_vfEwNCip4PW4DqhHGXYMtC3K_mzOac0=" }} style={styles.profilePicture}/>
+                <Image source={{ uri: "https://media.istockphoto.com/id/1248723171/vector/camera-photo-upload-icon-on-isolated-white-background-eps-10-vector.jpg?s=612x612&w=0&k=20&c=e-OBJ2jbB-W_vfEwNCip4PW4DqhHGXYMtC3K_mzOac0=" }} style={styles.noPictures}/>
             </TouchableOpacity>
             ) : (
             <TouchableOpacity onPress={openCameraRoll}>
-                <Image source={{ uri: "https://source.unsplash.com/1024x768/?boat" }} style={styles.profilePicture}/>
+                <Image source={{ uri: "https://source.unsplash.com/1024x768/?boat" }} style={styles.noPictures}/>
             </TouchableOpacity>
             )}
         </View>
@@ -58,11 +58,12 @@ const styles = StyleSheet.create({
       alignItems: 'center',
       paddingTop: '0%',
     },
-    profilePicture: {
-      width: 350,
-      height: 200,
+    noPictures: {
+      width: 300,
+      height: 150,
       borderRadius: 10,
-      marginBottom: '3%',
+      marginBottom: '5%',
+      opacity: 0.2
     },
     userName: {
       fontSize: 24,

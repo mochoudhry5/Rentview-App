@@ -46,7 +46,7 @@ const RentalPostScreen = () => {
             <ImageCarousel />
             <Text style={{fontSize:20, fontWeight:'bold',marginTop: '2%', marginLeft:'5%'}}>Street Address</Text>
             <TextInput
-                style={styles.nameInput}
+                style={[styles.dropdown, {fontSize: 18}]}
                 onChangeText={onChangeFullName}
                 value={fullName}
                 maxLength={20}
@@ -114,7 +114,6 @@ const RentalPostScreen = () => {
               />
             <Text style={{fontSize:20, fontWeight:'bold', marginTop: '3%', marginLeft:'5%'}}>Bedrooms</Text>
             <Dropdown
-                search
                 style={styles.dropdown}
                 placeholderStyle={styles.placeholderStyle}
                 selectedTextStyle={styles.selectedTextStyle}
@@ -130,7 +129,6 @@ const RentalPostScreen = () => {
               />
             <Text style={{fontSize:20, fontWeight:'bold', marginTop: '5%', marginLeft:'5%'}}>Bathrooms</Text>
             <Dropdown
-                search
                 style={styles.dropdown}
                 placeholderStyle={styles.placeholderStyle}
                 selectedTextStyle={styles.selectedTextStyle}
@@ -145,7 +143,7 @@ const RentalPostScreen = () => {
                 }}
               />
             </View>
-            <View style={{marginBottom: '90%'}}/>
+            <View style={{marginBottom: '85%'}}/>
         </ScrollView>
         <View style={{flexDirection:'row', justifyContent:'space-evenly'}}>
             <TouchableOpacity style={styles.cancelButton}>
