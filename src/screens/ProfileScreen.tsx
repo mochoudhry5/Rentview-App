@@ -11,7 +11,7 @@ type ProfileProps = NativeStackScreenProps<AccountStackParamList, "ProfileScreen
 
 const ProfileScreen : React.FC<ProfileProps> = ({ route,  navigation }) => {
     const user = auth.currentUser;
-    const [fullName, onChangeFullName] = useState('');
+    const [username, onChangeUsername] = useState('');
     const [phoneNumber, onChangePhoneNumber] = useState('');
     const email = user?.email ? user.email : "Email not found...";
 
@@ -22,7 +22,7 @@ const ProfileScreen : React.FC<ProfileProps> = ({ route,  navigation }) => {
             let homeSnapshot = await getDoc(docRef);
 
             if(homeSnapshot.exists()){
-                onChangeFullName(homeSnapshot.data().fullName);
+                onChangeUsername(homeSnapshot.data().username);
                 onChangePhoneNumber(homeSnapshot.data().phoneNumber);
             }
         }   
@@ -36,7 +36,7 @@ const ProfileScreen : React.FC<ProfileProps> = ({ route,  navigation }) => {
         const docSnap = await getDoc(docRef);
 
         if(docSnap.exists()){
-            if (docSnap.data().fullName !== fullName){
+            if (docSnap.data().username !== username){
 
                 const q = query(collection(db, "UserReviews", route.params.userId, "Reviews"));
                 const querySnapshot = await getDocs(q);
@@ -44,14 +44,14 @@ const ProfileScreen : React.FC<ProfileProps> = ({ route,  navigation }) => {
                 querySnapshot.forEach(async (document) => {
                     const reviewRef = doc(db, "HomeReviews", document.data().homeId, "IndividualRatings", route.params.userId);
                     await updateDoc(reviewRef, {
-                        reviewerFullName: fullName
+                        reviewerUsername: username
                         
                     });
                 });
             }
 
             await updateDoc(docRef, {
-                fullName: fullName, 
+                username: username, 
                 phoneNumber: phoneNumber,
             })
         }    
@@ -67,11 +67,11 @@ const ProfileScreen : React.FC<ProfileProps> = ({ route,  navigation }) => {
                     <Image source={{ uri: "https://source.unsplash.com/1024x768/?male" }} style={styles.profilePicture}/>
                 </View>
                 <Text style={{fontSize:20, fontWeight:'bold', marginLeft:'5%',marginBottom:'3%'}}>Basic Information</Text>
-                <Text style={{marginLeft:'5%', color:'#969696'}}>Full Name</Text>
+                <Text style={{marginLeft:'5%', color:'#969696'}}>Username</Text>
                 <TextInput
                     style={styles.nameInput}
-                    onChangeText={onChangeFullName}
-                    value={fullName}
+                    onChangeText={onChangeUsername}
+                    value={username}
                     maxLength={20}
                     placeholder='Add your name'
                 />
@@ -116,6 +116,7 @@ const styles = StyleSheet.create({
     height: '7%',
     marginLeft:'5%',
     marginRight:'5%',
+    marginTop:'2%',
     borderBottomWidth:.3,
     fontSize:16
   },
