@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, TouchableOpacity, useWindowDimensions, ScrollView, TextInput } from 'react-native'
+import { View, Text, StyleSheet, TouchableOpacity, useWindowDimensions, ScrollView, TextInput, Switch } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { collection, doc, updateDoc, getDoc, addDoc, setDoc } from "firebase/firestore";
 import { db } from '../config/firebase';
@@ -22,6 +22,8 @@ const CreateReviewScreen: React.FC<CreateReviewProps> = ( {route, navigation}) =
   const [thumbsDown, setThumbsDown] = useState ('thumbs-down-outline');
   const styles = makeStyles(fontScale); 
   const [user, setUser] = useState<User>();
+  const [isAnonymous, setIsAnonymous] = useState(false);
+  const toggleSwitch = () => setIsAnonymous(previousState => !previousState);
 
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
@@ -178,9 +180,20 @@ const CreateReviewScreen: React.FC<CreateReviewProps> = ( {route, navigation}) =
   return (
     <View style={{flex:1, backgroundColor:'white'}}>
       <ScrollView>
-      <View> 
+      <View style={{marginBottom:'20%'}}> 
+        <View style={{flexDirection:'row', justifyContent:'space-evenly', alignItems:'center', marginTop:'5%'}}>
+          <Text style={{fontSize:16, fontWeight:'bold', fontFamily: 'Iowan Old Style'}}>Be Anonymous</Text>
+          <Switch
+              trackColor={{false: '#767577', true: '#1f3839'}}
+              thumbColor={'#f4f3f4'}
+              ios_backgroundColor="#3e3e3e"
+              onValueChange={toggleSwitch}
+              value={isAnonymous}
+              style={{ transform: [{ scaleX: 1 }, { scaleY: .9 }] }}
+            />
+        </View>
         <View>
-          <View style={{flexDirection: 'row', alignItems: 'center', paddingTop:'5%'}}>
+          <View style={{flexDirection: 'row', alignItems: 'center', paddingTop:'3%'}}>
             <View style={{flex: 1, height: 1, backgroundColor: '#DEDEDE'}} />
             <View>
               <Text style={{fontFamily: 'Iowan Old Style', fontWeight:'bold', fontSize:20,textAlign: 'center', paddingLeft:'2%', paddingRight:'2%'}}>Overall Rating</Text>
@@ -308,8 +321,7 @@ const makeStyles = (fontScale:any) => StyleSheet.create({
       borderWidth: 1,
       borderRadius:10,
       textAlignVertical:'top',
-      padding:5,
-      marginBottom:80
+      padding:'2%',
     },
     submitButton: {
       alignItems: 'center',
