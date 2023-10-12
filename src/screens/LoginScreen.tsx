@@ -47,7 +47,8 @@ const Login:  React.FC<LoginProps> = ( { navigation } ) => {
 
     if(!docSnap.exists()){
       await setDoc(doc(db, 'UserReviews', auth.currentUser ? auth.currentUser.uid : ""), {
-        fullName: null,
+        anonymous: null,
+        username:null,
         email: auth.currentUser?.email,
         phoneNumber: null
       })
