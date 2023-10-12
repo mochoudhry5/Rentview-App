@@ -136,14 +136,6 @@ const NearbyRentalView: React.FC<SearchRentalsProps> = ({ navigation }) => {
           fiveStar: 0,
           avgLandlordServiceRating: 0
         },
-        houseQuality: {
-          oneStar: 0, 
-          twoStar: 0, 
-          threeStar: 0, 
-          fourStar: 0, 
-          fiveStar: 0,
-          avgHouseQualityRating: 0
-        },
         wouldRecommend: {
           yes: 0, 
           no: 0, 

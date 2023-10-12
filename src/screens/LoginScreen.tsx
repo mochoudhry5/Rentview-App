@@ -7,7 +7,6 @@ import { auth } from "../config/firebase"
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import { doc, getDoc,setDoc } from "firebase/firestore";
 import { db } from '../config/firebase';
-import { generateFromEmail, generateUsername } from "unique-username-generator";
 
 GoogleSignin.configure({
   webClientId: '795551030882-3mrb1u5bp15jvsmi97rp2kq42frc20gb.apps.googleusercontent.com',
@@ -48,8 +47,7 @@ const Login:  React.FC<LoginProps> = ( { navigation } ) => {
 
     if(!docSnap.exists()){
       await setDoc(doc(db, 'UserReviews', auth.currentUser ? auth.currentUser.uid : ""), {
-        anonymous: generateUsername("", 0, 15),
-        username:null,
+        fullName: null,
         email: auth.currentUser?.email,
         phoneNumber: null
       })

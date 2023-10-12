@@ -137,7 +137,7 @@ const RentalPostScreen = () => {
                 }}
               />
             </View>
-            <View style={{marginBottom: '20%'}}/>
+            <View style={{marginBottom: '85%'}}/>
         </ScrollView>
         <View style={{flexDirection:'row', justifyContent:'space-evenly'}}>
             <TouchableOpacity style={styles.cancelButton}>

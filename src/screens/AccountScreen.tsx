@@ -32,6 +32,7 @@ const AccountScreen : React.FC<AccountProps> = ({ navigation }) => {
     querySnapshot.forEach((doc) => {
       setAllReviews((prevArr) => ([...prevArr, doc.data()]));
     });
+
     navigation.navigate("ActivityScreen", { reviews: allReviews });
   }
 

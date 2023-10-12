@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, TouchableOpacity, useWindowDimensions, ScrollView, TextInput, Switch } from 'react-native'
+import { View, Text, StyleSheet, TouchableOpacity, useWindowDimensions, ScrollView, TextInput } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { collection, doc, updateDoc, getDoc, addDoc, setDoc } from "firebase/firestore";
 import { db } from '../config/firebase';
@@ -12,7 +12,7 @@ import { onAuthStateChanged, User } from 'firebase/auth';
 type CreateReviewProps = NativeStackScreenProps<HomeStackParamList, "CreateReview">;
 
 const CreateReviewScreen: React.FC<CreateReviewProps> = ( {route, navigation}) => {
-  const [userHouseQuality, setUserHouseQuality] = useState(5); 
+  const [houseQuality, setHouseQuality] = useState(5); 
   const [userRecommend, setUserRecommend] = useState(false); 
   const {fontScale} = useWindowDimensions();
   const [userOverallRating, setUserOverallRating] = useState(5); 
@@ -22,8 +22,6 @@ const CreateReviewScreen: React.FC<CreateReviewProps> = ( {route, navigation}) =
   const [thumbsDown, setThumbsDown] = useState ('thumbs-down-outline');
   const styles = makeStyles(fontScale); 
   const [user, setUser] = useState<User>();
-  const [isAnonymous, setIsAnonymous] = useState(false);
-  const toggleSwitch = () => setIsAnonymous(previousState => !previousState);
 
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
@@ -63,15 +61,6 @@ const CreateReviewScreen: React.FC<CreateReviewProps> = ( {route, navigation}) =
         fourStar:  homeSnapshot.data().landlordService.fourStar, 
         fiveStar:  homeSnapshot.data().landlordService.fiveStar,
         avgLandlordService: 0
-      }
-
-      var houseRating = {
-        oneStar:   homeSnapshot.data().houseQuality.oneStar, 
-        twoStar:   homeSnapshot.data().houseQuality.twoStar, 
-        threeStar: homeSnapshot.data().houseQuality.threeStar, 
-        fourStar:  homeSnapshot.data().houseQuality.fourStar, 
-        fiveStar:  homeSnapshot.data().houseQuality.fiveStar,
-        avgHouseQuality: 0
       }
 
       var recommendation = {
@@ -118,22 +107,6 @@ const CreateReviewScreen: React.FC<CreateReviewProps> = ( {route, navigation}) =
         landlordRating.fiveStar += 1; 
       }
 
-      if(userHouseQuality === 1){
-        houseRating.oneStar += + 1; 
-      }
-      else if (userHouseQuality === 2){
-        houseRating.twoStar += 1; 
-      }
-      else if(userHouseQuality === 3){
-        houseRating.threeStar += 1; 
-      }
-      else if(userHouseQuality === 4){
-        houseRating.fourStar += 1; 
-      }
-      else {
-        houseRating.fiveStar += 1; 
-      }
-
       rating.avgOverallRating = ((1 * rating.oneStar)   + 
                                  (2 * rating.twoStar)   +
                                  (3 * rating.threeStar) + 
@@ -146,15 +119,8 @@ const CreateReviewScreen: React.FC<CreateReviewProps> = ( {route, navigation}) =
                                            (4 * landlordRating.fourStar)  +
                                            (5 * landlordRating.fiveStar)) / totalReviews;
       
-      houseRating.avgHouseQuality = ((1 * houseRating.oneStar)   + 
-                                           (2 * houseRating.twoStar)   +
-                                           (3 * houseRating.threeStar) + 
-                                           (4 * houseRating.fourStar)  +
-                                           (5 * houseRating.fiveStar)) / totalReviews;
-      
       await updateDoc(docRef, {
         landlordService: landlordRating, 
-        houseQuality: houseRating,
         wouldRecommend: recommendation,
         totalReviews: totalReviews, 
         overallRating: rating
@@ -165,19 +131,17 @@ const CreateReviewScreen: React.FC<CreateReviewProps> = ( {route, navigation}) =
         await setDoc(doc(db, 'HomeReviews', route.params.docId, "IndividualRatings", user ? user.uid : ""), {
           landlordServiceRating: userLandlordRating,
           recommendHouseRating: userRecommend,
-          houseQualityRating: userHouseQuality,
           overallRating: userOverallRating,
           additionalComment: text,
           dateOfReview: month + "/" + day + "/" + year, 
           reviewerEmail: user.email,
-          reviewerUserName: docSnap.data().username
+          reviewerFullName: docSnap.data().fullName
         })
 
-        await addDoc(collection(db, 'UserReviews', user ? user.uid : "", "Reviews"), {
+        await addDoc(collection(db, 'UserReviews', user ? user.uid : ""), {
           homeId: route.params.docId,
           landlordServiceRating: userLandlordRating,
           overallRating: userOverallRating,
-          houseRating: userHouseQuality,
           recommendHouseRating: userRecommend,
           additionalComment: text,
           dateOfReview: month + "/" + day + "/" + year, 
@@ -214,20 +178,9 @@ const CreateReviewScreen: React.FC<CreateReviewProps> = ( {route, navigation}) =
   return (
     <View style={{flex:1, backgroundColor:'white'}}>
       <ScrollView>
-      <View style={{marginBottom:'20%'}}> 
-        <View style={{flexDirection:'row', justifyContent:'space-evenly', alignItems:'center', marginTop:'5%'}}>
-          <Text style={{fontSize:16, fontWeight:'bold', fontFamily: 'Iowan Old Style'}}>Post as Anonymous</Text>
-          <Switch
-              trackColor={{false: '#767577', true: '#1f3839'}}
-              thumbColor={'#f4f3f4'}
-              ios_backgroundColor="#3e3e3e"
-              onValueChange={toggleSwitch}
-              value={isAnonymous}
-              style={{ transform: [{ scaleX: 1 }, { scaleY: .9 }] }}
-            />
-        </View>
+      <View> 
         <View>
-          <View style={{flexDirection: 'row', alignItems: 'center', paddingTop:'3%'}}>
+          <View style={{flexDirection: 'row', alignItems: 'center', paddingTop:'5%'}}>
             <View style={{flex: 1, height: 1, backgroundColor: '#DEDEDE'}} />
             <View>
               <Text style={{fontFamily: 'Iowan Old Style', fontWeight:'bold', fontSize:20,textAlign: 'center', paddingLeft:'2%', paddingRight:'2%'}}>Overall Rating</Text>
@@ -273,8 +226,8 @@ const CreateReviewScreen: React.FC<CreateReviewProps> = ( {route, navigation}) =
           <AirbnbRating 
             showRating={true} 
             selectedColor="black" 
-            defaultRating={userHouseQuality}
-            onFinishRating={setUserHouseQuality}
+            defaultRating={houseQuality}
+            onFinishRating={setHouseQuality}
             size={20}
             reviewColor='gray'
             reviewSize={13}
@@ -355,7 +308,8 @@ const makeStyles = (fontScale:any) => StyleSheet.create({
       borderWidth: 1,
       borderRadius:10,
       textAlignVertical:'top',
-      padding:'2%',
+      padding:5,
+      marginBottom:80
     },
     submitButton: {
       alignItems: 'center',

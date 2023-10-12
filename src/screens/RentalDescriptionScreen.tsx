@@ -42,8 +42,6 @@ const RentalDescription: React.FC<RentalDescriptionProps> = ( { route, navigatio
     const handlePressPropertyInfo = () => setExpandedPropertyInfo(!expandedPropertyInfo);
     const handlePressOwnerInfo = () => setExpandedOwnerInfo(!expandedOwnerInfo);
     const [currentUserReviewed, setCurrentUserReviewed] = useState(false);
-    const [isEnabled, setIsEnabled] = useState(false);
-    const toggleSwitch = () => setIsEnabled(previousState => !previousState);
 
     useEffect(() => {
       const subscriber = onSnapshot(docRef, (docSnapshot) => {
@@ -239,7 +237,6 @@ const RentalDescription: React.FC<RentalDescriptionProps> = ( { route, navigatio
               }}
             />
           </View>
-          
           ))}
         </BottomSheetScrollView>
       </BottomSheet>

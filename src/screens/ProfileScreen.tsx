@@ -11,7 +11,7 @@ type ProfileProps = NativeStackScreenProps<AccountStackParamList, "ProfileScreen
 
 const ProfileScreen : React.FC<ProfileProps> = ({ route,  navigation }) => {
     const user = auth.currentUser;
-    const [anonymous, onChangeAnonymous] = useState('');
+    const [fullName, onChangeFullName] = useState('');
     const [phoneNumber, onChangePhoneNumber] = useState('');
     const email = user?.email ? user.email : "Email not found...";
 
@@ -22,7 +22,7 @@ const ProfileScreen : React.FC<ProfileProps> = ({ route,  navigation }) => {
             let homeSnapshot = await getDoc(docRef);
 
             if(homeSnapshot.exists()){
-                onChangeAnonymous(homeSnapshot.data().anonymous);
+                onChangeFullName(homeSnapshot.data().fullName);
                 onChangePhoneNumber(homeSnapshot.data().phoneNumber);
             }
         }   
@@ -36,7 +36,7 @@ const ProfileScreen : React.FC<ProfileProps> = ({ route,  navigation }) => {
         const docSnap = await getDoc(docRef);
 
         if(docSnap.exists()){
-            if (docSnap.data().anonymous !== anonymous){
+            if (docSnap.data().fullName !== fullName){
 
                 const q = query(collection(db, "UserReviews", route.params.userId, "Reviews"));
                 const querySnapshot = await getDocs(q);
@@ -44,14 +44,14 @@ const ProfileScreen : React.FC<ProfileProps> = ({ route,  navigation }) => {
                 querySnapshot.forEach(async (document) => {
                     const reviewRef = doc(db, "HomeReviews", document.data().homeId, "IndividualRatings", route.params.userId);
                     await updateDoc(reviewRef, {
-                        reviewerUsername: anonymous
+                        reviewerFullName: fullName
                         
                     });
                 });
             }
 
             await updateDoc(docRef, {
-                anonymous: anonymous, 
+                fullName: fullName, 
                 phoneNumber: phoneNumber,
             })
         }    
@@ -67,25 +67,17 @@ const ProfileScreen : React.FC<ProfileProps> = ({ route,  navigation }) => {
                     <Image source={{ uri: "https://source.unsplash.com/1024x768/?male" }} style={styles.profilePicture}/>
                 </View>
                 <Text style={{fontSize:20, fontWeight:'bold', marginLeft:'5%',marginBottom:'3%'}}>Basic Information</Text>
-                <Text style={{marginLeft:'5%', color:'#969696'}}>Username</Text>
+                <Text style={{marginLeft:'5%', color:'#969696'}}>Full Name</Text>
                 <TextInput
-                    style={styles.input}
-                    //onChangeText={}
-                    value={"PLACEHOLDER"}
+                    style={styles.nameInput}
+                    onChangeText={onChangeFullName}
+                    value={fullName}
                     maxLength={20}
-                />
-                <Text style={{marginLeft:'5%', marginTop:'5%', color:'#969696'}}>Anonymous Username</Text>
-                <TextInput
-                    style={styles.nonEditInput}
-                    onChangeText={onChangeAnonymous}
-                    value={anonymous}
-                    maxLength={20}
-                    editable={false} 
                     placeholder='Add your name'
                 />
                 <Text style={{marginLeft:'5%', marginTop:'5%', color:'#969696'}}>Email</Text>
                 <TextInput
-                    style={styles.input}
+                    style={styles.nameInput}
                     value={email}
                     maxLength={20}
                     editable={false} 
@@ -93,7 +85,7 @@ const ProfileScreen : React.FC<ProfileProps> = ({ route,  navigation }) => {
                 />
                 <Text style={{marginLeft:'5%', marginTop:'5%', color:'#969696'}}>Phone Number</Text>
                 <TextInput
-                    style={styles.input}
+                    style={styles.nameInput}
                     onChangeText={onChangePhoneNumber}
                     value={phoneNumber}
                     maxLength={10}
@@ -120,22 +112,12 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     marginBottom: '3%',
   },
-  input: {
+  nameInput: {
     height: '7%',
     marginLeft:'5%',
     marginRight:'5%',
-    marginTop:'2%',
     borderBottomWidth:.3,
     fontSize:16
-  },
-  nonEditInput: {
-    height: '7%',
-    marginLeft:'5%',
-    marginRight:'5%',
-    marginTop:'2%',
-    borderBottomWidth:.3,
-    fontSize:16,
-    color:'gray'
   },
   cancelButton: {
     alignItems: 'center',
