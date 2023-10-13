@@ -49,8 +49,9 @@ const Login:  React.FC<LoginProps> = ( { navigation } ) => {
       await setDoc(doc(db, 'UserReviews', auth.currentUser ? auth.currentUser.uid : ""), {
         anonymous: null,
         username:null,
+        fullName:null,
         email: auth.currentUser?.email,
-        phoneNumber: null
+        phoneNumber: null,
       })
     }
   }
@@ -74,19 +75,19 @@ const Login:  React.FC<LoginProps> = ( { navigation } ) => {
           <Text style={styles.signedUpButtonText}>Log In</Text>
       </TouchableOpacity>
       <View style={{flexDirection: 'row', alignItems: 'center', marginBottom: 10}}>
-      <View style={{flex: 1, height: 1, backgroundColor: 'black'}} />
-      <View>
-        <Text style={{width: 50, textAlign: 'center'}}>or</Text>
-      </View>
-      <View style={{flex: 1, height: 1, backgroundColor: 'black'}} />
-</View>
-      <TouchableOpacity style={styles.googleButton} onPress={signinWithGoogle}>
-        <Image
-        style={styles.googleIcon}
-        source={{
-          uri: "https://i.ibb.co/j82DCcR/search.png",
-        }}/>
-        <Text style={styles.googleButtonText}>Continue with Google</Text>
+        <View style={{flex: 1, height: 1, backgroundColor: 'black'}} />
+        <View>
+          <Text style={{width: 50, textAlign: 'center'}}>or</Text>
+        </View>
+        <View style={{flex: 1, height: 1, backgroundColor: 'black'}} />
+        </View>
+        <TouchableOpacity style={styles.googleButton} onPress={signinWithGoogle}>
+          <Image
+          style={styles.googleIcon}
+          source={{
+            uri: "https://i.ibb.co/j82DCcR/search.png",
+          }}/>
+          <Text style={styles.googleButtonText}>Continue with Google</Text>
       </TouchableOpacity>
     </View>
   );

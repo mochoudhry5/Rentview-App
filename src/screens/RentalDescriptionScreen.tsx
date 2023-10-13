@@ -218,7 +218,7 @@ const RentalDescription: React.FC<RentalDescriptionProps> = ( { route, navigatio
                 marginTop:'1%'}}
                 source={{ uri: "https://source.unsplash.com/1024x768/?user" }}
               />
-              <Text style={{paddingLeft:'1%', fontWeight:'bold', fontSize:14}}>{review.reviewerFullName !== null && review.reviewerFullName !== "" ? review.reviewerFullName : review.reviewerEmail}</Text>
+              <Text style={{paddingLeft:'1%', fontWeight:'bold', fontSize:14}}>{review.reviewerUsername}</Text>
             </View>
             <View style={{flexDirection:'row', alignItems:'center'}}>
               <AirbnbRating 

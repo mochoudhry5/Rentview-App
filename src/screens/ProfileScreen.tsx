@@ -13,6 +13,9 @@ const ProfileScreen : React.FC<ProfileProps> = ({ route,  navigation }) => {
     const user = auth.currentUser;
     const [anonymous, onChangeAnonymous] = useState('');
     const [phoneNumber, onChangePhoneNumber] = useState('');
+    const [username, onChangeUsername] = useState('');
+    const [fullName, onChangeFullName] = useState('');
+
     const email = user?.email ? user.email : "Email not found...";
 
     useEffect(() => {
@@ -22,8 +25,9 @@ const ProfileScreen : React.FC<ProfileProps> = ({ route,  navigation }) => {
             let homeSnapshot = await getDoc(docRef);
 
             if(homeSnapshot.exists()){
-                onChangeAnonymous(homeSnapshot.data().anonymous);
                 onChangePhoneNumber(homeSnapshot.data().phoneNumber);
+                onChangeUsername(homeSnapshot.data().username);
+                onChangeFullName(homeSnapshot.data().fullName);
             }
         }   
         
@@ -51,8 +55,8 @@ const ProfileScreen : React.FC<ProfileProps> = ({ route,  navigation }) => {
             }
 
             await updateDoc(docRef, {
-                anonymous: anonymous, 
                 phoneNumber: phoneNumber,
+                username: username
             })
         }    
         
@@ -67,25 +71,30 @@ const ProfileScreen : React.FC<ProfileProps> = ({ route,  navigation }) => {
                     <Image source={{ uri: "https://source.unsplash.com/1024x768/?male" }} style={styles.profilePicture}/>
                 </View>
                 <Text style={{fontSize:20, fontWeight:'bold', marginLeft:'5%',marginBottom:'3%'}}>Basic Information</Text>
-                <Text style={{marginLeft:'5%', color:'#969696'}}>Username</Text>
+                <Text style={{marginLeft:'5%', color:'#969696'}}>Full Name</Text>
+                <TextInput
+                    style={styles.nonEditInput}
+                    editable={false} 
+                    value={fullName}
+                    maxLength={20}
+                />
+                <Text style={{marginLeft:'5%', marginTop:'5%', color:'#969696'}}>Username</Text>
                 <TextInput
                     style={styles.input}
-                    //onChangeText={}
-                    value={"PLACEHOLDER"}
+                    onChangeText={onChangeUsername}
+                    value={username}
                     maxLength={20}
                 />
                 <Text style={{marginLeft:'5%', marginTop:'5%', color:'#969696'}}>Anonymous Username</Text>
                 <TextInput
                     style={styles.nonEditInput}
-                    onChangeText={onChangeAnonymous}
-                    value={anonymous}
                     maxLength={20}
                     editable={false} 
-                    placeholder='Add your name'
+                    value={"Nothing for now"}
                 />
                 <Text style={{marginLeft:'5%', marginTop:'5%', color:'#969696'}}>Email</Text>
                 <TextInput
-                    style={styles.input}
+                    style={styles.nonEditInput}
                     value={email}
                     maxLength={20}
                     editable={false} 

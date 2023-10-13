@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { View, StyleSheet, ActivityIndicator, Text } from 'react-native';
+import { View, StyleSheet, ActivityIndicator, Text, Button, TouchableOpacity, TextInput } from 'react-native';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import MapView, { PROVIDER_DEFAULT } from 'react-native-maps';
 import Geolocation from '@react-native-community/geolocation';
@@ -7,9 +7,10 @@ import { calculateDistance } from '../utils/calculateDistance';
 import { sampleData } from '../utils/sampleData';
 import { HomeStackParamList } from "../utils/types"
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { collection, addDoc, query, where, getDocs, QuerySnapshot, DocumentData } from "firebase/firestore";
-import { db } from '../config/firebase';
+import { doc, updateDoc, collection, addDoc, query, where, getDocs, QuerySnapshot, DocumentData, getDoc } from "firebase/firestore";
+import { auth, db } from '../config/firebase';
 import BottomSheet, { BottomSheetScrollView } from '@gorhom/bottom-sheet';
+import {Modal} from "../components/Modal";
 
 type SearchRentalsProps = NativeStackScreenProps<HomeStackParamList, "SearchRentals">;
 
@@ -20,7 +21,8 @@ const defaultRegion = {
   longitudeDelta: 0.01, // Adjust the initial zoom level here to see streets
 };
 
-const NearbyRentalView: React.FC<SearchRentalsProps> = ({ navigation }) => {
+const NearbyRentalView: React.FC<SearchRentalsProps> = ({ route, navigation }) => {
+  const userId = auth.currentUser ? auth.currentUser.uid : "";
   const [initialRegion, setInitialRegion] = useState(defaultRegion);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedRentalIndex, setSelectedRentalIndex] = useState<number | null>(null);
@@ -28,6 +30,11 @@ const NearbyRentalView: React.FC<SearchRentalsProps> = ({ navigation }) => {
   const sheetRef = useRef<BottomSheet>(null);
   const snapPoints = ["1%","10%", "90%"];
   const mapRef = useRef<MapView | null>(null);
+  const [isModalVisible, setIsModalVisible] = React.useState(false);
+  const [fullName, onChangeFullName] = useState('');
+  const [username, onChangeUserName] = useState('');
+
+  const handleModal = () => setIsModalVisible(() => !isModalVisible);
 
   useEffect(() => {
     Geolocation.getCurrentPosition(
@@ -75,7 +82,44 @@ const NearbyRentalView: React.FC<SearchRentalsProps> = ({ navigation }) => {
       },
       { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
     );
+    const subscribe = async () => {
+      const docRef = doc(db, "UserReviews", userId);
+      let homeSnapshot = await getDoc(docRef);
+
+      if(homeSnapshot.exists()){
+        if(homeSnapshot.data().fullName != null){
+          setIsModalVisible(false);
+        }
+        else{
+          setIsModalVisible(true);
+        }
+      }
+      else{
+        setIsModalVisible(true);
+      }
+  }   
+  
+  subscribe();
   }, []);
+
+  const setBasicInfo = async () => {   
+    const docRef = doc(db, "UserReviews", userId);
+    const docSnap = await getDoc(docRef);
+
+    if(docSnap.exists()){
+
+      const q = query(collection(db, "UserReviews", userId, "Reviews"));
+      const querySnapshot = await getDocs(q);
+
+      await updateDoc(docRef, {
+          fullName: fullName, 
+          username: username,
+      })
+    }    
+    setIsModalVisible(false)
+  }
+
+  
 
   const nextRentalHome = () => {
     // Navigate to the next closest rental home
@@ -225,7 +269,32 @@ const NearbyRentalView: React.FC<SearchRentalsProps> = ({ navigation }) => {
               },
             }}
           />
-
+          <Modal isVisible={isModalVisible}>
+            <Modal.Container>
+              <Modal.Header title="Welcome to RentView" />
+              <Modal.Body>
+                <Text style={{marginLeft:'5%', marginTop:'5%', color:'#969696'}}>Full Name</Text>
+                <TextInput
+                    style={styles.input}
+                    maxLength={15}
+                    onChangeText={onChangeFullName}
+                    placeholder='John Doe'
+                />
+                <Text style={{marginLeft:'5%', marginTop:'5%', color:'#969696'}}>Username</Text>
+                <TextInput
+                    style={styles.input}
+                    maxLength={15}
+                    onChangeText={onChangeUserName}
+                    placeholder='johndoe'
+                />
+              </Modal.Body>
+              <Modal.Footer>
+              <TouchableOpacity style={styles.submitButton} onPress={setBasicInfo}>
+                <Text style={{fontSize:16,fontWeight:'bold', color:'white'}}>Start Exploring</Text>
+              </TouchableOpacity>
+              </Modal.Footer>
+            </Modal.Container>
+          </Modal>
           <BottomSheet style={styles.bottomSheetShadow} ref={sheetRef} snapPoints={snapPoints} index={0}>
             <BottomSheetScrollView>
               <View style={styles.inlineContainer}>
@@ -233,34 +302,6 @@ const NearbyRentalView: React.FC<SearchRentalsProps> = ({ navigation }) => {
               </View>
             </BottomSheetScrollView>
           </BottomSheet>
-            {/* {sampleData.map((rental, index) =>
-                displayedMarkers[index] ? (
-                <Marker
-                    key={rental.id}
-                    pinColor={'green'}
-                    coordinate={{
-                    latitude: initialRegion.latitude + rental.latitude,
-                    longitude: initialRegion.longitude + rental.longitude,
-                    }}
-                >
-                </Marker>
-                ) : null
-            )} */}
-            {/* {selectedRentalIndex !== null && (
-              <RentalDescriptionScreen
-                name={sampleData[selectedRentalIndex].name}
-                rooms={sampleData[selectedRentalIndex].rooms}
-                address={sampleData[selectedRentalIndex].address}
-              />
-            )} */}
-            {/* <View style={styles.navigationButtons}>
-              <TouchableOpacity onPress={prevRentalHome} style={styles.navigationButtons}>
-                <Text style={styles.buttonText}>Previous</Text>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={nextRentalHome} style={styles.navigationButtons}>
-                <Text style={styles.buttonText}>Next</Text>
-              </TouchableOpacity>
-            </View> */}
         </>
       )}
     </View>
@@ -268,105 +309,64 @@ const NearbyRentalView: React.FC<SearchRentalsProps> = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-    container: {
-      flex: 1, 
+  container: {
+    flex: 1, 
+  },
+  map: {
+    width: '100%',
+    height: '100%',
+    position: 'absolute',
+    top: 0
+  },
+  navigationButtons: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    margin: 15,
+  },
+  button: {
+    backgroundColor: '#3498db',
+    paddingVertical: 10,
+    paddingHorizontal: 10,
+    borderRadius: 5,
+    elevation: 3,
+  },
+  bottomSheetShadow: {
+    backgroundColor: 'white',
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 12,
     },
-    map: {
-      width: '100%',
-      height: '100%',
-      position: 'absolute',
-      top: 0
-    },
-    navigationButtons: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      margin: 15,
-    },
-    button: {
-      backgroundColor: '#3498db',
-      paddingVertical: 10,
-      paddingHorizontal: 10,
-      borderRadius: 5,
-      elevation: 3,
-    },
-    buttonText: {
-      color: 'black',
-      fontSize: 16,
-      fontWeight: 'bold',
-    },
-    rootView: {
-      flex: 1,
-      backgroundColor: 'white',
-    },
-    bottomSheetShadow: {
-      backgroundColor: 'white',
-      shadowColor: "#000",
-      shadowOffset: {
-        width: 0,
-        height: 12,
-      },
-      shadowOpacity: 0.58,
-      shadowRadius: 16.00,
-      elevation: 24,
-    },
-    inlineContainer: {
-      flexDirection:'row',
-      alignItems: 'center',
-      borderRadius: 20
-    },
-    rating: {
-      fontSize: 30,
-      paddingLeft: '5%',
-      fontWeight: '600',
-    },
-    totalRentersContainer: {
-      flex: 1,
-    },
-    reviewDescription: {
-      marginLeft: '5%',
-      marginRight: '5%',
-      marginTop: '3%',
-      fontSize: 14
-    },
-    renters: {
-      fontSize: 20,
-      marginLeft: '2%'
-    },
-    reviewsSection: {
-      marginTop: '2.5%',
-      textAlign: 'center',
-    },
-    houseImage: {
-      width: '100%',
-      height: '35%',
-      top: 0, 
-      alignItems: 'center',
-      justifyContent:'center',
-    },
-    addressLines: {
-      backgroundColor: '#FAFAFA',
-      width: '100%',
-      marginBottom: '1%'
-    },
-    addressLine1: {
-      textAlign: 'center',
-      color: 'black',
-      fontWeight: 'bold',
-      fontSize: 22,
-      
-    },
-    addressLine2: {
-      textAlign: 'center',
-      color: 'gray',
-      fontSize: 14,
-    },
-    rating1: {
-      backgroundColor: '#FAFAFA',
-      width: '40%',
-      marginLeft: '6%',
-      borderWidth: .2,
-      borderRadius: 20
-    },
+    shadowOpacity: 0.58,
+    shadowRadius: 16.00,
+    elevation: 24,
+  },
+  inlineContainer: {
+    flexDirection:'row',
+    alignItems: 'center',
+    borderRadius: 20
+  },
+  submitButton: {
+    alignItems: 'center',
+    backgroundColor: '#1f3839',
+    borderWidth: 1,
+    width:'88%',
+    height:40,
+    alignSelf: 'center',
+    justifyContent: 'center',
+    marginTop:'5%',
+    marginBottom:'5%'
+  },
+  input: {
+    marginLeft:'5%',
+    marginRight:'5%',
+    marginTop:'2%',
+    borderWidth:.3,
+    height:40,
+    fontSize:16,
+    textAlignVertical:'bottom',
+    paddingLeft:'2%'
+  },
   });
 
 export default NearbyRentalView;

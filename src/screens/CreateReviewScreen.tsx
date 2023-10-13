@@ -170,7 +170,7 @@ const CreateReviewScreen: React.FC<CreateReviewProps> = ( {route, navigation}) =
           additionalComment: text,
           dateOfReview: month + "/" + day + "/" + year, 
           reviewerEmail: user.email,
-          reviewerUserName: docSnap.data().username
+          reviewerUsername: docSnap.data().username
         })
 
         await addDoc(collection(db, 'UserReviews', user ? user.uid : "", "Reviews"), {
