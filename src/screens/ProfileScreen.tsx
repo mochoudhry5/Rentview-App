@@ -60,10 +60,12 @@ const ProfileScreen : React.FC<ProfileProps> = ({ route,  navigation }) => {
             })
         }    
         
-        navigation.navigate("AccountScreen")
-        
     }
 
+    const cancelProfileInfo = () => {
+        navigation.navigate("AccountScreen")
+    }
+    
     return (
         <View style={{flex:1,paddingTop:'5%', backgroundColor:'white'}}>
             <ScrollView>
@@ -111,11 +113,11 @@ const ProfileScreen : React.FC<ProfileProps> = ({ route,  navigation }) => {
                 />
             </ScrollView>
             <View style={{flexDirection:'row', justifyContent:'space-evenly'}}>
-                <TouchableOpacity style={styles.cancelButton}>
-                    <Text style={{fontWeight:'bold', color:'#424242'}}>Cancel</Text>
-                </TouchableOpacity>
                 <TouchableOpacity style={styles.saveButton} onPress={updateProfileInfo}>
                     <Text style={{fontWeight:'bold', color:'white'}}>Save</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.cancelButton} onPress={cancelProfileInfo}>
+                    <Text style={{fontWeight:'bold', color:'#424242'}}>Back</Text>
                 </TouchableOpacity>
             </View>
         </View>
@@ -150,8 +152,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: 'white',
     borderWidth: 1,
-    width:'30%',
-    height:30,
+    width:'40%',
+    height:35,
     alignSelf: 'center',
     justifyContent: 'center',
     borderRadius:20
@@ -160,8 +162,8 @@ saveButton: {
     alignItems: 'center',
     backgroundColor: '#1f3839',
     borderWidth: 1,
-    width:'30%',
-    height:30,
+    width:'40%',
+    height:35,
     alignSelf: 'center',
     justifyContent: 'center',
     borderRadius:20

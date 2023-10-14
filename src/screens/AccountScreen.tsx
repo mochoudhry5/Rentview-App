@@ -46,7 +46,6 @@ const AccountScreen : React.FC<AccountProps> = ({ navigation }) => {
 
   const settingsOptions = [
     {title: 'Profile', subTitle: 'Manage your RentView profile', onPress : handleProfile },
-    {title: 'Notifications', subTitle: 'Turn on/off Notifications', onPress: () => {}},
     {title: 'Activity', subTitle: 'Manage your reviews', onPress : handleActivity},
     {title: 'Logout', subTitle: 'Get out of RentView', onPress : handleLogout},
   ];
