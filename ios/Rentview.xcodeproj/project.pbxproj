@@ -14,7 +14,7 @@
 		33241B784F88E967E8C64D79 /* Pods_Rentview.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 72A3548DC0E0FC96E26166CE /* Pods_Rentview.framework */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		A486DE60CA3F954262155524 /* Pods_Rentview_RentviewTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3B8753FE08D2FF82A332AB40 /* Pods_Rentview_RentviewTests.framework */; };
-		FDEDA17C2ABF548400166187 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = FDEDA17B2ABF548400166187 /* GoogleService-Info.plist */; };
+		FDDEE2EF2ADA0EC600A0791E /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = FDDEE2EE2ADA0EC600A0791E /* GoogleService-Info.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -46,7 +46,7 @@
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		ED320077E126DC66DFB0B7D0 /* Pods-Rentview-RentviewTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Rentview-RentviewTests.debug.xcconfig"; path = "Target Support Files/Pods-Rentview-RentviewTests/Pods-Rentview-RentviewTests.debug.xcconfig"; sourceTree = "<group>"; };
 		FD7D320F2AAE58060049EB0C /* Ionicons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Ionicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Ionicons.ttf"; sourceTree = "<group>"; };
-		FDEDA17B2ABF548400166187 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
+		FDDEE2EE2ADA0EC600A0791E /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		FDEDA17D2ACB7D9E00166187 /* MaterialCommunityIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = MaterialCommunityIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialCommunityIcons.ttf"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -121,7 +121,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
-				FDEDA17B2ABF548400166187 /* GoogleService-Info.plist */,
+				FDDEE2EE2ADA0EC600A0791E /* GoogleService-Info.plist */,
 				13B07FAE1A68108700A75B9A /* Rentview */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* RentviewTests */,
@@ -261,7 +261,7 @@
 			files = (
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
-				FDEDA17C2ABF548400166187 /* GoogleService-Info.plist in Resources */,
+				FDDEE2EF2ADA0EC600A0791E /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
