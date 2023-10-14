@@ -1,18 +1,39 @@
-import React, { useEffect, useState, useRef } from 'react';
-import { View, StyleSheet, ActivityIndicator, Text, Button, TouchableOpacity, TextInput } from 'react-native';
-import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
-import MapView, { PROVIDER_DEFAULT } from 'react-native-maps';
+import React, {useEffect, useState, useRef} from 'react';
+import {
+  View,
+  StyleSheet,
+  ActivityIndicator,
+  Text,
+  Button,
+  TouchableOpacity,
+  TextInput,
+} from 'react-native';
+import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
+import MapView, {PROVIDER_DEFAULT} from 'react-native-maps';
 import Geolocation from '@react-native-community/geolocation';
-import { calculateDistance } from '../utils/calculateDistance';
-import { sampleData } from '../utils/sampleData';
-import { HomeStackParamList } from "../utils/types"
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { doc, updateDoc, collection, addDoc, query, where, getDocs, QuerySnapshot, DocumentData, getDoc } from "firebase/firestore";
-import { auth, db } from '../config/firebase';
-import BottomSheet, { BottomSheetScrollView } from '@gorhom/bottom-sheet';
-import {Modal} from "../components/Modal";
+import {calculateDistance} from '../utils/calculateDistance';
+import {sampleData} from '../utils/sampleData';
+import {HomeStackParamList} from '../utils/types';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {
+  doc,
+  updateDoc,
+  collection,
+  addDoc,
+  query,
+  where,
+  getDocs,
+  QuerySnapshot,
+  DocumentData,
+  getDoc,
+} from 'firebase/firestore';
+import {auth, db} from '../config/firebase';
+import {Modal} from '../components/Modal';
 
-type SearchRentalsProps = NativeStackScreenProps<HomeStackParamList, "SearchRentals">;
+type SearchRentalsProps = NativeStackScreenProps<
+  HomeStackParamList,
+  'SearchRentals'
+>;
 
 const defaultRegion = {
   latitude: 0,
@@ -21,14 +42,17 @@ const defaultRegion = {
   longitudeDelta: 0.01, // Adjust the initial zoom level here to see streets
 };
 
-const NearbyRentalView: React.FC<SearchRentalsProps> = ({ route, navigation }) => {
-  const userId = auth.currentUser ? auth.currentUser.uid : "";
+const NearbyRentalView: React.FC<SearchRentalsProps> = ({
+  route,
+  navigation,
+}) => {
+  const userId = auth.currentUser ? auth.currentUser.uid : '';
   const [initialRegion, setInitialRegion] = useState(defaultRegion);
   const [isLoading, setIsLoading] = useState(true);
-  const [selectedRentalIndex, setSelectedRentalIndex] = useState<number | null>(null);
+  const [selectedRentalIndex, setSelectedRentalIndex] = useState<number | null>(
+    null,
+  );
   const [displayedMarkers, setDisplayedMarkers] = useState<boolean[]>([]);
-  const sheetRef = useRef<BottomSheet>(null);
-  const snapPoints = ["1%","10%", "90%"];
   const mapRef = useRef<MapView | null>(null);
   const [isModalVisible, setIsModalVisible] = React.useState(false);
   const [fullName, onChangeFullName] = useState('');
@@ -39,7 +63,7 @@ const NearbyRentalView: React.FC<SearchRentalsProps> = ({ route, navigation }) =
   useEffect(() => {
     Geolocation.getCurrentPosition(
       position => {
-        const { latitude, longitude } = position.coords;
+        const {latitude, longitude} = position.coords;
         setInitialRegion({
           latitude,
           longitude,
@@ -58,7 +82,7 @@ const NearbyRentalView: React.FC<SearchRentalsProps> = ({ route, navigation }) =
             latitude,
             longitude,
             initialRegion.latitude + rental.latitude,
-            initialRegion.longitude + rental.longitude
+            initialRegion.longitude + rental.longitude,
           );
 
           if (distance < minDistance) {
@@ -80,50 +104,45 @@ const NearbyRentalView: React.FC<SearchRentalsProps> = ({ route, navigation }) =
         console.error(error);
         setIsLoading(false);
       },
-      { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
+      {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000},
     );
     const subscribe = async () => {
-      const docRef = doc(db, "UserReviews", userId);
+      const docRef = doc(db, 'UserReviews', userId);
       let homeSnapshot = await getDoc(docRef);
 
-      if(homeSnapshot.exists()){
-        if(homeSnapshot.data().fullName != null){
+      if (homeSnapshot.exists()) {
+        if (homeSnapshot.data().fullName != null) {
           setIsModalVisible(false);
-        }
-        else{
+        } else {
           setIsModalVisible(true);
         }
-      }
-      else{
+      } else {
         setIsModalVisible(true);
       }
-  }   
-  
-  subscribe();
+    };
+
+    subscribe();
   }, []);
 
-  const setBasicInfo = async () => {   
-    const docRef = doc(db, "UserReviews", userId);
-    const docSnap = await getDoc(docRef);
+  const setBasicInfo = async () => {
+    const userInfoRef = doc(db, 'UserReviews', userId);
+    const userInfoSnapshot = await getDoc(userInfoRef);
 
-    if(docSnap.exists()){
-
-      const q = query(collection(db, "UserReviews", userId, "Reviews"));
-      const querySnapshot = await getDocs(q);
-
-      await updateDoc(docRef, {
-          fullName: fullName, 
-          username: username,
-      })
-    }    
-    setIsModalVisible(false)
-  }
-
-  
+    if (userInfoSnapshot.exists()) {
+      await updateDoc(userInfoRef, {
+        fullName: fullName,
+        username: username,
+      });
+    }
+    setIsModalVisible(false);
+  };
 
   const nextRentalHome = () => {
     // Navigate to the next closest rental home
-    if (selectedRentalIndex !== null && selectedRentalIndex < sampleData.length - 1) {
+    if (
+      selectedRentalIndex !== null &&
+      selectedRentalIndex < sampleData.length - 1
+    ) {
       setSelectedRentalIndex(selectedRentalIndex + 1);
 
       // Hide the previously selected marker
@@ -153,64 +172,68 @@ const NearbyRentalView: React.FC<SearchRentalsProps> = ({ route, navigation }) =
     }
   };
 
-  async function handleOnPressAddress(data : string, postalCode : string) {
-    let docId = ""; 
-    let array = data.split(',')
-    let streetAddress = array[0]; 
-    let city = array[1]; 
-    let state = array[2]; 
-    let homeInfo = query(collection(db, "HomeReviews"), where("address.street", "==", streetAddress));
-    let homeSnapshot : QuerySnapshot<DocumentData, DocumentData> = await getDocs(homeInfo);
+  async function handleOnPressAddress(data: string, postalCode: string) {
+    let docId = '';
+    let array = data.split(',');
+    let streetAddress = array[0];
+    let city = array[1];
+    let state = array[2];
+    let homeInfo = query(
+      collection(db, 'HomeReviews'),
+      where('address.street', '==', streetAddress),
+    );
+    let homeSnapshot: QuerySnapshot<DocumentData, DocumentData> = await getDocs(
+      homeInfo,
+    );
 
-    if(homeSnapshot.size !== 1)
-    {
+    if (homeSnapshot.size !== 1) {
       await addDoc(collection(db, 'HomeReviews'), {
         address: {
-          street: streetAddress, 
-          city: city, 
-          state: state, 
+          street: streetAddress,
+          city: city,
+          state: state,
           postalCode: postalCode,
-          fullAddress: data
+          fullAddress: data,
         },
         landlordService: {
-          oneStar: 0, 
-          twoStar: 0, 
-          threeStar: 0, 
-          fourStar: 0, 
+          oneStar: 0,
+          twoStar: 0,
+          threeStar: 0,
+          fourStar: 0,
           fiveStar: 0,
-          avgLandlordServiceRating: 0
+          avgLandlordServiceRating: 0,
         },
         houseQuality: {
-          oneStar: 0, 
-          twoStar: 0, 
-          threeStar: 0, 
-          fourStar: 0, 
+          oneStar: 0,
+          twoStar: 0,
+          threeStar: 0,
+          fourStar: 0,
           fiveStar: 0,
-          avgHouseQualityRating: 0
+          avgHouseQualityRating: 0,
         },
         wouldRecommend: {
-          yes: 0, 
-          no: 0, 
-        }, 
-        overallRating : {
-          oneStar: 0, 
-          twoStar: 0, 
-          threeStar: 0, 
-          fourStar: 0, 
+          yes: 0,
+          no: 0,
+        },
+        overallRating: {
+          oneStar: 0,
+          twoStar: 0,
+          threeStar: 0,
+          fourStar: 0,
           fiveStar: 0,
           avgOverallRating: 0,
         },
         totalReviews: 0,
-      })
+      });
     }
 
     homeSnapshot = await getDocs(homeInfo);
 
     homeSnapshot.forEach(doc => {
-      docId = doc.id; 
+      docId = doc.id;
     });
 
-    navigation.navigate("RentalDescription", { docId: docId });
+    navigation.navigate('RentalDescription', {docId: docId});
   }
 
   return (
@@ -220,52 +243,51 @@ const NearbyRentalView: React.FC<SearchRentalsProps> = ({ route, navigation }) =
       ) : (
         <>
           <MapView
-          ref={mapRef}
-          provider={PROVIDER_DEFAULT}
-          style={styles.map}
-          initialRegion={initialRegion}
-          showsUserLocation={true}
+            ref={mapRef}
+            provider={PROVIDER_DEFAULT}
+            style={styles.map}
+            initialRegion={initialRegion}
+            showsUserLocation={true}
           />
-          
+
           <GooglePlacesAutocomplete
-            placeholder='Search'
+            placeholder="Search"
             minLength={2}
-            listViewDisplayed={false} 
+            listViewDisplayed={false}
             fetchDetails={true}
             onPress={(data, details) => {
-              let postalCode = ""; 
-              if(data !== null && details !== null)
-              {
+              let postalCode = '';
+              if (data !== null && details !== null) {
                 for (let i = 0; i < details.address_components.length; i++) {
-                
-                  if (details.address_components[i].types[0] === "postal_code") {
-                      postalCode = details.address_components[i].long_name
+                  if (
+                    details.address_components[i].types[0] === 'postal_code'
+                  ) {
+                    postalCode = details.address_components[i].long_name;
                   }
-                  details.address_components[i]
-
+                  details.address_components[i];
                 }
-                handleOnPressAddress(data.description, postalCode)
+                handleOnPressAddress(data.description, postalCode);
               }
             }}
             query={{
-                key: 'AIzaSyDMCC2Peu8bQvTkgddfI3OhHe3zTxNoSeU',
-                language: 'en'
+              key: 'AIzaSyDMCC2Peu8bQvTkgddfI3OhHe3zTxNoSeU',
+              language: 'en',
             }}
-            nearbyPlacesAPI='GooglePlacesSearch'
+            nearbyPlacesAPI="GooglePlacesSearch"
             debounce={300}
             styles={{
               textInput: {
                 height: 40,
-                color: "black",
+                color: 'black',
                 fontSize: 14,
                 marginTop: 43,
-                marginLeft: 2, 
-                marginRight: 2, 
+                marginLeft: 2,
+                marginRight: 2,
                 backgroundColor: 'white',
-                width: "90%",
+                width: '90%',
                 borderWidth: 2,
-                borderColor: "black",
-                borderRadius: 10
+                borderColor: 'black',
+                borderRadius: 10,
               },
             }}
           />
@@ -273,35 +295,39 @@ const NearbyRentalView: React.FC<SearchRentalsProps> = ({ route, navigation }) =
             <Modal.Container>
               <Modal.Header title="Welcome to RentView" />
               <Modal.Body>
-                <Text style={{marginLeft:'5%', marginTop:'5%', color:'#969696'}}>Full Name</Text>
+                <Text
+                  style={{marginLeft: '5%', marginTop: '5%', color: '#969696'}}>
+                  Full Name
+                </Text>
                 <TextInput
-                    style={styles.input}
-                    maxLength={15}
-                    onChangeText={onChangeFullName}
-                    placeholder='John Doe'
+                  style={styles.input}
+                  maxLength={15}
+                  onChangeText={onChangeFullName}
+                  placeholder="John Doe"
                 />
-                <Text style={{marginLeft:'5%', marginTop:'5%', color:'#969696'}}>Username</Text>
+                <Text
+                  style={{marginLeft: '5%', marginTop: '5%', color: '#969696'}}>
+                  Username
+                </Text>
                 <TextInput
-                    style={styles.input}
-                    maxLength={15}
-                    onChangeText={onChangeUserName}
-                    placeholder='johndoe'
+                  style={styles.input}
+                  maxLength={15}
+                  onChangeText={onChangeUserName}
+                  placeholder="johndoe"
                 />
               </Modal.Body>
               <Modal.Footer>
-              <TouchableOpacity style={styles.submitButton} onPress={setBasicInfo}>
-                <Text style={{fontSize:16,fontWeight:'bold', color:'white'}}>Start Exploring</Text>
-              </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.submitButton}
+                  onPress={setBasicInfo}>
+                  <Text
+                    style={{fontSize: 16, fontWeight: 'bold', color: 'white'}}>
+                    Start Exploring
+                  </Text>
+                </TouchableOpacity>
               </Modal.Footer>
             </Modal.Container>
           </Modal>
-          <BottomSheet style={styles.bottomSheetShadow} ref={sheetRef} snapPoints={snapPoints} index={0}>
-            <BottomSheetScrollView>
-              <View style={styles.inlineContainer}>
-                <Text>No results</Text>
-              </View>
-            </BottomSheetScrollView>
-          </BottomSheet>
         </>
       )}
     </View>
@@ -310,13 +336,13 @@ const NearbyRentalView: React.FC<SearchRentalsProps> = ({ route, navigation }) =
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1, 
+    flex: 1,
   },
   map: {
     width: '100%',
     height: '100%',
     position: 'absolute',
-    top: 0
+    top: 0,
   },
   navigationButtons: {
     flexDirection: 'row',
@@ -332,41 +358,41 @@ const styles = StyleSheet.create({
   },
   bottomSheetShadow: {
     backgroundColor: 'white',
-    shadowColor: "#000",
+    shadowColor: '#000',
     shadowOffset: {
       width: 0,
       height: 12,
     },
     shadowOpacity: 0.58,
-    shadowRadius: 16.00,
+    shadowRadius: 16.0,
     elevation: 24,
   },
   inlineContainer: {
-    flexDirection:'row',
+    flexDirection: 'row',
     alignItems: 'center',
-    borderRadius: 20
+    borderRadius: 20,
   },
   submitButton: {
     alignItems: 'center',
     backgroundColor: '#1f3839',
     borderWidth: 1,
-    width:'88%',
-    height:40,
+    width: '88%',
+    height: 40,
     alignSelf: 'center',
     justifyContent: 'center',
-    marginTop:'5%',
-    marginBottom:'5%'
+    marginTop: '5%',
+    marginBottom: '5%',
   },
   input: {
-    marginLeft:'5%',
-    marginRight:'5%',
-    marginTop:'2%',
-    borderWidth:.3,
-    height:40,
-    fontSize:16,
-    textAlignVertical:'bottom',
-    paddingLeft:'2%'
+    marginLeft: '5%',
+    marginRight: '5%',
+    marginTop: '2%',
+    borderWidth: 0.3,
+    height: 40,
+    fontSize: 16,
+    textAlignVertical: 'bottom',
+    paddingLeft: '2%',
   },
-  });
+});
 
 export default NearbyRentalView;
