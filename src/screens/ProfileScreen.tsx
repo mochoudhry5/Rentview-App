@@ -76,13 +76,16 @@ const ProfileScreen: React.FC<ProfileProps> = ({route, navigation}) => {
           });
         });
       }
-
       await updateDoc(userInfoRef, {
         phoneNumber: phoneNumber,
         username: username,
       });
     }
 
+    navigation.navigate('AccountScreen');
+  };
+
+  const cancelProfileInfo = () => {
     navigation.navigate('AccountScreen');
   };
 
@@ -152,7 +155,9 @@ const ProfileScreen: React.FC<ProfileProps> = ({route, navigation}) => {
         />
       </ScrollView>
       <View style={{flexDirection: 'row', justifyContent: 'space-evenly'}}>
-        <TouchableOpacity style={styles.cancelButton}>
+        <TouchableOpacity
+          style={styles.cancelButton}
+          onPress={cancelProfileInfo}>
           <Text style={{fontWeight: 'bold', color: '#424242'}}>Cancel</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.saveButton} onPress={updateProfileInfo}>
@@ -191,8 +196,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: 'white',
     borderWidth: 1,
-    width: '30%',
-    height: 30,
+    width: '40%',
+    height: 35,
     alignSelf: 'center',
     justifyContent: 'center',
     borderRadius: 20,
@@ -201,8 +206,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#1f3839',
     borderWidth: 1,
-    width: '30%',
-    height: 30,
+    width: '40%',
+    height: 35,
     alignSelf: 'center',
     justifyContent: 'center',
     borderRadius: 20,
