@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import ImageCarousel from './ImageCarousel';
 import {Country, State, City} from 'country-state-city';
 import {Dropdown} from 'react-native-element-dropdown';
@@ -30,7 +30,12 @@ const bedAndBath = [
 ];
 
 const RentalPostScreen = () => {
-  const [fullName, onChangeFullName] = useState('');
+  const [chosenAddress, setChosenAddress] = useState('');
+  const [chosenCountry, setChosenCountry] = useState('');
+  const [chosenState, setChosenState] = useState('');
+  const [chosenCity, setChosenCity] = useState('');
+  const [totalBedrooms, setTotalBedrooms] = useState('');
+  const [totalBathrooms, setTotalBathrooms] = useState('');
   const [countries, setCountries] = useState<Array<RegionDataType>>([
     {label: 'United States', value: 'US'},
   ]);
@@ -40,11 +45,6 @@ const RentalPostScreen = () => {
   const [states, setStates] = useState<Array<RegionDataType>>([
     {label: '', value: ''},
   ]);
-  const [chosenCountry, setChosenCountry] = useState('');
-  const [chosenState, setChosenState] = useState('');
-  const [chosenCity, setChosenCity] = useState('');
-  const [totalBedrooms, setTotalBedrooms] = useState('');
-  const [totalBathrooms, setTotalBathrooms] = useState('');
 
   return (
     <View style={{flex: 1, paddingTop: '2%', backgroundColor: 'white'}}>
@@ -61,8 +61,8 @@ const RentalPostScreen = () => {
         </Text>
         <TextInput
           style={[styles.dropdown, {fontSize: 18}]}
-          onChangeText={onChangeFullName}
-          value={fullName}
+          onChangeText={setChosenAddress}
+          value={chosenAddress}
           maxLength={20}
           placeholder="Enter Home address"
         />
