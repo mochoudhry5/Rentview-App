@@ -57,6 +57,7 @@ const NearbyRentalView: React.FC<SearchRentalsProps> = ({
   const [isModalVisible, setIsModalVisible] = React.useState(false);
   const [fullName, onChangeFullName] = useState('');
   const [username, onChangeUserName] = useState('');
+  const [phoneNumber, onChangePhoneNumber] = useState('');
 
   const handleModal = () => setIsModalVisible(() => !isModalVisible);
 
@@ -132,6 +133,7 @@ const NearbyRentalView: React.FC<SearchRentalsProps> = ({
       await updateDoc(userInfoRef, {
         fullName: fullName,
         username: username,
+        phoneNumber: phoneNumber,
       });
     }
     setIsModalVisible(false);
@@ -314,6 +316,17 @@ const NearbyRentalView: React.FC<SearchRentalsProps> = ({
                   maxLength={15}
                   onChangeText={onChangeUserName}
                   placeholder="johndoe"
+                />
+                <Text
+                  style={{marginLeft: '5%', marginTop: '5%', color: '#969696'}}>
+                  Phone Number
+                </Text>
+                <TextInput
+                  style={styles.input}
+                  maxLength={10}
+                  onChangeText={onChangePhoneNumber}
+                  placeholder="9165023590"
+                  keyboardType='numeric'
                 />
               </Modal.Body>
               <Modal.Footer>
