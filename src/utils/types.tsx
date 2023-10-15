@@ -15,6 +15,7 @@ export type AccountStackParamList = {
   AccountScreen: undefined;
   ProfileScreen: {userId: string};
   RentalDescription: {docId: string};
+  PropertiesScreen: undefined;
   RentalPostScreen: undefined;
 };
 

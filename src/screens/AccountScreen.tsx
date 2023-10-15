@@ -70,7 +70,7 @@ const AccountScreen: React.FC<AccountProps> = ({navigation}) => {
   };
 
   const handleMyProperties = () => {
-    navigation.navigate('RentalPostScreen');
+    navigation.navigate('PropertiesScreen');
   };
 
   const settingsOptions = [

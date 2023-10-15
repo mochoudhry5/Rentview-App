@@ -5,6 +5,7 @@ import ProfileScreen from '../screens/ProfileScreen';
 import AccountScreen from '../screens/AccountScreen';
 import ActivityScreen from '../screens/ActivityScreen';
 import RentalDescriptionScreen from '../screens/RentalDescriptionScreen';
+import PropertiesScreen from '../screens/PropertiesScreen';
 import RentalPostScreen from '../screens/RentalPostScreen';
 
 const Stack = createStackNavigator<AccountStackParamList>();
@@ -35,6 +36,11 @@ const AccountStack = () => {
           title: 'Property Information',
           headerBackTitle: 'Reviews',
         }}
+      />
+      <Stack.Screen
+        name="PropertiesScreen"
+        component={PropertiesScreen}
+        options={{title: 'My Properties'}}
       />
       <Stack.Screen
         name="RentalPostScreen"

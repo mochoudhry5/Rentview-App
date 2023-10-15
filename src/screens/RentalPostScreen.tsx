@@ -10,6 +10,23 @@ import React, {useState} from 'react';
 import ImageCarousel from './ImageCarousel';
 import {Country, State, City} from 'country-state-city';
 import {Dropdown} from 'react-native-element-dropdown';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {AccountStackParamList} from '../utils/types';
+import {
+  DocumentData,
+  QuerySnapshot,
+  addDoc,
+  collection,
+  getDocs,
+  query,
+  where,
+} from 'firebase/firestore';
+import {auth, db} from '../config/firebase';
+
+type PostPropertyScreen = NativeStackScreenProps<
+  AccountStackParamList,
+  'RentalPostScreen'
+>;
 
 type RegionDataType = {
   label: string;
@@ -29,13 +46,15 @@ const bedAndBath = [
   {label: '10+', value: '10+'},
 ];
 
-const RentalPostScreen = () => {
+const RentalPostScreen: React.FC<PostPropertyScreen> = ({navigation}) => {
+  const user = auth.currentUser;
   const [chosenAddress, setChosenAddress] = useState('');
   const [chosenCountry, setChosenCountry] = useState('');
   const [chosenState, setChosenState] = useState('');
   const [chosenCity, setChosenCity] = useState('');
   const [totalBedrooms, setTotalBedrooms] = useState('');
   const [totalBathrooms, setTotalBathrooms] = useState('');
+  const [chosenPostalCode, setChosenPostalCode] = useState('');
   const [countries, setCountries] = useState<Array<RegionDataType>>([
     {label: 'United States', value: 'US'},
   ]);
@@ -45,6 +64,87 @@ const RentalPostScreen = () => {
   const [states, setStates] = useState<Array<RegionDataType>>([
     {label: '', value: ''},
   ]);
+
+  const handlePostSubmit = async () => {
+    let homeInfo = query(
+      collection(db, 'HomeReviews'),
+      where('address.street', '==', chosenAddress),
+    );
+
+    let homeSnapshot: QuerySnapshot<DocumentData, DocumentData> = await getDocs(
+      homeInfo,
+    );
+
+    if (homeSnapshot.size !== 1) {
+      let fullAddress =
+        chosenAddress +
+        ', ' +
+        chosenCity +
+        ', ' +
+        chosenState +
+        ', ' +
+        chosenCountry +
+        ' ' +
+        chosenPostalCode;
+
+      const newHomePost = await addDoc(collection(db, 'HomeReviews'), {
+        address: {
+          street: chosenAddress,
+          city: chosenCity,
+          state: chosenState,
+          postalCode: chosenPostalCode,
+          fullAddress: fullAddress,
+        },
+        landlordService: {
+          oneStar: 0,
+          twoStar: 0,
+          threeStar: 0,
+          fourStar: 0,
+          fiveStar: 0,
+          avgLandlordServiceRating: 0,
+        },
+        houseQuality: {
+          oneStar: 0,
+          twoStar: 0,
+          threeStar: 0,
+          fourStar: 0,
+          fiveStar: 0,
+          avgHouseQualityRating: 0,
+        },
+        wouldRecommend: {
+          yes: 0,
+          no: 0,
+        },
+        overallRating: {
+          oneStar: 0,
+          twoStar: 0,
+          threeStar: 0,
+          fourStar: 0,
+          fiveStar: 0,
+          avgOverallRating: 0,
+        },
+        totalReviews: 0,
+      });
+
+      await addDoc(
+        collection(db, 'UserReviews', user?.uid ? user.uid : '', 'Properties'),
+        {
+          address: {
+            street: chosenAddress,
+            city: chosenCity,
+            state: chosenState,
+            postalCode: chosenPostalCode,
+            fullAddress: fullAddress,
+          },
+          homeId: newHomePost.id,
+        },
+      );
+    }
+  };
+
+  const handleCancel = () => {
+    navigation.navigate('PropertiesScreen');
+  };
 
   return (
     <View style={{flex: 1, paddingTop: '2%', backgroundColor: 'white'}}>
@@ -65,6 +165,23 @@ const RentalPostScreen = () => {
           value={chosenAddress}
           maxLength={20}
           placeholder="Enter Home address"
+        />
+        <Text
+          style={{
+            fontSize: 20,
+            fontWeight: 'bold',
+            marginTop: '2%',
+            marginLeft: '5%',
+          }}>
+          Postal Code
+        </Text>
+        <TextInput
+          style={[styles.dropdown, {fontSize: 18}]}
+          onChangeText={setChosenPostalCode}
+          value={chosenPostalCode}
+          maxLength={20}
+          placeholder="Enter Postal Code"
+          keyboardType="numeric"
         />
         <View>
           <Text
@@ -200,10 +317,10 @@ const RentalPostScreen = () => {
         <View style={{marginBottom: '20%'}} />
       </ScrollView>
       <View style={{flexDirection: 'row', justifyContent: 'space-evenly'}}>
-        <TouchableOpacity style={styles.cancelButton}>
+        <TouchableOpacity style={styles.cancelButton} onPress={handleCancel}>
           <Text style={{fontWeight: 'bold', color: '#424242'}}>Cancel</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.saveButton}>
+        <TouchableOpacity style={styles.saveButton} onPress={handlePostSubmit}>
           <Text style={{fontWeight: 'bold', color: 'white'}}>Post</Text>
         </TouchableOpacity>
       </View>
