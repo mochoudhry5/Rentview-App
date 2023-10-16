@@ -117,7 +117,7 @@ const RentalDescription: React.FC<RentalDescriptionProps> = ({
   return (
     <GestureHandlerRootView style={styles.rootView}>
       <ScrollView>
-        <ImageSlider images={images} />
+        <ImageSlider images={images}/>
         <View>
           <View style={styles.addressLines}>
             <Text style={styles.addressLine1}>{street}</Text>
