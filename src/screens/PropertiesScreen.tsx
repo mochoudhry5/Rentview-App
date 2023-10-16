@@ -11,8 +11,8 @@ type PropertiesProps = NativeStackScreenProps<
 >;
 
 const PropertiesScreen: React.FC<PropertiesProps> = ({navigation}) => {
-  const [allProperties, setAllProperties] = useState<DocumentData[]>([]);
   const user = auth.currentUser;
+  const [allProperties, setAllProperties] = useState<DocumentData[]>([]);
   const userPropertiesRef = query(
     collection(db, 'UserReviews', user?.uid ? user.uid : '', 'Properties'),
   );
@@ -26,7 +26,6 @@ const PropertiesScreen: React.FC<PropertiesProps> = ({navigation}) => {
         });
       }
     });
-
     return () => subscriber();
   }, []);
 

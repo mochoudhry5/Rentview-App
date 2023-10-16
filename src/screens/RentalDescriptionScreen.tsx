@@ -3,14 +3,6 @@ import {StyleSheet, View, Text, TouchableOpacity, Image} from 'react-native';
 import ImageSlider from './ImageSliderScreen';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {HomeStackParamList} from '../utils/types';
-import {
-  doc,
-  getDoc,
-  query,
-  onSnapshot,
-  collection,
-  DocumentData,
-} from 'firebase/firestore';
 import {db} from '../config/firebase';
 import {GestureHandlerRootView, ScrollView} from 'react-native-gesture-handler';
 import BottomSheet, {BottomSheetScrollView} from '@gorhom/bottom-sheet';
@@ -19,6 +11,14 @@ import {auth} from '../config/firebase';
 import Icon from 'react-native-vector-icons/Ionicons';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {ListItem} from '@rneui/themed';
+import {
+  doc,
+  getDoc,
+  query,
+  onSnapshot,
+  collection,
+  DocumentData,
+} from 'firebase/firestore';
 
 const images = [
   'https://source.unsplash.com/1024x768/?house',
@@ -36,29 +36,31 @@ const RentalDescription: React.FC<RentalDescriptionProps> = ({
   route,
   navigation,
 }) => {
-  const [totalReviews, setTotalReviews] = useState(0);
-  const [yesRecommendation, setYesRecommendation] = useState(0);
-  const [overallRating, setOverallRating] = useState(0);
-  const [landlordRating, setLandlordRating] = useState(0);
-  const [street, setStreet] = useState('');
-  const [city, setCity] = useState('');
-  const [state, setState] = useState('');
-  const [postalCode, setPostalCode] = useState('');
+  const [totalReviews, setTotalReviews] = useState<number>(0);
+  const [yesRecommendation, setYesRecommendation] = useState<number>(0);
+  const [overallRating, setOverallRating] = useState<number>(0);
+  const [landlordRating, setLandlordRating] = useState<number>(0);
+  const [street, setStreet] = useState<string>('');
+  const [city, setCity] = useState<string>('');
+  const [state, setState] = useState<string>('');
+  const [postalCode, setPostalCode] = useState<string>('');
   const [allReviews, setAllReviews] = useState<DocumentData[]>([]);
   const sheetRef = useRef<BottomSheet>(null);
   const snapPoints = ['3%', '14%', '90%'];
-  const homeInfoRef = doc(db, 'HomeReviews', route.params.docId);
-  const homeReviewsRef = query(
-    collection(db, 'HomeReviews', route.params.docId, 'IndividualRatings'),
+  const homeInfoRef = doc(db, 'HomeReviews', route.params.homeId);
+  const homeReviewsQuery = query(
+    collection(db, 'HomeReviews', route.params.homeId, 'IndividualRatings'),
   );
   const user = auth.currentUser;
-  const [expandedPropertyInfo, setExpandedPropertyInfo] = React.useState(false);
-  const [expandedOwnerInfo, setExpandedOwnerInfo] = React.useState(false);
+  const [expandedPropertyInfo, setExpandedPropertyInfo] =
+    useState<boolean>(false);
+  const [expandedOwnerInfo, setExpandedOwnerInfo] = useState<boolean>(false);
   const handlePressPropertyInfo = () =>
     setExpandedPropertyInfo(!expandedPropertyInfo);
   const handlePressOwnerInfo = () => setExpandedOwnerInfo(!expandedOwnerInfo);
-  const [currentUserReviewed, setCurrentUserReviewed] = useState(false);
-  const [isEnabled, setIsEnabled] = useState(false);
+  const [currentUserReviewed, setCurrentUserReviewed] =
+    useState<boolean>(false);
+  const [isEnabled, setIsEnabled] = useState<boolean>(false);
   const toggleSwitch = () => setIsEnabled(previousState => !previousState);
 
   useEffect(() => {
@@ -75,7 +77,7 @@ const RentalDescription: React.FC<RentalDescriptionProps> = ({
     });
 
     const getData = () => {
-      onSnapshot(homeReviewsRef, docSnapshot => {
+      onSnapshot(homeReviewsQuery, docSnapshot => {
         if (docSnapshot.size >= 1) {
           setAllReviews([]);
           docSnapshot.forEach(doc => {
@@ -111,7 +113,7 @@ const RentalDescription: React.FC<RentalDescriptionProps> = ({
   }, []);
 
   const handleOnPress = () => {
-    navigation.navigate('CreateReview', {docId: route.params.docId});
+    navigation.navigate('CreateReview', {homeId: route.params.homeId});
   };
 
   return (
@@ -371,10 +373,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderRadius: 20,
   },
-  iconContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
   rating: {
     fontSize: 30,
     paddingLeft: '5%',
@@ -383,26 +381,9 @@ const styles = StyleSheet.create({
   totalRentersContainer: {
     flex: 1,
   },
-  reviewDescription: {
-    marginLeft: '5%',
-    marginRight: '5%',
-    marginTop: '3%',
-    fontSize: 14,
-  },
   renters: {
     fontSize: 20,
     marginLeft: '2%',
-  },
-  reviewsSection: {
-    marginTop: '2.5%',
-    textAlign: 'center',
-  },
-  houseImage: {
-    width: '100%',
-    height: '35%',
-    top: 0,
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   addressLines: {
     width: '100%',

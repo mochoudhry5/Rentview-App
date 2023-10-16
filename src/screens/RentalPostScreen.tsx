@@ -6,12 +6,6 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from 'react-native';
-import React, {useState} from 'react';
-import ImageCarousel from './ImageCarousel';
-import {Country, State, City} from 'country-state-city';
-import {Dropdown} from 'react-native-element-dropdown';
-import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {AccountStackParamList} from '../utils/types';
 import {
   DocumentData,
   QuerySnapshot,
@@ -21,6 +15,12 @@ import {
   query,
   where,
 } from 'firebase/firestore';
+import React, {useState} from 'react';
+import ImageCarousel from './ImageCarousel';
+import {Country, State, City} from 'country-state-city';
+import {Dropdown} from 'react-native-element-dropdown';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {AccountStackParamList} from '../utils/types';
 import {auth, db} from '../config/firebase';
 
 type PostPropertyScreen = NativeStackScreenProps<
@@ -48,13 +48,13 @@ const bedAndBath = [
 
 const RentalPostScreen: React.FC<PostPropertyScreen> = ({navigation}) => {
   const user = auth.currentUser;
-  const [chosenAddress, setChosenAddress] = useState('');
-  const [chosenCountry, setChosenCountry] = useState('');
-  const [chosenState, setChosenState] = useState('');
-  const [chosenCity, setChosenCity] = useState('');
-  const [totalBedrooms, setTotalBedrooms] = useState('');
-  const [totalBathrooms, setTotalBathrooms] = useState('');
-  const [chosenPostalCode, setChosenPostalCode] = useState('');
+  const [chosenAddress, setChosenAddress] = useState<string>('');
+  const [chosenCountry, setChosenCountry] = useState<string>('');
+  const [chosenState, setChosenState] = useState<string>('');
+  const [chosenCity, setChosenCity] = useState<string>('');
+  const [totalBedrooms, setTotalBedrooms] = useState<string>('');
+  const [totalBathrooms, setTotalBathrooms] = useState<string>('');
+  const [chosenPostalCode, setChosenPostalCode] = useState<string>('');
   const [countries, setCountries] = useState<Array<RegionDataType>>([
     {label: 'United States', value: 'US'},
   ]);
@@ -329,18 +329,6 @@ const RentalPostScreen: React.FC<PostPropertyScreen> = ({navigation}) => {
 };
 
 const styles = StyleSheet.create({
-  profilePicture: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
-  },
-  nameInput: {
-    height: '5%',
-    marginLeft: '5%',
-    marginRight: '5%',
-    borderBottomWidth: 0.4,
-    fontSize: 16,
-  },
   cancelButton: {
     alignItems: 'center',
     backgroundColor: 'white',
@@ -365,9 +353,6 @@ const styles = StyleSheet.create({
     margin: 16,
     borderBottomColor: 'gray',
     borderBottomWidth: 0.5,
-  },
-  icon: {
-    marginRight: 5,
   },
   placeholderStyle: {
     fontSize: 16,

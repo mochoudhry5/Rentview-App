@@ -15,20 +15,17 @@ import {
 import {OtherStackParamList} from '../utils/types';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {auth} from '../config/firebase';
-import {GoogleSignin} from '@react-native-google-signin/google-signin';
+import {configureGoogle, signInGoogle} from '../config/googleConfig';
 import {doc, getDoc, setDoc} from 'firebase/firestore';
 import {db} from '../config/firebase';
 
-GoogleSignin.configure({
-  webClientId:
-    '795551030882-3mrb1u5bp15jvsmi97rp2kq42frc20gb.apps.googleusercontent.com',
-  offlineAccess: true,
-});
+configureGoogle();
+
 type LoginProps = NativeStackScreenProps<OtherStackParamList, 'Login'>;
 
 const Login: React.FC<LoginProps> = ({navigation}) => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
 
   const handleLogin = async () => {
     try {
@@ -39,8 +36,8 @@ const Login: React.FC<LoginProps> = ({navigation}) => {
     }
   };
 
-  async function signinWithGoogle() {
-    const {idToken} = await GoogleSignin.signIn();
+  const signinWithGoogle = async () => {
+    const {idToken} = await signInGoogle.signIn();
     const googleCredential = GoogleAuthProvider.credential(idToken);
 
     await signInWithCredential(auth, googleCredential);
@@ -48,29 +45,23 @@ const Login: React.FC<LoginProps> = ({navigation}) => {
     if (auth.currentUser !== null) {
       await addUserToDb();
     }
-  }
+  };
 
-  async function addUserToDb() {
-    const userInfoRef = doc(
-      db,
-      'UserReviews',
-      auth.currentUser ? auth.currentUser.uid : '',
-    );
+  const addUserToDb = async () => {
+    let userId = auth.currentUser ? auth.currentUser.uid : '';
+    const userInfoRef = doc(db, 'UserReviews', userId);
     const userInfoSnapshot = await getDoc(userInfoRef);
 
     if (!userInfoSnapshot.exists()) {
-      await setDoc(
-        doc(db, 'UserReviews', auth.currentUser ? auth.currentUser.uid : ''),
-        {
-          anonymous: null,
-          username: null,
-          fullName: null,
-          email: auth.currentUser?.email,
-          phoneNumber: null,
-        },
-      );
+      await setDoc(doc(db, 'UserReviews', userId), {
+        anonymous: null,
+        username: null,
+        fullName: null,
+        email: auth.currentUser?.email,
+        phoneNumber: null,
+      });
     }
-  }
+  };
 
   return (
     <View style={styles.container}>

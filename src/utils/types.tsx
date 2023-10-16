@@ -2,19 +2,15 @@ import {DocumentData} from 'firebase/firestore';
 
 export type HomeStackParamList = {
   SearchRentals: undefined;
-  RentalDescription: {docId: string};
-  CreateReview: {docId: string};
-};
-
-export type RentalPostStackParamList = {
-  RentalPostScreen: undefined;
+  RentalDescription: {homeId: string};
+  CreateReview: {homeId: string};
 };
 
 export type AccountStackParamList = {
   ActivityScreen: {reviews: DocumentData[]};
   AccountScreen: undefined;
   ProfileScreen: {userId: string};
-  RentalDescription: {docId: string};
+  RentalDescription: {homeId: string};
   PropertiesScreen: undefined;
   RentalPostScreen: undefined;
 };
@@ -22,7 +18,6 @@ export type AccountStackParamList = {
 export type RootStackParamList = {
   Home: HomeStackParamList;
   Account: AccountStackParamList;
-  RentalPost: RentalPostStackParamList;
 };
 
 export type OtherStackParamList = {

@@ -14,8 +14,8 @@ import {auth} from '../config/firebase';
 type SignupProps = NativeStackScreenProps<OtherStackParamList, 'Signup'>;
 
 const Signup: React.FC<SignupProps> = ({navigation}) => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
 
   const handleSignup = async () => {
     try {

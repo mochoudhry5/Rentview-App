@@ -20,18 +20,9 @@ type MyReviewProps = NativeStackScreenProps<
 
 const MyReviews: React.FC<MyReviewProps> = ({route, navigation}) => {
   const sheetRef = useRef<BottomSheet>(null);
-  const [onEdit, setOnEdit] = useState(false);
+  const [onEdit, setOnEdit] = useState<boolean>(false);
   const [currentProperty, setCurrentProperty] = useState<DocumentData>();
   const snapPoints = ['1%', '100%'];
-
-  const handleEditReview = (review: DocumentData) => {
-    setCurrentProperty(review);
-    setOnEdit(true);
-  };
-
-  const handleViewProperty = (homeId: string) => {
-    navigation.navigate('RentalDescription', {docId: homeId});
-  };
 
   const handleSheetChanges = useCallback((index: number) => {
     if (index == 0) {
@@ -42,7 +33,16 @@ const MyReviews: React.FC<MyReviewProps> = ({route, navigation}) => {
     }
   }, []);
 
-  return (
+  const handleEditReview = (review: DocumentData) => {
+    setCurrentProperty(review);
+    setOnEdit(true);
+  };
+
+  const handleViewProperty = (homeId: string) => {
+    navigation.navigate('RentalDescription', {homeId: homeId});
+  };
+
+  return route.params.reviews.length > 0 ? (
     <View style={{flex: 1, backgroundColor: 'white'}}>
       <ScrollView>
         {route.params.reviews.map(review => (
@@ -127,6 +127,10 @@ const MyReviews: React.FC<MyReviewProps> = ({route, navigation}) => {
         </BottomSheet>
       ) : null}
     </View>
+  ) : (
+    <View style={styles.noReviewsView}>
+      <Text style={{fontSize: 25, opacity: 0.5}}>No Reviews</Text>
+    </View>
   );
 };
 const styles = StyleSheet.create({
@@ -164,6 +168,11 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.58,
     shadowRadius: 16.0,
     elevation: 24,
+  },
+  noReviewsView: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
 export default MyReviews;

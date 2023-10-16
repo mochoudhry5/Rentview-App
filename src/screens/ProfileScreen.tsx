@@ -15,10 +15,8 @@ import {
   doc,
   getDoc,
   getDocs,
-  limit,
   query,
   updateDoc,
-  where,
 } from 'firebase/firestore';
 import {db} from '../config/firebase';
 import {auth} from '../config/firebase';
@@ -29,17 +27,17 @@ type ProfileProps = NativeStackScreenProps<
 >;
 
 const ProfileScreen: React.FC<ProfileProps> = ({route, navigation}) => {
+  const [anonymous, onChangeAnonymous] = useState<string>('');
+  const [phoneNumber, onChangePhoneNumber] = useState<string>('');
+  const [username, onChangeUsername] = useState<string>('');
+  const [fullName, onChangeFullName] = useState<string>('');
   const user = auth.currentUser;
-  const [anonymous, onChangeAnonymous] = useState('');
-  const [phoneNumber, onChangePhoneNumber] = useState('');
-  const [username, onChangeUsername] = useState('');
-  const [fullName, onChangeFullName] = useState('');
-
   const email = user?.email ? user.email : 'Email not found...';
+  const userId = user?.uid ? user.uid : '';
 
   useEffect(() => {
     const subscribe = async () => {
-      const userInfoRef = doc(db, 'UserReviews', route.params.userId);
+      const userInfoRef = doc(db, 'UserReviews', userId);
       let userInfoSnapshot = await getDoc(userInfoRef);
 
       if (userInfoSnapshot.exists()) {
@@ -48,19 +46,16 @@ const ProfileScreen: React.FC<ProfileProps> = ({route, navigation}) => {
         onChangeFullName(userInfoSnapshot.data().fullName);
       }
     };
-
     subscribe();
   }, []);
 
   const updateProfileInfo = async () => {
-    const userInfoRef = doc(db, 'UserReviews', route.params.userId);
+    const userInfoRef = doc(db, 'UserReviews', userId);
     const userInfoSnapshot = await getDoc(userInfoRef);
 
     if (userInfoSnapshot.exists()) {
       if (userInfoSnapshot.data().anonymous !== anonymous) {
-        const q = query(
-          collection(db, 'UserReviews', route.params.userId, 'Reviews'),
-        );
+        const q = query(collection(db, 'UserReviews', userId, 'Reviews'));
         const querySnapshot = await getDocs(q);
 
         querySnapshot.forEach(async document => {
@@ -69,7 +64,7 @@ const ProfileScreen: React.FC<ProfileProps> = ({route, navigation}) => {
             'HomeReviews',
             document.data().homeId,
             'IndividualRatings',
-            route.params.userId,
+            userId,
           );
           await updateDoc(reviewRef, {
             reviewerUsername: anonymous,

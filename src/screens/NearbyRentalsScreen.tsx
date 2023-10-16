@@ -4,17 +4,9 @@ import {
   StyleSheet,
   ActivityIndicator,
   Text,
-  Button,
   TouchableOpacity,
   TextInput,
 } from 'react-native';
-import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
-import MapView, {PROVIDER_DEFAULT} from 'react-native-maps';
-import Geolocation from '@react-native-community/geolocation';
-import {calculateDistance} from '../utils/calculateDistance';
-import {sampleData} from '../utils/sampleData';
-import {HomeStackParamList} from '../utils/types';
-import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {
   doc,
   updateDoc,
@@ -27,6 +19,13 @@ import {
   DocumentData,
   getDoc,
 } from 'firebase/firestore';
+import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
+import MapView, {PROVIDER_DEFAULT} from 'react-native-maps';
+import Geolocation from '@react-native-community/geolocation';
+import {calculateDistance} from '../utils/calculateDistance';
+import {sampleData} from '../utils/sampleData';
+import {HomeStackParamList} from '../utils/types';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {auth, db} from '../config/firebase';
 import {Modal} from '../components/Modal';
 
@@ -48,18 +47,16 @@ const NearbyRentalView: React.FC<SearchRentalsProps> = ({
 }) => {
   const userId = auth.currentUser ? auth.currentUser.uid : '';
   const [initialRegion, setInitialRegion] = useState(defaultRegion);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [selectedRentalIndex, setSelectedRentalIndex] = useState<number | null>(
     null,
   );
   const [displayedMarkers, setDisplayedMarkers] = useState<boolean[]>([]);
   const mapRef = useRef<MapView | null>(null);
-  const [isModalVisible, setIsModalVisible] = React.useState(false);
-  const [fullName, onChangeFullName] = useState('');
-  const [username, onChangeUserName] = useState('');
-  const [phoneNumber, onChangePhoneNumber] = useState('');
-
-  const handleModal = () => setIsModalVisible(() => !isModalVisible);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [fullName, onChangeFullName] = useState<string>('');
+  const [username, onChangeUserName] = useState<string>('');
+  const [phoneNumber, onChangePhoneNumber] = useState<string>('');
 
   useEffect(() => {
     Geolocation.getCurrentPosition(
@@ -175,21 +172,19 @@ const NearbyRentalView: React.FC<SearchRentalsProps> = ({
   };
 
   async function handleOnPressAddress(data: string, postalCode: string) {
-    let docId = '';
-    let array = data.split(',');
-    let streetAddress = array[0];
-    let city = array[1];
-    let state = array[2];
-    let homeInfo = query(
+    const array = data.split(',');
+    const streetAddress = array[0];
+    const city = array[1];
+    const state = array[2];
+    const specificHomeQuery = query(
       collection(db, 'HomeReviews'),
       where('address.street', '==', streetAddress),
     );
-    let homeSnapshot: QuerySnapshot<DocumentData, DocumentData> = await getDocs(
-      homeInfo,
-    );
+    const homeSnapshot: QuerySnapshot<DocumentData, DocumentData> =
+      await getDocs(specificHomeQuery);
 
-    if (homeSnapshot.size !== 1) {
-      await addDoc(collection(db, 'HomeReviews'), {
+    if (homeSnapshot.size === 0) {
+      const newHomeAdded = await addDoc(collection(db, 'HomeReviews'), {
         address: {
           street: streetAddress,
           city: city,
@@ -227,15 +222,9 @@ const NearbyRentalView: React.FC<SearchRentalsProps> = ({
         },
         totalReviews: 0,
       });
+
+      navigation.navigate('RentalDescription', {homeId: newHomeAdded.id});
     }
-
-    homeSnapshot = await getDocs(homeInfo);
-
-    homeSnapshot.forEach(doc => {
-      docId = doc.id;
-    });
-
-    navigation.navigate('RentalDescription', {docId: docId});
   }
 
   return (
@@ -325,8 +314,8 @@ const NearbyRentalView: React.FC<SearchRentalsProps> = ({
                   style={styles.input}
                   maxLength={10}
                   onChangeText={onChangePhoneNumber}
-                  placeholder="9165023590"
-                  keyboardType='numeric'
+                  placeholder="(123)456-7890"
+                  keyboardType="numeric"
                 />
               </Modal.Body>
               <Modal.Footer>
@@ -357,33 +346,12 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 0,
   },
-  navigationButtons: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    margin: 15,
-  },
   button: {
     backgroundColor: '#3498db',
     paddingVertical: 10,
     paddingHorizontal: 10,
     borderRadius: 5,
     elevation: 3,
-  },
-  bottomSheetShadow: {
-    backgroundColor: 'white',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 12,
-    },
-    shadowOpacity: 0.58,
-    shadowRadius: 16.0,
-    elevation: 24,
-  },
-  inlineContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderRadius: 20,
   },
   submitButton: {
     alignItems: 'center',

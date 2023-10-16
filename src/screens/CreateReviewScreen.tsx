@@ -1,3 +1,4 @@
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -8,7 +9,6 @@ import {
   TextInput,
   Switch,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
 import {
   collection,
   doc,
@@ -34,18 +34,20 @@ const CreateReviewScreen: React.FC<CreateReviewProps> = ({
   route,
   navigation,
 }) => {
-  const [userHouseQuality, setUserHouseQuality] = useState(5);
-  const [userRecommend, setUserRecommend] = useState(false);
+  const [userHouseQuality, setUserHouseQuality] = useState<number>(5);
+  const [userRecommend, setUserRecommend] = useState<boolean>(false);
   const {fontScale} = useWindowDimensions();
-  const [userOverallRating, setUserOverallRating] = useState(5);
-  const [userLandlordRating, setUserLandlordRating] = useState(5);
-  const [text, onChangeText] = useState('');
-  const [thumbsUp, setThumbsUp] = useState('thumbs-up-outline');
-  const [thumbsDown, setThumbsDown] = useState('thumbs-down-outline');
+  const [userOverallRating, setUserOverallRating] = useState<number>(5);
+  const [userLandlordRating, setUserLandlordRating] = useState<number>(5);
+  const [text, onChangeText] = useState<string>('');
+  const [thumbsUp, setThumbsUp] = useState<string>('thumbs-up-outline');
+  const [thumbsDown, setThumbsDown] = useState<string>('thumbs-down-outline');
   const styles = makeStyles(fontScale);
   const [user, setUser] = useState<User>();
-  const [isAnonymous, setIsAnonymous] = useState(false);
+  const [isAnonymous, setIsAnonymous] = useState<boolean>(false);
   const toggleSwitch = () => setIsAnonymous(previousState => !previousState);
+  const userId = user ? user.uid : '';
+  const homeId = route.params.homeId;
 
   useEffect(() => {
     onAuthStateChanged(auth, user => {
@@ -56,7 +58,7 @@ const CreateReviewScreen: React.FC<CreateReviewProps> = ({
   }, []);
 
   const handleReviewSubmit = async () => {
-    const homeInfoRef = doc(db, 'HomeReviews', route.params.docId);
+    const homeInfoRef = doc(db, 'HomeReviews', homeId);
     const homeInfoSnapshot = await getDoc(homeInfoRef);
 
     const userInfoRef = doc(db, 'UserReviews', user ? user.uid : '');
@@ -178,13 +180,7 @@ const CreateReviewScreen: React.FC<CreateReviewProps> = ({
 
       if (user && userInfoSnapshot.exists()) {
         await setDoc(
-          doc(
-            db,
-            'HomeReviews',
-            route.params.docId,
-            'IndividualRatings',
-            user ? user.uid : '',
-          ),
+          doc(db, 'HomeReviews', homeId, 'IndividualRatings', userId),
           {
             landlordServiceRating: userLandlordRating,
             recommendHouseRating: userRecommend,
@@ -197,22 +193,19 @@ const CreateReviewScreen: React.FC<CreateReviewProps> = ({
           },
         );
 
-        await addDoc(
-          collection(db, 'UserReviews', user ? user.uid : '', 'Reviews'),
-          {
-            homeId: route.params.docId,
-            address: homeInfoSnapshot.data().address,
-            landlordServiceRating: userLandlordRating,
-            overallRating: userOverallRating,
-            houseRating: userHouseQuality,
-            recommendHouseRating: userRecommend,
-            additionalComment: text,
-            dateOfReview: month + '/' + day + '/' + year,
-          },
-        );
+        await addDoc(collection(db, 'UserReviews', userId, 'Reviews'), {
+          homeId: homeId,
+          address: homeInfoSnapshot.data().address,
+          landlordServiceRating: userLandlordRating,
+          overallRating: userOverallRating,
+          houseRating: userHouseQuality,
+          recommendHouseRating: userRecommend,
+          additionalComment: text,
+          dateOfReview: month + '/' + day + '/' + year,
+        });
       }
     }
-    navigation.navigate('RentalDescription', {docId: route.params.docId});
+    navigation.navigate('RentalDescription', {homeId: homeId});
   };
 
   const handleYesClick = () => {
@@ -257,7 +250,7 @@ const CreateReviewScreen: React.FC<CreateReviewProps> = ({
               Post as Anonymous
             </Text>
             <Switch
-              trackColor={{false: '#767577', true: '#1f3839'}}
+              trackColor={{false: 'grey', true: 'green'}}
               thumbColor={'#f4f3f4'}
               ios_backgroundColor="#3e3e3e"
               onValueChange={toggleSwitch}
@@ -445,36 +438,8 @@ const CreateReviewScreen: React.FC<CreateReviewProps> = ({
 
 const makeStyles = (fontScale: any) =>
   StyleSheet.create({
-    card: {
-      width: '80%',
-      height: '15%',
-      marginVertical: '5%',
-      alignSelf: 'center',
-    },
-    shadowProp: {
-      shadowOffset: {width: -2, height: 4},
-      shadowOpacity: 0.1,
-      shadowRadius: 5,
-    },
-    container: {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-      width: '100%',
-    },
-    slider: {
-      width: '70%',
-      opacity: 1,
-      alignSelf: 'center',
-    },
-    text: {
-      fontSize: 16 / fontScale,
-      textAlign: 'center',
-      fontWeight: 'bold',
-      margin: 0,
-    },
     input: {
-      height: 150,
+      height: 180,
       margin: 20,
       borderWidth: 1,
       borderRadius: 10,
@@ -492,24 +457,16 @@ const makeStyles = (fontScale: any) =>
       justifyContent: 'center',
     },
     yesButton: {
-      height: '35%',
+      height: '30%',
       width: '30%',
       alignItems: 'center',
       justifyContent: 'center',
     },
     noButton: {
-      height: '35%',
+      height: '30%',
       width: '30%',
       alignItems: 'center',
       justifyContent: 'center',
-    },
-    heading: {
-      fontSize: 18 / fontScale,
-      fontWeight: '600',
-      marginBottom: 13,
-      paddingLeft: '5%',
-      paddingTop: '2%',
-      textAlign: 'center',
     },
   });
 

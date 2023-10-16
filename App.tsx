@@ -11,45 +11,9 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/Ionicons';
 import AccountStack from './src/navigation/AccountStack';
 
-const Tab = createBottomTabNavigator();
-
-const Stack = createStackNavigator<OtherStackParamList>();
-
-function LoggedInLayout() {
-  return (
-    <Tab.Navigator
-      screenOptions={({route}) => ({
-        tabBarIcon: ({focused}) => {
-          let iconName: string = '';
-          if (route.name === 'Home') {
-            iconName = focused ? 'navigate-circle' : 'navigate-circle-outline';
-          } else if (route.name === 'Profile') {
-            iconName = focused ? 'person-circle' : 'person-circle-outline';
-          } else {
-            iconName = focused ? 'add-circle' : 'add-circle-outline';
-          }
-          return <Icon name={iconName} color="black" size={36} />;
-        },
-        tabBarLabel: () => {
-          return null;
-        },
-      })}>
-      <Tab.Screen
-        name="Home"
-        component={HomeStack}
-        options={{headerShown: false}}
-      />
-      <Tab.Screen
-        name="Profile"
-        component={AccountStack}
-        options={{headerShown: false}}
-      />
-    </Tab.Navigator>
-  );
-}
-
 const App = () => {
   const [user, setUser] = useState<User | null>();
+  const Stack = createStackNavigator<OtherStackParamList>();
 
   useEffect(() => {
     onAuthStateChanged(auth, user => {
@@ -86,3 +50,37 @@ const App = () => {
 };
 
 export default App;
+
+function LoggedInLayout() {
+  const Tab = createBottomTabNavigator();
+  return (
+    <Tab.Navigator
+      screenOptions={({route}) => ({
+        tabBarIcon: ({focused}) => {
+          let iconName: string = '';
+          if (route.name === 'Home') {
+            iconName = focused ? 'navigate-circle' : 'navigate-circle-outline';
+          } else if (route.name === 'Profile') {
+            iconName = focused ? 'person-circle' : 'person-circle-outline';
+          } else {
+            iconName = focused ? 'add-circle' : 'add-circle-outline';
+          }
+          return <Icon name={iconName} color="black" size={36} />;
+        },
+        tabBarLabel: () => {
+          return null;
+        },
+      })}>
+      <Tab.Screen
+        name="Home"
+        component={HomeStack}
+        options={{headerShown: false}}
+      />
+      <Tab.Screen
+        name="Profile"
+        component={AccountStack}
+        options={{headerShown: false}}
+      />
+    </Tab.Navigator>
+  );
+}

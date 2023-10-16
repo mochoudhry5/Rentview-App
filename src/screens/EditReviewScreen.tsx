@@ -17,13 +17,13 @@ type EditReviewProps = {
 };
 
 const EditReviewScreen: React.FC<EditReviewProps> = ({currentProperty}) => {
-  const [houseQuality, setHouseQuality] = useState(0);
-  const [recommendation, setRecommendation] = useState(false);
-  const [overallRating, setOverallRating] = useState(0);
-  const [landlordRating, setLandlordRating] = useState(0);
-  const [comment, setComment] = useState('');
-  const [thumbsUp, setThumbsUp] = useState('thumbs-up-outline');
-  const [thumbsDown, setThumbsDown] = useState('thumbs-down-outline');
+  const [houseQuality, setHouseQuality] = useState<number>(0);
+  const [recommendation, setRecommendation] = useState<boolean>(false);
+  const [overallRating, setOverallRating] = useState<number>(0);
+  const [landlordRating, setLandlordRating] = useState<number>(0);
+  const [comment, setComment] = useState<string>('');
+  const [thumbsUp, setThumbsUp] = useState<string>('thumbs-up-outline');
+  const [thumbsDown, setThumbsDown] = useState<string>('thumbs-down-outline');
   const {fontScale} = useWindowDimensions();
   const styles = makeStyles(fontScale);
 
@@ -61,8 +61,6 @@ const EditReviewScreen: React.FC<EditReviewProps> = ({currentProperty}) => {
       setRecommendation(false);
     }
   };
-
-  const handleReviewChange = () => {};
 
   return (
     <View>
@@ -245,28 +243,6 @@ export default EditReviewScreen;
 
 const makeStyles = (fontScale: any) =>
   StyleSheet.create({
-    shadowProp: {
-      shadowOffset: {width: -2, height: 4},
-      shadowOpacity: 0.1,
-      shadowRadius: 5,
-    },
-    container: {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-      width: '100%',
-    },
-    slider: {
-      width: '70%',
-      opacity: 1,
-      alignSelf: 'center',
-    },
-    text: {
-      fontSize: 16 / fontScale,
-      textAlign: 'center',
-      fontWeight: 'bold',
-      margin: 0,
-    },
     input: {
       height: 150,
       margin: 20,
@@ -296,13 +272,5 @@ const makeStyles = (fontScale: any) =>
       width: '30%',
       alignItems: 'center',
       justifyContent: 'center',
-    },
-    heading: {
-      fontSize: 18 / fontScale,
-      fontWeight: '600',
-      marginBottom: 13,
-      paddingLeft: '5%',
-      paddingTop: '2%',
-      textAlign: 'center',
     },
   });

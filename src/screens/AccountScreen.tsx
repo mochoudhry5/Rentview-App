@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
@@ -6,8 +6,6 @@ import {
   TouchableOpacity,
   ScrollView,
 } from 'react-native';
-import {auth} from '../config/firebase';
-import {signOut} from 'firebase/auth';
 import {
   collection,
   getDoc,
@@ -16,9 +14,12 @@ import {
   DocumentData,
   getDocs,
 } from 'firebase/firestore';
+import {auth} from '../config/firebase';
+import {signOut} from 'firebase/auth';
 import {db} from '../config/firebase';
 import {AccountStackParamList} from '../utils/types';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {Modal} from '../components/Modal';
 
 type AccountProps = NativeStackScreenProps<
   AccountStackParamList,
@@ -31,8 +32,18 @@ type HomeReviewsProps = {
 };
 const AccountScreen: React.FC<AccountProps> = ({navigation}) => {
   const userId = auth.currentUser ? auth.currentUser.uid : '';
+  const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
+
+  const handleLogoutAttempt = () => {
+    setIsModalVisible(true);
+  };
+
+  const handleCancel = () => {
+    setIsModalVisible(false);
+  };
 
   const handleLogout = () => {
+    setIsModalVisible(false);
     signOut(auth)
       .then(() => {
         console.log('User logged out successfully:');
@@ -89,7 +100,11 @@ const AccountScreen: React.FC<AccountProps> = ({navigation}) => {
       subTitle: 'View my properties',
       onPress: handleMyProperties,
     },
-    {title: 'Logout', subTitle: 'Get out of RentView', onPress: handleLogout},
+    {
+      title: 'Logout',
+      subTitle: 'Get out of RentView',
+      onPress: handleLogoutAttempt,
+    },
   ];
 
   return (
@@ -117,6 +132,27 @@ const AccountScreen: React.FC<AccountProps> = ({navigation}) => {
           </TouchableOpacity>
         ))}
       </View>
+      <Modal isVisible={isModalVisible}>
+        <Modal.Container>
+          <Modal.Header title="Continue logging out?" />
+          <Modal.Body>
+            <TouchableOpacity
+              style={styles.submitButton}
+              onPress={handleLogout}>
+              <Text style={{fontSize: 16, fontWeight: 'bold', color: 'red'}}>
+                Log out
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.submitButton}
+              onPress={handleCancel}>
+              <Text style={{fontSize: 16, fontWeight: 'bold', color: 'grey'}}>
+                Cancel
+              </Text>
+            </TouchableOpacity>
+          </Modal.Body>
+        </Modal.Container>
+      </Modal>
     </ScrollView>
   );
 };
@@ -128,15 +164,27 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingTop: '15%',
   },
-  profilePicture: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
-    marginBottom: '3%',
+  submitButton: {
+    alignItems: 'center',
+    backgroundColor: 'white',
+    borderWidth: 1,
+    width: '88%',
+    height: 40,
+    alignSelf: 'center',
+    justifyContent: 'center',
+    marginTop: '5%',
+    marginBottom: '5%',
+    borderRadius: 10,
   },
-  userName: {
-    fontSize: 24,
-    marginBottom: 20,
+  input: {
+    marginLeft: '5%',
+    marginRight: '5%',
+    marginTop: '2%',
+    borderWidth: 0.3,
+    height: 40,
+    fontSize: 16,
+    textAlignVertical: 'bottom',
+    paddingLeft: '2%',
   },
 });
 
