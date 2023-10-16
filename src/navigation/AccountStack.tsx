@@ -16,17 +16,28 @@ const AccountStack = () => {
       <Stack.Screen
         name="AccountScreen"
         component={AccountScreen}
-        options={{headerShown: false, title: 'Account'}}
+        options={{
+          headerShown: true, 
+          title: 'Account Settings'
+        }}
       />
       <Stack.Screen
         name="ActivityScreen"
         component={ActivityScreen}
-        options={{title: 'Activity'}}
+        options={{
+          title: 'Activity',
+          headerBackTitleVisible: false,
+          headerTintColor: 'black'
+        }}
       />
       <Stack.Screen
         name="ProfileScreen"
         component={ProfileScreen}
-        options={{title: 'Profile'}}
+        options={{
+          title: 'Profile',
+          headerBackTitleVisible: false,
+          headerTintColor: 'black'
+        }}
       />
       <Stack.Screen
         name="RentalDescription"
@@ -40,7 +51,11 @@ const AccountStack = () => {
       <Stack.Screen
         name="PropertiesScreen"
         component={PropertiesScreen}
-        options={{title: 'My Properties'}}
+        options={{
+          title: 'My Properties',
+          headerBackTitleVisible: false,
+          headerTintColor: 'black'
+        }}
       />
       <Stack.Screen
         name="RentalPostScreen"

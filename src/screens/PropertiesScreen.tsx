@@ -4,6 +4,7 @@ import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {AccountStackParamList} from '../utils/types';
 import {DocumentData, collection, onSnapshot, query} from 'firebase/firestore';
 import {auth, db} from '../config/firebase';
+import { ScrollView } from 'react-native-gesture-handler';
 
 type PropertiesProps = NativeStackScreenProps<
   AccountStackParamList,
@@ -35,11 +36,13 @@ const PropertiesScreen: React.FC<PropertiesProps> = ({navigation}) => {
   };
 
   return (
-    <View>
-      <Button title={'Add property'} onPress={handleNewProperty} />
-      {allProperties.map(property => (
-        <Text key={property.homeId}>{property.homeId};</Text>
-      ))}
+    <View style={{flex:1, backgroundColor:'white'}}>
+      <ScrollView>
+        <Button title={'Add property'} onPress={handleNewProperty} />
+        {allProperties.map(property => (
+          <Text key={property.homeId}>{property.homeId};</Text>
+        ))}
+      </ScrollView>
     </View>
   );
 };
