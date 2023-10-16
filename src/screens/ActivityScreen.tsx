@@ -44,7 +44,7 @@ const MyReviews: React.FC<MyReviewProps> = ({route, navigation}) => {
 
   return route.params.reviews.length > 0 ? (
     <View style={{flex: 1, backgroundColor: 'white'}}>
-      <ScrollView>
+      <ScrollView style={{flex: 1}}>
         {route.params.reviews.map(review => (
           <View key={review.reviewId}>
             <View style={{marginTop: '3%'}}>
@@ -120,10 +120,13 @@ const MyReviews: React.FC<MyReviewProps> = ({route, navigation}) => {
           index={1}
           onChange={handleSheetChanges}>
           <BottomSheetScrollView>
-            <View style={styles.inlineContainer}>
-              <EditReviewScreen currentProperty={currentProperty} />
-            </View>
+            <EditReviewScreen currentProperty={currentProperty} />
           </BottomSheetScrollView>
+          <TouchableOpacity style={styles.submitButton}>
+            <Text style={{fontSize: 16, fontWeight: 'bold', color: 'white'}}>
+              Update Review
+            </Text>
+          </TouchableOpacity>
         </BottomSheet>
       ) : null}
     </View>
@@ -172,6 +175,14 @@ const styles = StyleSheet.create({
   noReviewsView: {
     flex: 1,
     alignItems: 'center',
+  },
+  submitButton: {
+    alignItems: 'center',
+    backgroundColor: '#1f3839',
+    borderWidth: 1,
+    width: '100%',
+    height: '7%',
+    alignSelf: 'center',
     justifyContent: 'center',
   },
 });

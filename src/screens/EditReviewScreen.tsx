@@ -64,7 +64,6 @@ const EditReviewScreen: React.FC<EditReviewProps> = ({currentProperty}) => {
 
   return (
     <View>
-      <ScrollView>
         <View>
           <View
             style={{
@@ -103,7 +102,7 @@ const EditReviewScreen: React.FC<EditReviewProps> = ({currentProperty}) => {
             style={{
               flexDirection: 'row',
               alignItems: 'center',
-              paddingTop: '5%',
+              paddingTop: '7%',
             }}>
             <View style={{flex: 1, height: 1, backgroundColor: '#DEDEDE'}} />
             <View>
@@ -136,7 +135,7 @@ const EditReviewScreen: React.FC<EditReviewProps> = ({currentProperty}) => {
             style={{
               flexDirection: 'row',
               alignItems: 'center',
-              paddingTop: '5%',
+              paddingTop: '7%',
             }}>
             <View style={{flex: 1, height: 1, backgroundColor: '#DEDEDE'}} />
             <View>
@@ -168,7 +167,7 @@ const EditReviewScreen: React.FC<EditReviewProps> = ({currentProperty}) => {
           style={{
             flexDirection: 'row',
             alignItems: 'center',
-            paddingTop: '5%',
+            paddingTop: '7%',
           }}>
           <View style={{flex: 1, height: 1, backgroundColor: '#DEDEDE'}} />
           <View>
@@ -190,7 +189,7 @@ const EditReviewScreen: React.FC<EditReviewProps> = ({currentProperty}) => {
           style={{
             flexDirection: 'row',
             justifyContent: 'center',
-            paddingTop: '3%',
+            paddingTop: '2%', 
           }}>
           <TouchableOpacity style={styles.yesButton} onPress={handleYesClick}>
             <Icon name={thumbsUp} size={30} style={{color: '#538c50'}} />
@@ -199,42 +198,34 @@ const EditReviewScreen: React.FC<EditReviewProps> = ({currentProperty}) => {
             <Icon name={thumbsDown} size={30} style={{color: '#FF5147'}} />
           </TouchableOpacity>
         </View>
-        <View style={{top: -100}}>
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              paddingTop: '5%',
-            }}>
-            <View style={{flex: 1, height: 1, backgroundColor: '#DEDEDE'}} />
-            <View>
-              <Text
-                style={{
-                  fontFamily: 'Iowan Old Style',
-                  fontWeight: 'bold',
-                  fontSize: 20,
-                  textAlign: 'center',
-                  paddingLeft: '2%',
-                  paddingRight: '2%',
-                }}>
-                Write a Comment
-              </Text>
-            </View>
-            <View style={{flex: 1, height: 1, backgroundColor: '#DEDEDE'}} />
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            paddingTop: '5%',
+          }}>
+          <View style={{flex: 1, height: 1, backgroundColor: '#DEDEDE'}} />
+          <View>
+            <Text
+              style={{
+                fontFamily: 'Iowan Old Style',
+                fontWeight: 'bold',
+                fontSize: 20,
+                textAlign: 'center',
+                paddingLeft: '2%',
+                paddingRight: '2%',
+              }}>
+              Write a Comment
+            </Text>
           </View>
-          <TextInput
-            style={styles.input}
-            multiline={true}
-            onChangeText={setComment}
-            value={comment}
-          />
+          <View style={{flex: 1, height: 1, backgroundColor: '#DEDEDE'}} />
         </View>
-      </ScrollView>
-      <TouchableOpacity style={styles.submitButton}>
-        <Text style={{fontSize: 16, fontWeight: 'bold', color: 'white'}}>
-          Publish Review
-        </Text>
-      </TouchableOpacity>
+        <TextInput
+          style={styles.input}
+          multiline={true}
+          onChangeText={setComment}
+          value={comment}
+        />
     </View>
   );
 };
@@ -245,32 +236,24 @@ const makeStyles = (fontScale: any) =>
   StyleSheet.create({
     input: {
       height: 150,
-      margin: 20,
-      borderWidth: 1,
+      borderWidth: .8,
       borderRadius: 10,
       textAlignVertical: 'top',
       padding: '2%',
       fontSize: 16,
-    },
-    submitButton: {
-      alignItems: 'center',
-      backgroundColor: '#1f3839',
-      borderWidth: 1,
-      width: '100%',
-      height: '7%',
-      alignSelf: 'center',
-      justifyContent: 'center',
+      marginLeft:'5%',
+      marginRight:'5%',
+      marginTop:'5%',
+      marginBottom:'20%',
     },
     yesButton: {
-      height: '35%',
-      width: '30%',
       alignItems: 'center',
       justifyContent: 'center',
+      marginRight:'7%'
     },
     noButton: {
-      height: '35%',
-      width: '30%',
       alignItems: 'center',
       justifyContent: 'center',
+      marginLeft:'7%'
     },
   });

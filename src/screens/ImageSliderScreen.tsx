@@ -5,10 +5,12 @@ import {
   StyleSheet,
   ScrollView,
   Dimensions,
-  Text,
   NativeScrollEvent,
   NativeSyntheticEvent,
+  TouchableOpacity,
+  Text,
 } from 'react-native';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 const {width} = Dimensions.get('screen');
 const height = width * 0.9;
@@ -38,25 +40,44 @@ const ImageSlider: React.FC<ImageProps> = ({images}) => {
         scrollEventThrottle={16}
         showsHorizontalScrollIndicator={false}
         style={{width: width, height}}>
-        {images.map((image: string, index: number) => (
-          <Image key={index} source={{uri: image}} style={styles.image} />
+        {images.map((image) => (
+          <Image key={image} source={{uri: image}} style={styles.image}/>
         ))}
       </ScrollView>
-      <View style={styles.pagination}>
-        {images.map((k: React.Key) => (
-          <Text key={k} style={k == active ? styles.activeDot : styles.dot}>
-            ○
-          </Text>
-        ))}
+      <View style={styles.backButton}>
+          <TouchableOpacity style={styles.roundButton1}>
+            <Icon name={"chevron-back-outline"} color="black" size={28} />
+          </TouchableOpacity>
+      </View>
+      <View style={styles.claimButton}>
+        <TouchableOpacity style={styles.roundButton1}>
+              <Text>Claim Home</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  pagination: {
-    flexDirection: 'row',
-    alignSelf: 'center',
+  backButton: {
+    position:'absolute',
+    flexDirection:'row',
+    justifyContent:'flex-start',
+    alignItems:'center',
+    width:width,
+    paddingTop:'15%',
+    paddingLeft:'5%',
+    zIndex:2
+  },
+  claimButton: {
+    position:'absolute',
+    flexDirection:'row',
+    justifyContent:'flex-end',
+    alignItems:'center',
+    width:width,
+    paddingTop:'15%',
+    paddingRight:'5%',
+    zIndex:2
   },
   dot: {
     color: 'white',
@@ -71,6 +92,14 @@ const styles = StyleSheet.create({
     height: height,
     borderColor: 'black',
     borderWidth: 1,
+  },
+  roundButton1: {
+    borderRadius: 50,
+    padding:'2%',
+    backgroundColor: '#D3D3D3',
+    opacity: 0.7,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 

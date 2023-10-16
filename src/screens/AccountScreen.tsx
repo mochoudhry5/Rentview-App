@@ -108,7 +108,7 @@ const AccountScreen: React.FC<AccountProps> = ({navigation}) => {
   ];
 
   return (
-    <ScrollView>
+    <ScrollView style={{flex:1, backgroundColor:'white'}}>
       <View style={styles.container}>
         {settingsOptions.map(({title, subTitle, onPress}, index) => (
           <TouchableOpacity
@@ -162,7 +162,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-start',
     alignItems: 'center',
-    paddingTop: '15%',
   },
   submitButton: {
     alignItems: 'center',

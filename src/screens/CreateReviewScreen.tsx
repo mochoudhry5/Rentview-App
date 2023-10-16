@@ -392,37 +392,35 @@ const CreateReviewScreen: React.FC<CreateReviewProps> = ({
               <Icon name={thumbsDown} size={30} style={{color: '#FF5147'}} />
             </TouchableOpacity>
           </View>
-          <View style={{top: -100}}>
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                paddingTop: '5%',
-              }}>
-              <View style={{flex: 1, height: 1, backgroundColor: '#DEDEDE'}} />
-              <View>
-                <Text
-                  style={{
-                    fontFamily: 'Iowan Old Style',
-                    fontWeight: 'bold',
-                    fontSize: 20,
-                    textAlign: 'center',
-                    paddingLeft: '2%',
-                    paddingRight: '2%',
-                  }}>
-                  Write a Comment
-                </Text>
-              </View>
-              <View style={{flex: 1, height: 1, backgroundColor: '#DEDEDE'}} />
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              paddingTop: '5%',
+            }}>
+            <View style={{flex: 1, height: 1, backgroundColor: '#DEDEDE'}} />
+            <View>
+              <Text
+                style={{
+                  fontFamily: 'Iowan Old Style',
+                  fontWeight: 'bold',
+                  fontSize: 20,
+                  textAlign: 'center',
+                  paddingLeft: '2%',
+                  paddingRight: '2%',
+                }}>
+                Write a Comment
+              </Text>
             </View>
-            <TextInput
-              style={styles.input}
-              multiline={true}
-              onChangeText={onChangeText}
-              value={text}
-              placeholder="How was your experience?"
-            />
+            <View style={{flex: 1, height: 1, backgroundColor: '#DEDEDE'}} />
           </View>
+          <TextInput
+            style={styles.input}
+            multiline={true}
+            onChangeText={onChangeText}
+            value={text}
+            placeholder="How was your experience?"
+          />
         </View>
       </ScrollView>
       <TouchableOpacity
@@ -441,11 +439,13 @@ const makeStyles = (fontScale: any) =>
     input: {
       height: 180,
       margin: 20,
-      borderWidth: 1,
+      borderWidth: 0.8,
       borderRadius: 10,
       textAlignVertical: 'top',
       padding: '2%',
       fontSize: 16,
+      marginTop: '5%',
+      marginBottom: '20%',
     },
     submitButton: {
       alignItems: 'center',
@@ -461,12 +461,14 @@ const makeStyles = (fontScale: any) =>
       width: '30%',
       alignItems: 'center',
       justifyContent: 'center',
+      marginRight: '7%',
     },
     noButton: {
       height: '30%',
       width: '30%',
       alignItems: 'center',
       justifyContent: 'center',
+      marginLeft: '7%',
     },
   });
 
