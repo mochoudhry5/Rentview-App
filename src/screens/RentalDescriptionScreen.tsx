@@ -1,6 +1,14 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {StyleSheet, View, Text, TouchableOpacity, Image} from 'react-native';
-import ImageSlider from './ImageSliderScreen';
+import {
+  StyleSheet,
+  View,
+  Text,
+  TouchableOpacity,
+  Image,
+  NativeSyntheticEvent,
+  NativeScrollEvent,
+  Dimensions,
+} from 'react-native';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {HomeStackParamList} from '../utils/types';
 import {db} from '../config/firebase';
@@ -32,6 +40,9 @@ type RentalDescriptionProps = NativeStackScreenProps<
   'RentalDescription'
 >;
 
+const {width} = Dimensions.get('screen');
+const height = width * 0.9;
+
 const RentalDescription: React.FC<RentalDescriptionProps> = ({
   route,
   navigation,
@@ -62,6 +73,7 @@ const RentalDescription: React.FC<RentalDescriptionProps> = ({
     useState<boolean>(false);
   const [isEnabled, setIsEnabled] = useState<boolean>(false);
   const toggleSwitch = () => setIsEnabled(previousState => !previousState);
+  const [active, setActive] = useState(0);
 
   useEffect(() => {
     const subscriber = onSnapshot(homeInfoRef, docSnapshot => {
@@ -116,10 +128,44 @@ const RentalDescription: React.FC<RentalDescriptionProps> = ({
     navigation.navigate('CreateReview', {homeId: route.params.homeId});
   };
 
+  const onScrollChange = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+    const slide = Math.ceil(
+      event.nativeEvent.contentOffset.x /
+        event.nativeEvent.layoutMeasurement.width,
+    );
+    if (slide !== active) {
+      setActive(slide);
+    }
+  };
+
   return (
     <GestureHandlerRootView style={styles.rootView}>
       <ScrollView>
-        <ImageSlider images={images}/>
+        <View>
+          <ScrollView
+            pagingEnabled
+            horizontal
+            onScroll={onScrollChange}
+            scrollEventThrottle={16}
+            showsHorizontalScrollIndicator={false}
+            style={{width: width, height}}>
+            {images.map(image => (
+              <Image key={image} source={{uri: image}} style={styles.image} />
+            ))}
+          </ScrollView>
+          <View style={styles.claimButton}>
+            <TouchableOpacity style={styles.roundButton1}>
+              <Text>Claim Home</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.backButton}>
+            <TouchableOpacity
+              style={styles.roundButton1}
+              onPress={() => navigation.goBack()}>
+              <Icon name={'chevron-back-outline'} color="black" size={30} />
+            </TouchableOpacity>
+          </View>
+        </View>
         <View>
           <View style={styles.addressLines}>
             <Text style={styles.addressLine1}>{street}</Text>
@@ -420,6 +466,42 @@ const styles = StyleSheet.create({
   },
   miscRating: {
     marginTop: '5%',
+  },
+  backButton: {
+    position: 'absolute',
+    top: '14%',
+    left: '5%',
+    flexDirection: 'row',
+    width: 200,
+  },
+  claimButton: {
+    position: 'absolute',
+    top: '16%',
+    left: '74%',
+    flexDirection: 'row',
+    width: 250,
+  },
+  dot: {
+    color: 'white',
+    fontSize: 13,
+  },
+  activeDot: {
+    color: 'black',
+    fontSize: 13,
+  },
+  image: {
+    width: width,
+    height: height,
+    borderColor: 'black',
+    borderWidth: 1,
+  },
+  roundButton1: {
+    borderRadius: 50,
+    padding: '2%',
+    backgroundColor: '#D3D3D3',
+    opacity: 0.7,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 

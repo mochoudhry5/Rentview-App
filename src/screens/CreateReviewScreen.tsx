@@ -457,15 +457,11 @@ const makeStyles = (fontScale: any) =>
       justifyContent: 'center',
     },
     yesButton: {
-      height: '30%',
-      width: '30%',
       alignItems: 'center',
       justifyContent: 'center',
       marginRight: '7%',
     },
     noButton: {
-      height: '30%',
-      width: '30%',
       alignItems: 'center',
       justifyContent: 'center',
       marginLeft: '7%',

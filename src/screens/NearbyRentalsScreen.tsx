@@ -18,6 +18,7 @@ import {
   QuerySnapshot,
   DocumentData,
   getDoc,
+  limit,
 } from 'firebase/firestore';
 import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
 import MapView, {PROVIDER_DEFAULT} from 'react-native-maps';
@@ -179,6 +180,7 @@ const NearbyRentalView: React.FC<SearchRentalsProps> = ({
     const specificHomeQuery = query(
       collection(db, 'HomeReviews'),
       where('address.street', '==', streetAddress),
+      limit(1),
     );
     const homeSnapshot: QuerySnapshot<DocumentData, DocumentData> =
       await getDocs(specificHomeQuery);
@@ -222,8 +224,13 @@ const NearbyRentalView: React.FC<SearchRentalsProps> = ({
         },
         totalReviews: 0,
       });
-
       navigation.navigate('RentalDescription', {homeId: newHomeAdded.id});
+    } else {
+      let homeId = '';
+      homeSnapshot.forEach(doc => {
+        homeId = doc.id;
+      });
+      navigation.navigate('RentalDescription', {homeId: homeId});
     }
   }
 

@@ -175,6 +175,7 @@ const styles = StyleSheet.create({
   noReviewsView: {
     flex: 1,
     alignItems: 'center',
+    justifyContent: 'center',
   },
   submitButton: {
     alignItems: 'center',
