@@ -10,6 +10,7 @@ import {onAuthStateChanged, User} from 'firebase/auth';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/Ionicons';
 import AccountStack from './src/navigation/AccountStack';
+import ChatScreen from './src/screens/ChatScreen';
 
 const App = () => {
   const [user, setUser] = useState<User | null>();
@@ -63,7 +64,7 @@ function LoggedInLayout() {
           } else if (route.name === 'Profile') {
             iconName = focused ? 'person-circle' : 'person-circle-outline';
           } else {
-            iconName = focused ? 'add-circle' : 'add-circle-outline';
+            iconName = focused ? 'chatbubbles' : 'chatbubbles-outline';
           }
           return <Icon name={iconName} color="black" size={36} />;
         },
@@ -74,6 +75,11 @@ function LoggedInLayout() {
       <Tab.Screen
         name="Home"
         component={HomeStack}
+        options={{headerShown: false}}
+      />
+      <Tab.Screen
+        name="Chat"
+        component={ChatScreen}
         options={{headerShown: false}}
       />
       <Tab.Screen
