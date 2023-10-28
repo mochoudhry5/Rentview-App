@@ -10,6 +10,15 @@ import {
   Dimensions,
   ActivityIndicator,
 } from 'react-native';
+import {
+  doc,
+  getDoc,
+  query,
+  onSnapshot,
+  collection,
+  DocumentData,
+  updateDoc,
+} from 'firebase/firestore';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {HomeStackParamList} from '../utils/types';
 import {db} from '../config/firebase';
@@ -20,17 +29,9 @@ import {auth} from '../config/firebase';
 import Icon from 'react-native-vector-icons/Ionicons';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {ListItem} from '@rneui/themed';
-import {
-  doc,
-  getDoc,
-  query,
-  onSnapshot,
-  collection,
-  DocumentData,
-  updateDoc,
-  setDoc,
-} from 'firebase/firestore';
 
+const {width} = Dimensions.get('screen');
+const height = width * 0.9;
 const images = [
   'https://source.unsplash.com/1024x768/?house',
   'https://source.unsplash.com/1024x768/?interior',
@@ -42,9 +43,6 @@ type RentalDescriptionProps = NativeStackScreenProps<
   HomeStackParamList,
   'RentalDescription'
 >;
-
-const {width} = Dimensions.get('screen');
-const height = width * 0.9;
 
 let detailObj = {
   totalBathrooms: '',
@@ -83,22 +81,18 @@ const RentalDescription: React.FC<RentalDescriptionProps> = ({
   const [furnished, setFurnished] = useState<string>('');
   const [applianceIncluded, setApplianceIncluded] = useState<string>('');
   const [ownerFullName, setOwnerFullName] = useState<string>('');
+  const [active, setActive] = useState(0);
+  const [expandedPropInfo, setExpandedPropInfo] = useState<boolean>(false);
+  const [expandedOwnerInfo, setExpandedOwnerInfo] = useState<boolean>(false);
+  const [currUserReviewed, setCurrUserReviewed] = useState<boolean>(false);
   const user = auth.currentUser;
   const userId = user?.uid ? user.uid : '';
   const sheetRef = useRef<BottomSheet>(null);
   const snapPoints = ['3%', '14%', '90%'];
-  const [currUserReviewed, setCurrUserReviewed] = useState<boolean>(false);
   const homeInfoRef = doc(db, 'HomeReviews', route.params.homeId);
   const homeReviewsQuery = query(
     collection(db, 'HomeReviews', route.params.homeId, 'IndividualRatings'),
   );
-  const [expandedPropertyInfo, setExpandedPropertyInfo] =
-    useState<boolean>(false);
-  const [expandedOwnerInfo, setExpandedOwnerInfo] = useState<boolean>(false);
-  const [currentUserReviewed, setCurrentUserReviewed] =
-    useState<boolean>(false);
-  const [isEnabled, setIsEnabled] = useState<boolean>(false);
-  const [active, setActive] = useState(0);
 
   useEffect(() => {
     const subscriber = onSnapshot(homeInfoRef, docSnapshot => {
@@ -146,10 +140,6 @@ const RentalDescription: React.FC<RentalDescriptionProps> = ({
     return () => getData();
   }, []);
 
-  const handleOnPress = () => {
-    navigation.navigate('CreateReview', {homeId: route.params.homeId});
-  };
-
   const handleClaimHome = async () => {
     const homeInfoRef = doc(db, 'HomeReviews', route.params.homeId);
     const homeInfoSnapshot = await getDoc(homeInfoRef);
@@ -196,6 +186,10 @@ const RentalDescription: React.FC<RentalDescriptionProps> = ({
     if (slide !== active) {
       setActive(slide);
     }
+  };
+
+  const handleCreateReview = () => {
+    navigation.navigate('CreateReview', {homeId: route.params.homeId});
   };
 
   return (
@@ -519,9 +513,9 @@ const RentalDescription: React.FC<RentalDescriptionProps> = ({
                   </ListItem.Title>
                 </ListItem.Content>
               }
-              isExpanded={expandedPropertyInfo}
+              isExpanded={expandedPropInfo}
               onPress={() => {
-                setExpandedPropertyInfo(!expandedPropertyInfo);
+                setExpandedPropInfo(!expandedPropInfo);
               }}>
               <ListItem containerStyle={{paddingTop: 0, paddingBottom: 0}}>
                 <ListItem.Content>
@@ -634,7 +628,7 @@ const RentalDescription: React.FC<RentalDescriptionProps> = ({
                           {'('}
                           {totalReviews} Reviews{')'}
                         </Text>
-                        {currentUserReviewed ? (
+                        {currUserReviewed ? (
                           <TouchableOpacity
                             disabled
                             style={styles.alreadyReviewButton}>
@@ -645,7 +639,7 @@ const RentalDescription: React.FC<RentalDescriptionProps> = ({
                         ) : (
                           <TouchableOpacity
                             style={styles.button}
-                            onPress={handleOnPress}>
+                            onPress={handleCreateReview}>
                             <Text style={{color: 'blue'}}>Add Review</Text>
                           </TouchableOpacity>
                         )}
@@ -653,7 +647,7 @@ const RentalDescription: React.FC<RentalDescriptionProps> = ({
                     ) : (
                       <TouchableOpacity
                         style={styles.button}
-                        onPress={handleOnPress}>
+                        onPress={handleCreateReview}>
                         <Text
                           style={{
                             position: 'absolute',

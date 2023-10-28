@@ -6,19 +6,8 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from 'react-native';
-import {
-  DocumentData,
-  QuerySnapshot,
-  addDoc,
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  query,
-  updateDoc,
-  where,
-} from 'firebase/firestore';
-import React, {useEffect, useState} from 'react';
+import {doc, getDoc, updateDoc} from 'firebase/firestore';
+import React, {useState} from 'react';
 import ImageCarousel from '../components/ImageCarousel';
 import {Country, State, City} from 'country-state-city';
 import {Dropdown} from 'react-native-element-dropdown';
@@ -65,30 +54,31 @@ const RentalPostScreen: React.FC<PostPropertyScreen> = ({
   route,
   navigation,
 }) => {
-  const refParam = route.params.homeDetails;
+  const homeDetails = route.params.homeDetails;
   const [user, setUser] = useState<User>();
   const [totalBedrooms, setTotalBedrooms] = useState<string>(
-    refParam.totalBedrooms,
+    homeDetails.totalBedrooms,
   );
   const [totalBathrooms, setTotalBathrooms] = useState<string>(
-    refParam.totalBathrooms,
+    homeDetails.totalBathrooms,
   );
   const [totalSquareFeet, setTotalSquareFeet] = useState<string>(
-    refParam.totalSquareFeet,
+    homeDetails.totalSquareFeet,
   );
   const [statusOfRental, setStatusOfRental] = useState<string>(
-    refParam.statusOfRental,
+    homeDetails.statusOfRental,
   );
-  const [rentalArea, setRentalArea] = useState<string>(refParam.rentalArea);
+  const [rentalArea, setRentalArea] = useState<string>(homeDetails.rentalArea);
   const [propertyDescription, setPropertyDescription] = useState<string>(
-    refParam.propertyDescription,
+    homeDetails.propertyDescription,
   );
-  const [monthlyRent, setMonthlyRent] = useState<string>(refParam.monthlyRent);
-  const [furnished, setFurnished] = useState<string>(refParam.furnished);
+  const [monthlyRent, setMonthlyRent] = useState<string>(
+    homeDetails.monthlyRent,
+  );
+  const [furnished, setFurnished] = useState<string>(homeDetails.furnished);
   const [applianceIncluded, setApplianceIncluded] = useState<string>(
-    refParam.applianceIncluded,
+    homeDetails.applianceIncluded,
   );
-
   const userId = user ? user.uid : '';
 
   const handlePostSubmit = async () => {

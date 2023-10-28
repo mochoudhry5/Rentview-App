@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {
   View,
   Text,
@@ -20,7 +20,6 @@ import {signOut} from 'firebase/auth';
 import {db} from '../config/firebase';
 import {AccountStackParamList} from '../utils/types';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {Modal} from '../components/Modal';
 
 type AccountProps = NativeStackScreenProps<
   AccountStackParamList,
@@ -35,14 +34,10 @@ const AccountScreen: React.FC<AccountProps> = ({navigation}) => {
   const userId = auth.currentUser ? auth.currentUser.uid : '';
 
   const handleLogoutAttempt = () => {
-    Alert.alert(
-      'Log out?',
-      'Unsaved changes will be lost',
-      [
-        {text:'Cancel', style: 'cancel'},
-        {text:'Logout', onPress: (handleLogout), style: 'destructive'}
-      ]
-    )
+    Alert.alert('Log out?', 'Unsaved changes will be lost', [
+      {text: 'Cancel', style: 'cancel'},
+      {text: 'Logout', onPress: handleLogout, style: 'destructive'},
+    ]);
   };
 
   const handleLogout = () => {
@@ -110,7 +105,7 @@ const AccountScreen: React.FC<AccountProps> = ({navigation}) => {
   ];
 
   return (
-    <ScrollView style={{flex:1, backgroundColor:'white'}}>
+    <ScrollView style={{flex: 1, backgroundColor: 'white'}}>
       <View style={styles.container}>
         {settingsOptions.map(({title, subTitle, onPress}, index) => (
           <TouchableOpacity

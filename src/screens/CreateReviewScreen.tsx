@@ -9,13 +9,6 @@ import {
   TextInput,
   Switch,
 } from 'react-native';
-import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {HomeStackParamList} from '../utils/types';
-import {auth, db} from '../config/firebase';
-import {AirbnbRating} from 'react-native-elements';
-import Icon from 'react-native-vector-icons/Ionicons';
-import {onAuthStateChanged, User} from 'firebase/auth';
-import {handleReview} from '../utils/firebaseCalls';
 import {
   addDoc,
   collection,
@@ -24,6 +17,12 @@ import {
   setDoc,
   updateDoc,
 } from 'firebase/firestore';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {HomeStackParamList} from '../utils/types';
+import {auth, db} from '../config/firebase';
+import {AirbnbRating} from 'react-native-elements';
+import Icon from 'react-native-vector-icons/Ionicons';
+import {onAuthStateChanged, User} from 'firebase/auth';
 
 type CreateReviewProps = NativeStackScreenProps<
   HomeStackParamList,
@@ -43,12 +42,12 @@ const CreateReviewScreen: React.FC<CreateReviewProps> = ({
   const [thumbsUp, setThumbsUp] = useState<string>('thumbs-up-outline');
   const [thumbsDown, setThumbsDown] = useState<string>('thumbs-down-outline');
   const [ownerId, setOwnerId] = useState<string>('');
-  const styles = makeStyles(fontScale);
   const [user, setUser] = useState<User>();
   const [isAnonymous, setIsAnonymous] = useState<boolean>(false);
   const toggleSwitch = () => setIsAnonymous(previousState => !previousState);
   const userId = user ? user.uid : '';
   const homeId = route.params.homeId;
+  const styles = makeStyles(fontScale);
 
   useEffect(() => {
     onAuthStateChanged(auth, user => {
