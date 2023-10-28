@@ -57,11 +57,6 @@ const AccountStack = () => {
           headerTintColor: 'black',
         }}
       />
-      <Stack.Screen
-        name="RentalPostScreen"
-        component={RentalPostScreen}
-        options={{headerShown: true, title: 'Post Rental'}}
-      />
     </Stack.Navigator>
   );
 };

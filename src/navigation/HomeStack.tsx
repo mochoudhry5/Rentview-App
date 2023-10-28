@@ -4,6 +4,7 @@ import {HomeStackParamList} from '../utils/types';
 import RentalDescriptionScreen from '../screens/RentalDescriptionScreen';
 import CreateReviewScreen from '../screens/CreateReviewScreen';
 import NearbyRentalView from '../screens/NearbyRentalsScreen';
+import RentalPostScreen from '../screens/RentalPostScreen';
 
 const Stack = createStackNavigator<HomeStackParamList>();
 
@@ -28,6 +29,15 @@ const HomeStack = () => {
         name="CreateReview"
         options={{title: 'Review Home'}}
         component={CreateReviewScreen}
+      />
+      <Stack.Screen
+        name="RentalPostScreen"
+        options={{
+          title: 'Edit Your Rental',
+          headerBackTitleVisible: false,
+          headerTintColor: 'black',
+        }}
+        component={RentalPostScreen}
       />
     </Stack.Navigator>
   );

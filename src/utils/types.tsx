@@ -2,15 +2,16 @@ import {DocumentData} from 'firebase/firestore';
 
 export type HomeStackParamList = {
   SearchRentals: undefined;
-  RentalDescription: {homeId: string};
+  RentalDescription: {homeId: string, ownerId: string};
   CreateReview: {homeId: string};
+  RentalPostScreen: {homeId: string, homeDetails: DocumentData}
 };
 
 export type AccountStackParamList = {
   ActivityScreen: {reviews: DocumentData[]};
   AccountScreen: undefined;
   ProfileScreen: {userId: string};
-  RentalDescription: {homeId: string};
+  RentalDescription: {homeId: string, ownerId: string};
   PropertiesScreen: undefined;
   RentalPostScreen: undefined;
 };

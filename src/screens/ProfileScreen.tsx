@@ -27,7 +27,6 @@ type ProfileProps = NativeStackScreenProps<
 >;
 
 const ProfileScreen: React.FC<ProfileProps> = ({route, navigation}) => {
-  const [anonymous, onChangeAnonymous] = useState<string>('');
   const [phoneNumber, onChangePhoneNumber] = useState<string>('');
   const [username, onChangeUsername] = useState<string>('');
   const [fullName, onChangeFullName] = useState<string>('');
@@ -54,7 +53,7 @@ const ProfileScreen: React.FC<ProfileProps> = ({route, navigation}) => {
     const userInfoSnapshot = await getDoc(userInfoRef);
 
     if (userInfoSnapshot.exists()) {
-      if (userInfoSnapshot.data().anonymous !== anonymous) {
+      if (userInfoSnapshot.data().username !== username) {
         const q = query(collection(db, 'UserReviews', userId, 'Reviews'));
         const querySnapshot = await getDocs(q);
 
@@ -67,7 +66,7 @@ const ProfileScreen: React.FC<ProfileProps> = ({route, navigation}) => {
             userId,
           );
           await updateDoc(reviewRef, {
-            reviewerUsername: anonymous,
+            reviewerUsername: username,
           });
         });
       }

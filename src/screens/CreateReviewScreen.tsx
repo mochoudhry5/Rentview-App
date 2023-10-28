@@ -42,6 +42,7 @@ const CreateReviewScreen: React.FC<CreateReviewProps> = ({
   const [text, onChangeText] = useState<string>('');
   const [thumbsUp, setThumbsUp] = useState<string>('thumbs-up-outline');
   const [thumbsDown, setThumbsDown] = useState<string>('thumbs-down-outline');
+  const [ownerId, setOwnerId] = useState<string>('');
   const styles = makeStyles(fontScale);
   const [user, setUser] = useState<User>();
   const [isAnonymous, setIsAnonymous] = useState<boolean>(false);
@@ -65,6 +66,9 @@ const CreateReviewScreen: React.FC<CreateReviewProps> = ({
     const userInfoSnapshot = await getDoc(userInfoRef);
 
     if (homeInfoSnapshot.exists()) {
+
+      setOwnerId(homeInfoSnapshot.data().owner.userId);
+
       const date = new Date();
       var month = date.getMonth() + 1;
       var day = date.getDate();
@@ -205,7 +209,7 @@ const CreateReviewScreen: React.FC<CreateReviewProps> = ({
         });
       }
     }
-    navigation.navigate('RentalDescription', {homeId: homeId});
+    navigation.navigate('RentalDescription', {homeId: homeId, ownerId: ownerId});
   };
 
   const handleYesClick = () => {
