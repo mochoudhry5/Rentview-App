@@ -9,6 +9,14 @@ import {
   NativeScrollEvent,
   Dimensions,
 } from 'react-native';
+import {
+  doc,
+  getDoc,
+  query,
+  onSnapshot,
+  collection,
+  DocumentData,
+} from 'firebase/firestore';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {HomeStackParamList} from '../utils/types';
 import {db} from '../config/firebase';
@@ -19,14 +27,6 @@ import {auth} from '../config/firebase';
 import Icon from 'react-native-vector-icons/Ionicons';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {ListItem} from '@rneui/themed';
-import {
-  doc,
-  getDoc,
-  query,
-  onSnapshot,
-  collection,
-  DocumentData,
-} from 'firebase/firestore';
 
 const images = [
   'https://source.unsplash.com/1024x768/?house',
@@ -58,22 +58,15 @@ const RentalDescription: React.FC<RentalDescriptionProps> = ({
   const [allReviews, setAllReviews] = useState<DocumentData[]>([]);
   const sheetRef = useRef<BottomSheet>(null);
   const snapPoints = ['3%', '14%', '90%'];
+  const user = auth.currentUser;
+  const [expandedPropInfo, setExpandedPropInfo] = useState<boolean>(false);
+  const [expandedOwnerInfo, setExpandedOwnerInfo] = useState<boolean>(false);
+  const [currUserReviewed, setCurrUserReviewed] = useState<boolean>(false);
+  const [active, setActive] = useState(0);
   const homeInfoRef = doc(db, 'HomeReviews', route.params.homeId);
   const homeReviewsQuery = query(
     collection(db, 'HomeReviews', route.params.homeId, 'IndividualRatings'),
   );
-  const user = auth.currentUser;
-  const [expandedPropertyInfo, setExpandedPropertyInfo] =
-    useState<boolean>(false);
-  const [expandedOwnerInfo, setExpandedOwnerInfo] = useState<boolean>(false);
-  const handlePressPropertyInfo = () =>
-    setExpandedPropertyInfo(!expandedPropertyInfo);
-  const handlePressOwnerInfo = () => setExpandedOwnerInfo(!expandedOwnerInfo);
-  const [currentUserReviewed, setCurrentUserReviewed] =
-    useState<boolean>(false);
-  const [isEnabled, setIsEnabled] = useState<boolean>(false);
-  const toggleSwitch = () => setIsEnabled(previousState => !previousState);
-  const [active, setActive] = useState(0);
 
   useEffect(() => {
     const subscriber = onSnapshot(homeInfoRef, docSnapshot => {
@@ -94,7 +87,7 @@ const RentalDescription: React.FC<RentalDescriptionProps> = ({
           setAllReviews([]);
           docSnapshot.forEach(doc => {
             if (doc.data().reviewerEmail === user?.email) {
-              setCurrentUserReviewed(true);
+              setCurrUserReviewed(true);
             }
             setAllReviews(prevArr => [...prevArr, doc.data()]);
           });
@@ -184,9 +177,9 @@ const RentalDescription: React.FC<RentalDescriptionProps> = ({
               </ListItem.Content>
             </>
           }
-          isExpanded={expandedPropertyInfo}
+          isExpanded={expandedPropInfo}
           onPress={() => {
-            setExpandedPropertyInfo(!expandedPropertyInfo);
+            setExpandedPropInfo(!expandedPropInfo);
           }}>
           <ListItem style={{marginTop: -10}}>
             <ListItem.Content
@@ -252,7 +245,7 @@ const RentalDescription: React.FC<RentalDescriptionProps> = ({
                       {'('}
                       {totalReviews} Reviews{')'}
                     </Text>
-                    {currentUserReviewed ? (
+                    {currUserReviewed ? (
                       <TouchableOpacity
                         disabled
                         style={styles.alreadyReviewButton}>

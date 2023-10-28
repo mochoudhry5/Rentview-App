@@ -10,7 +10,6 @@ import React, {useEffect, useState} from 'react';
 import {DocumentData} from 'firebase/firestore';
 import {AirbnbRating} from 'react-native-elements';
 import Icon from 'react-native-vector-icons/Ionicons';
-import {ScrollView} from 'react-native-gesture-handler';
 
 type EditReviewProps = {
   currentProperty: DocumentData | undefined;
@@ -64,105 +63,40 @@ const EditReviewScreen: React.FC<EditReviewProps> = ({currentProperty}) => {
 
   return (
     <View>
-        <View>
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              paddingTop: '3%',
-            }}>
-            <View style={{flex: 1, height: 1, backgroundColor: '#DEDEDE'}} />
-            <View>
-              <Text
-                style={{
-                  fontFamily: 'Iowan Old Style',
-                  fontWeight: 'bold',
-                  fontSize: 20,
-                  textAlign: 'center',
-                  paddingLeft: '2%',
-                  paddingRight: '2%',
-                }}>
-                Overall Rating
-              </Text>
-            </View>
-            <View style={{flex: 1, height: 1, backgroundColor: '#DEDEDE'}} />
+      <View>
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            paddingTop: '3%',
+          }}>
+          <View style={{flex: 1, height: 1, backgroundColor: '#DEDEDE'}} />
+          <View>
+            <Text
+              style={{
+                fontFamily: 'Iowan Old Style',
+                fontWeight: 'bold',
+                fontSize: 20,
+                textAlign: 'center',
+                paddingLeft: '2%',
+                paddingRight: '2%',
+              }}>
+              Overall Rating
+            </Text>
           </View>
-          <AirbnbRating
-            showRating={true}
-            selectedColor="black"
-            defaultRating={overallRating}
-            onFinishRating={setOverallRating}
-            size={20}
-            reviewColor="gray"
-            reviewSize={13}
-          />
+          <View style={{flex: 1, height: 1, backgroundColor: '#DEDEDE'}} />
         </View>
-        <View>
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              paddingTop: '7%',
-            }}>
-            <View style={{flex: 1, height: 1, backgroundColor: '#DEDEDE'}} />
-            <View>
-              <Text
-                style={{
-                  fontFamily: 'Iowan Old Style',
-                  fontWeight: 'bold',
-                  fontSize: 20,
-                  textAlign: 'center',
-                  paddingLeft: '2%',
-                  paddingRight: '2%',
-                }}>
-                Landlord Rating
-              </Text>
-            </View>
-            <View style={{flex: 1, height: 1, backgroundColor: '#DEDEDE'}} />
-          </View>
-          <AirbnbRating
-            showRating={true}
-            selectedColor="black"
-            defaultRating={landlordRating}
-            onFinishRating={setLandlordRating}
-            size={20}
-            reviewColor="gray"
-            reviewSize={13}
-          />
-        </View>
-        <View>
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              paddingTop: '7%',
-            }}>
-            <View style={{flex: 1, height: 1, backgroundColor: '#DEDEDE'}} />
-            <View>
-              <Text
-                style={{
-                  fontFamily: 'Iowan Old Style',
-                  fontWeight: 'bold',
-                  fontSize: 20,
-                  textAlign: 'center',
-                  paddingLeft: '2%',
-                  paddingRight: '2%',
-                }}>
-                House Quality
-              </Text>
-            </View>
-            <View style={{flex: 1, height: 1, backgroundColor: '#DEDEDE'}} />
-          </View>
-          <AirbnbRating
-            showRating={true}
-            selectedColor="black"
-            defaultRating={houseQuality}
-            onFinishRating={setHouseQuality}
-            size={20}
-            reviewColor="gray"
-            reviewSize={13}
-          />
-        </View>
+        <AirbnbRating
+          showRating={true}
+          selectedColor="black"
+          defaultRating={overallRating}
+          onFinishRating={setOverallRating}
+          size={20}
+          reviewColor="gray"
+          reviewSize={13}
+        />
+      </View>
+      <View>
         <View
           style={{
             flexDirection: 'row',
@@ -180,29 +114,27 @@ const EditReviewScreen: React.FC<EditReviewProps> = ({currentProperty}) => {
                 paddingLeft: '2%',
                 paddingRight: '2%',
               }}>
-              Rent Again
+              Landlord Rating
             </Text>
           </View>
           <View style={{flex: 1, height: 1, backgroundColor: '#DEDEDE'}} />
         </View>
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'center',
-            paddingTop: '2%', 
-          }}>
-          <TouchableOpacity style={styles.yesButton} onPress={handleYesClick}>
-            <Icon name={thumbsUp} size={30} style={{color: '#538c50'}} />
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.noButton} onPress={handleNoClick}>
-            <Icon name={thumbsDown} size={30} style={{color: '#FF5147'}} />
-          </TouchableOpacity>
-        </View>
+        <AirbnbRating
+          showRating={true}
+          selectedColor="black"
+          defaultRating={landlordRating}
+          onFinishRating={setLandlordRating}
+          size={20}
+          reviewColor="gray"
+          reviewSize={13}
+        />
+      </View>
+      <View>
         <View
           style={{
             flexDirection: 'row',
             alignItems: 'center',
-            paddingTop: '5%',
+            paddingTop: '7%',
           }}>
           <View style={{flex: 1, height: 1, backgroundColor: '#DEDEDE'}} />
           <View>
@@ -215,17 +147,84 @@ const EditReviewScreen: React.FC<EditReviewProps> = ({currentProperty}) => {
                 paddingLeft: '2%',
                 paddingRight: '2%',
               }}>
-              Write a Comment
+              House Quality
             </Text>
           </View>
           <View style={{flex: 1, height: 1, backgroundColor: '#DEDEDE'}} />
         </View>
-        <TextInput
-          style={styles.input}
-          multiline={true}
-          onChangeText={setComment}
-          value={comment}
+        <AirbnbRating
+          showRating={true}
+          selectedColor="black"
+          defaultRating={houseQuality}
+          onFinishRating={setHouseQuality}
+          size={20}
+          reviewColor="gray"
+          reviewSize={13}
         />
+      </View>
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          paddingTop: '7%',
+        }}>
+        <View style={{flex: 1, height: 1, backgroundColor: '#DEDEDE'}} />
+        <View>
+          <Text
+            style={{
+              fontFamily: 'Iowan Old Style',
+              fontWeight: 'bold',
+              fontSize: 20,
+              textAlign: 'center',
+              paddingLeft: '2%',
+              paddingRight: '2%',
+            }}>
+            Rent Again
+          </Text>
+        </View>
+        <View style={{flex: 1, height: 1, backgroundColor: '#DEDEDE'}} />
+      </View>
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'center',
+          paddingTop: '2%',
+        }}>
+        <TouchableOpacity style={styles.yesButton} onPress={handleYesClick}>
+          <Icon name={thumbsUp} size={30} style={{color: '#538c50'}} />
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.noButton} onPress={handleNoClick}>
+          <Icon name={thumbsDown} size={30} style={{color: '#FF5147'}} />
+        </TouchableOpacity>
+      </View>
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          paddingTop: '5%',
+        }}>
+        <View style={{flex: 1, height: 1, backgroundColor: '#DEDEDE'}} />
+        <View>
+          <Text
+            style={{
+              fontFamily: 'Iowan Old Style',
+              fontWeight: 'bold',
+              fontSize: 20,
+              textAlign: 'center',
+              paddingLeft: '2%',
+              paddingRight: '2%',
+            }}>
+            Write a Comment
+          </Text>
+        </View>
+        <View style={{flex: 1, height: 1, backgroundColor: '#DEDEDE'}} />
+      </View>
+      <TextInput
+        style={styles.input}
+        multiline={true}
+        onChangeText={setComment}
+        value={comment}
+      />
     </View>
   );
 };
@@ -236,24 +235,24 @@ const makeStyles = (fontScale: any) =>
   StyleSheet.create({
     input: {
       height: 150,
-      borderWidth: .8,
+      borderWidth: 0.8,
       borderRadius: 10,
       textAlignVertical: 'top',
       padding: '2%',
       fontSize: 16,
-      marginLeft:'5%',
-      marginRight:'5%',
-      marginTop:'5%',
-      marginBottom:'20%',
+      marginLeft: '5%',
+      marginRight: '5%',
+      marginTop: '5%',
+      marginBottom: '20%',
     },
     yesButton: {
       alignItems: 'center',
       justifyContent: 'center',
-      marginRight:'7%'
+      marginRight: '7%',
     },
     noButton: {
       alignItems: 'center',
       justifyContent: 'center',
-      marginLeft:'7%'
+      marginLeft: '7%',
     },
   });

@@ -16,7 +16,7 @@ import {
   where,
 } from 'firebase/firestore';
 import React, {useState} from 'react';
-import ImageCarousel from './ImageCarousel';
+import ImageCarousel from '../components/ImageCarousel';
 import {Country, State, City} from 'country-state-city';
 import {Dropdown} from 'react-native-element-dropdown';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';

@@ -136,6 +136,7 @@ const MyReviews: React.FC<MyReviewProps> = ({route, navigation}) => {
     </View>
   );
 };
+
 const styles = StyleSheet.create({
   cancelButton: {
     alignItems: 'center',
@@ -143,7 +144,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     width: '30%',
     height: 25,
-    alignSelf: 'center',
+    aligxnSelf: 'center',
     justifyContent: 'center',
     borderRadius: 20,
   },
