@@ -223,14 +223,34 @@ const NearbyRentalView: React.FC<SearchRentalsProps> = ({
           avgOverallRating: 0,
         },
         totalReviews: 0,
+        owner: {
+          userId: '',
+        },
+        totalSquareFeet: '',
+        totalBathrooms: '',
+        totalBedrooms: '',
+        propertyDescription: '',
+        statusOfRental: '',
+        rentalArea: '',
+        furnished: '',
+        applianceIncluded: '',
+        monthlyRent: '',
       });
-      navigation.navigate('RentalDescription', {homeId: newHomeAdded.id});
+      navigation.navigate('RentalDescription', {
+        homeId: newHomeAdded.id,
+        ownerId: '',
+      });
     } else {
       let homeId = '';
+      let ownerId = '';
       homeSnapshot.forEach(doc => {
         homeId = doc.id;
+        ownerId = doc.data().owner.userId;
       });
-      navigation.navigate('RentalDescription', {homeId: homeId});
+      navigation.navigate('RentalDescription', {
+        homeId: homeId,
+        ownerId: ownerId,
+      });
     }
   }
 

@@ -5,6 +5,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   ScrollView,
+  Alert,
 } from 'react-native';
 import {
   collection,
@@ -32,18 +33,19 @@ type HomeReviewsProps = {
 };
 const AccountScreen: React.FC<AccountProps> = ({navigation}) => {
   const userId = auth.currentUser ? auth.currentUser.uid : '';
-  const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
 
   const handleLogoutAttempt = () => {
-    setIsModalVisible(true);
-  };
-
-  const handleCancel = () => {
-    setIsModalVisible(false);
+    Alert.alert(
+      'Log out?',
+      'Unsaved changes will be lost',
+      [
+        {text:'Cancel', style: 'cancel'},
+        {text:'Logout', onPress: (handleLogout), style: 'destructive'}
+      ]
+    )
   };
 
   const handleLogout = () => {
-    setIsModalVisible(false);
     signOut(auth)
       .then(() => {
         console.log('User logged out successfully:');
@@ -132,27 +134,6 @@ const AccountScreen: React.FC<AccountProps> = ({navigation}) => {
           </TouchableOpacity>
         ))}
       </View>
-      <Modal isVisible={isModalVisible}>
-        <Modal.Container>
-          <Modal.Header title="Continue logging out?" />
-          <Modal.Body>
-            <TouchableOpacity
-              style={styles.submitButton}
-              onPress={handleLogout}>
-              <Text style={{fontSize: 16, fontWeight: 'bold', color: 'red'}}>
-                Log out
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.submitButton}
-              onPress={handleCancel}>
-              <Text style={{fontSize: 16, fontWeight: 'bold', color: 'grey'}}>
-                Cancel
-              </Text>
-            </TouchableOpacity>
-          </Modal.Body>
-        </Modal.Container>
-      </Modal>
     </ScrollView>
   );
 };

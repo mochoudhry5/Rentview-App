@@ -11,7 +11,8 @@ import {AccountStackParamList} from '../utils/types';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import BottomSheet, {BottomSheetScrollView} from '@gorhom/bottom-sheet';
 import EditReviewScreen from './EditReviewScreen';
-import {DocumentData} from 'firebase/firestore';
+import {DocumentData, doc, getDoc, updateDoc} from 'firebase/firestore';
+import { db } from '../config/firebase';
 
 type MyReviewProps = NativeStackScreenProps<
   AccountStackParamList,
@@ -38,8 +39,14 @@ const MyReviews: React.FC<MyReviewProps> = ({route, navigation}) => {
     setOnEdit(true);
   };
 
-  const handleViewProperty = (homeId: string) => {
-    navigation.navigate('RentalDescription', {homeId: homeId});
+  const handleViewProperty = async (homeId: string) => {
+    const homeInfoRef = doc(db, 'HomeReviews', homeId);
+    const homeInfoSnapshot = await getDoc(homeInfoRef);
+    let ownerId = ''
+    if (homeInfoSnapshot.exists()) {
+       ownerId = homeInfoSnapshot.data().owner.userId;
+    }
+    navigation.navigate('RentalDescription', {homeId: homeId, ownerId: ownerId});
   };
 
   return route.params.reviews.length > 0 ? (

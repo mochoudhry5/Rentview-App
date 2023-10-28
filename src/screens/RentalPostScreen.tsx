@@ -11,27 +11,26 @@ import {
   QuerySnapshot,
   addDoc,
   collection,
+  doc,
+  getDoc,
   getDocs,
   query,
+  updateDoc,
   where,
 } from 'firebase/firestore';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import ImageCarousel from '../components/ImageCarousel';
 import {Country, State, City} from 'country-state-city';
 import {Dropdown} from 'react-native-element-dropdown';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {AccountStackParamList} from '../utils/types';
+import {HomeStackParamList} from '../utils/types';
 import {auth, db} from '../config/firebase';
+import {User} from 'firebase/auth';
 
 type PostPropertyScreen = NativeStackScreenProps<
-  AccountStackParamList,
+  HomeStackParamList,
   'RentalPostScreen'
 >;
-
-type RegionDataType = {
-  label: string;
-  value: string;
-};
 
 const bedAndBath = [
   {label: '1', value: '1'},
@@ -46,171 +45,108 @@ const bedAndBath = [
   {label: '10+', value: '10+'},
 ];
 
-const RentalPostScreen: React.FC<PostPropertyScreen> = ({navigation}) => {
-  const user = auth.currentUser;
-  const [chosenAddress, setChosenAddress] = useState<string>('');
-  const [chosenCountry, setChosenCountry] = useState<string>('');
-  const [chosenState, setChosenState] = useState<string>('');
-  const [chosenCity, setChosenCity] = useState<string>('');
-  const [totalBedrooms, setTotalBedrooms] = useState<string>('');
-  const [totalBathrooms, setTotalBathrooms] = useState<string>('');
-  const [chosenPostalCode, setChosenPostalCode] = useState<string>('');
-  const [countries, setCountries] = useState<Array<RegionDataType>>([
-    {label: 'United States', value: 'US'},
-  ]);
-  const [cities, setCities] = useState<Array<RegionDataType>>([
-    {label: '', value: ''},
-  ]);
-  const [states, setStates] = useState<Array<RegionDataType>>([
-    {label: '', value: ''},
-  ]);
+const rentalStatus = [
+  {label: 'Available', value: 'Available'},
+  {label: 'Occupied', value: 'Occupied'},
+  {label: 'Not Renting', value: 'Not Renting'},
+];
+
+const rentalAreaSelections = [
+  {label: 'Private Room', value: 'Private Room'},
+  {label: 'Entire House', value: 'Entire House'},
+];
+
+const yesOrNo = [
+  {label: 'Yes', value: 'Yes'},
+  {label: 'No', value: 'No'},
+];
+
+const RentalPostScreen: React.FC<PostPropertyScreen> = ({
+  route,
+  navigation,
+}) => {
+  const refParam = route.params.homeDetails;
+  const [user, setUser] = useState<User>();
+  const [totalBedrooms, setTotalBedrooms] = useState<string>(
+    refParam.totalBedrooms,
+  );
+  const [totalBathrooms, setTotalBathrooms] = useState<string>(
+    refParam.totalBathrooms,
+  );
+  const [totalSquareFeet, setTotalSquareFeet] = useState<string>(
+    refParam.totalSquareFeet,
+  );
+  const [statusOfRental, setStatusOfRental] = useState<string>(
+    refParam.statusOfRental,
+  );
+  const [rentalArea, setRentalArea] = useState<string>(refParam.rentalArea);
+  const [propertyDescription, setPropertyDescription] = useState<string>(
+    refParam.propertyDescription,
+  );
+  const [monthlyRent, setMonthlyRent] = useState<string>(refParam.monthlyRent);
+  const [furnished, setFurnished] = useState<string>(refParam.furnished);
+  const [applianceIncluded, setApplianceIncluded] = useState<string>(
+    refParam.applianceIncluded,
+  );
+
+  const userId = user ? user.uid : '';
 
   const handlePostSubmit = async () => {
-    let homeInfo = query(
-      collection(db, 'HomeReviews'),
-      where('address.street', '==', chosenAddress),
-    );
+    const homeInfoRef = doc(db, 'HomeReviews', route.params.homeId);
+    const homeInfoSnapshot = await getDoc(homeInfoRef);
 
-    let homeSnapshot: QuerySnapshot<DocumentData, DocumentData> = await getDocs(
-      homeInfo,
-    );
-
-    if (homeSnapshot.size !== 1) {
-      let fullAddress =
-        chosenAddress +
-        ', ' +
-        chosenCity +
-        ', ' +
-        chosenState +
-        ', ' +
-        chosenCountry +
-        ' ' +
-        chosenPostalCode;
-
-      const newHomePost = await addDoc(collection(db, 'HomeReviews'), {
-        address: {
-          street: chosenAddress,
-          city: chosenCity,
-          state: chosenState,
-          postalCode: chosenPostalCode,
-          fullAddress: fullAddress,
-        },
-        landlordService: {
-          oneStar: 0,
-          twoStar: 0,
-          threeStar: 0,
-          fourStar: 0,
-          fiveStar: 0,
-          avgLandlordServiceRating: 0,
-        },
-        houseQuality: {
-          oneStar: 0,
-          twoStar: 0,
-          threeStar: 0,
-          fourStar: 0,
-          fiveStar: 0,
-          avgHouseQualityRating: 0,
-        },
-        wouldRecommend: {
-          yes: 0,
-          no: 0,
-        },
-        overallRating: {
-          oneStar: 0,
-          twoStar: 0,
-          threeStar: 0,
-          fourStar: 0,
-          fiveStar: 0,
-          avgOverallRating: 0,
-        },
-        totalReviews: 0,
+    if (homeInfoSnapshot.exists()) {
+      await updateDoc(homeInfoRef, {
+        totalSquareFeet: totalSquareFeet,
+        totalBedrooms: totalBedrooms,
+        totalBathrooms: totalBathrooms,
+        statusOfRental: statusOfRental,
+        propertyDescription: propertyDescription,
+        rentalArea: rentalArea,
+        monthlyRent: monthlyRent,
+        furnished: furnished,
+        applianceIncluded: applianceIncluded,
       });
-
-      await addDoc(
-        collection(db, 'UserReviews', user?.uid ? user.uid : '', 'Properties'),
-        {
-          address: {
-            street: chosenAddress,
-            city: chosenCity,
-            state: chosenState,
-            postalCode: chosenPostalCode,
-            fullAddress: fullAddress,
-          },
-          homeId: newHomePost.id,
-        },
-      );
     }
+    navigation.navigate('RentalDescription', {
+      homeId: route.params.homeId,
+      ownerId: userId,
+    });
   };
 
-  const handleCancel = () => {
-    navigation.navigate('PropertiesScreen');
+  const handleCancel = async () => {
+    navigation.navigate('RentalDescription', {
+      homeId: route.params.homeId,
+      ownerId: userId,
+    });
   };
 
   return (
     <View style={{flex: 1, paddingTop: '2%', backgroundColor: 'white'}}>
       <ScrollView>
         <ImageCarousel />
-        <Text
-          style={{
-            fontSize: 20,
-            fontWeight: 'bold',
-            marginTop: '2%',
-            marginLeft: '5%',
-          }}>
-          Street Address
-        </Text>
-        <TextInput
-          style={[styles.dropdown, {fontSize: 18}]}
-          onChangeText={setChosenAddress}
-          value={chosenAddress}
-          maxLength={20}
-          placeholder="Enter Home address"
-        />
-        <Text
-          style={{
-            fontSize: 20,
-            fontWeight: 'bold',
-            marginTop: '2%',
-            marginLeft: '5%',
-          }}>
-          Postal Code
-        </Text>
-        <TextInput
-          style={[styles.dropdown, {fontSize: 18}]}
-          onChangeText={setChosenPostalCode}
-          value={chosenPostalCode}
-          maxLength={20}
-          placeholder="Enter Postal Code"
-          keyboardType="numeric"
-        />
         <View>
           <Text
             style={{
               fontSize: 20,
               fontWeight: 'bold',
               marginTop: '2%',
-              marginLeft: '5%',
+              marginLeft: '4%',
             }}>
-            Country
+            Renting Out
           </Text>
           <Dropdown
             style={styles.dropdown}
             placeholderStyle={styles.placeholderStyle}
             selectedTextStyle={styles.selectedTextStyle}
-            inputSearchStyle={styles.inputSearchStyle}
             iconStyle={styles.iconStyle}
-            data={countries}
+            data={rentalAreaSelections}
             maxHeight={300}
             labelField="label"
             valueField="value"
+            value={rentalArea}
             onChange={item => {
-              setChosenCountry(item.label);
-              const allStates = State.getStatesOfCountry(item.value);
-              let statesData: Array<RegionDataType> = [];
-              allStates.map(states => {
-                statesData.push({label: states.name, value: states.isoCode});
-              });
-              setStates(statesData);
+              setRentalArea(item.label);
             }}
           />
           <Text
@@ -218,100 +154,171 @@ const RentalPostScreen: React.FC<PostPropertyScreen> = ({navigation}) => {
               fontSize: 20,
               fontWeight: 'bold',
               marginTop: '2%',
-              marginLeft: '5%',
+              marginLeft: '4%',
             }}>
-            State
+            Monthly Rent
           </Text>
-          <Dropdown
-            search
-            style={styles.dropdown}
-            placeholderStyle={styles.placeholderStyle}
-            selectedTextStyle={styles.selectedTextStyle}
-            inputSearchStyle={styles.inputSearchStyle}
-            iconStyle={styles.iconStyle}
-            data={states}
-            maxHeight={300}
-            labelField="label"
-            valueField="value"
-            onChange={item => {
-              setChosenState(item.label);
-              const allCities = City.getCitiesOfState('US', item.value);
-              let citiesData: Array<RegionDataType> = [];
-              allCities.map(city => {
-                citiesData.push({label: city.name, value: city.stateCode});
-              });
-              setCities(citiesData);
-            }}
+          <TextInput
+            style={[styles.dropdown, {fontSize: 18}]}
+            onChangeText={setMonthlyRent}
+            value={monthlyRent}
+            maxLength={20}
+            placeholder="1500"
+            keyboardType="numeric"
           />
-          <Text
-            style={{
-              fontSize: 20,
-              fontWeight: 'bold',
-              marginTop: '2%',
-              marginLeft: '5%',
-            }}>
-            City
-          </Text>
-          <Dropdown
-            search
-            style={styles.dropdown}
-            placeholderStyle={styles.placeholderStyle}
-            selectedTextStyle={styles.selectedTextStyle}
-            inputSearchStyle={styles.inputSearchStyle}
-            iconStyle={styles.iconStyle}
-            data={cities}
-            maxHeight={300}
-            labelField="label"
-            valueField="value"
-            onChange={item => {
-              setChosenCity(item.label);
-            }}
-          />
-          <Text
-            style={{
-              fontSize: 20,
-              fontWeight: 'bold',
-              marginTop: '3%',
-              marginLeft: '5%',
-            }}>
-            Bedrooms
-          </Text>
-          <Dropdown
-            style={styles.dropdown}
-            placeholderStyle={styles.placeholderStyle}
-            selectedTextStyle={styles.selectedTextStyle}
-            inputSearchStyle={styles.inputSearchStyle}
-            iconStyle={styles.iconStyle}
-            data={bedAndBath}
-            maxHeight={300}
-            labelField="label"
-            valueField="value"
-            onChange={item => {
-              setTotalBedrooms(item.label);
-            }}
-          />
+          <View>
+            <Text
+              style={{
+                fontSize: 20,
+                fontWeight: 'bold',
+                marginTop: '2%',
+                marginLeft: '4%',
+              }}>
+              Status of Rental
+            </Text>
+            <Dropdown
+              style={styles.dropdown}
+              placeholderStyle={styles.placeholderStyle}
+              selectedTextStyle={styles.selectedTextStyle}
+              iconStyle={styles.iconStyle}
+              data={rentalStatus}
+              maxHeight={300}
+              labelField="label"
+              valueField="value"
+              value={statusOfRental}
+              onChange={item => {
+                setStatusOfRental(item.label);
+              }}
+            />
+            <Text
+              style={{
+                fontSize: 20,
+                fontWeight: 'bold',
+                marginTop: '2%',
+                marginLeft: '4%',
+              }}>
+              Square Feet
+            </Text>
+            <TextInput
+              style={[styles.dropdown, {fontSize: 18}]}
+              onChangeText={setTotalSquareFeet}
+              value={totalSquareFeet}
+              maxLength={20}
+              placeholder="2500"
+              keyboardType="numeric"
+            />
+            <Text
+              style={{
+                fontSize: 20,
+                fontWeight: 'bold',
+                marginTop: '3%',
+                marginLeft: '4%',
+              }}>
+              Bedrooms
+            </Text>
+            <Dropdown
+              style={styles.dropdown}
+              placeholderStyle={styles.placeholderStyle}
+              selectedTextStyle={styles.selectedTextStyle}
+              inputSearchStyle={styles.inputSearchStyle}
+              iconStyle={styles.iconStyle}
+              data={bedAndBath}
+              maxHeight={300}
+              labelField="label"
+              valueField="value"
+              value={totalBedrooms}
+              onChange={item => {
+                setTotalBedrooms(item.label);
+              }}
+            />
+            <Text
+              style={{
+                fontSize: 20,
+                fontWeight: 'bold',
+                marginTop: '5%',
+                marginLeft: '4%',
+              }}>
+              Bathrooms
+            </Text>
+            <Dropdown
+              style={styles.dropdown}
+              placeholderStyle={styles.placeholderStyle}
+              selectedTextStyle={styles.selectedTextStyle}
+              inputSearchStyle={styles.inputSearchStyle}
+              iconStyle={styles.iconStyle}
+              data={bedAndBath}
+              maxHeight={300}
+              labelField="label"
+              valueField="value"
+              value={totalBathrooms}
+              onChange={item => {
+                setTotalBathrooms(item.label);
+              }}
+            />
+            <Text
+              style={{
+                fontSize: 20,
+                fontWeight: 'bold',
+                marginTop: '5%',
+                marginLeft: '4%',
+              }}>
+              Furnished
+            </Text>
+            <Dropdown
+              style={styles.dropdown}
+              placeholderStyle={styles.placeholderStyle}
+              selectedTextStyle={styles.selectedTextStyle}
+              inputSearchStyle={styles.inputSearchStyle}
+              iconStyle={styles.iconStyle}
+              data={yesOrNo}
+              maxHeight={300}
+              labelField="label"
+              valueField="value"
+              value={furnished}
+              onChange={item => {
+                setFurnished(item.label);
+              }}
+            />
+            <Text
+              style={{
+                fontSize: 20,
+                fontWeight: 'bold',
+                marginTop: '5%',
+                marginLeft: '4%',
+              }}>
+              Washer/Dryer Included
+            </Text>
+            <Dropdown
+              style={styles.dropdown}
+              placeholderStyle={styles.placeholderStyle}
+              selectedTextStyle={styles.selectedTextStyle}
+              inputSearchStyle={styles.inputSearchStyle}
+              iconStyle={styles.iconStyle}
+              data={yesOrNo}
+              maxHeight={300}
+              labelField="label"
+              valueField="value"
+              value={applianceIncluded}
+              onChange={item => {
+                setApplianceIncluded(item.label);
+              }}
+            />
+          </View>
           <Text
             style={{
               fontSize: 20,
               fontWeight: 'bold',
               marginTop: '5%',
-              marginLeft: '5%',
+              marginLeft: '4%',
             }}>
-            Bathrooms
+            Property Description
           </Text>
-          <Dropdown
-            style={styles.dropdown}
-            placeholderStyle={styles.placeholderStyle}
-            selectedTextStyle={styles.selectedTextStyle}
-            inputSearchStyle={styles.inputSearchStyle}
-            iconStyle={styles.iconStyle}
-            data={bedAndBath}
-            maxHeight={300}
-            labelField="label"
-            valueField="value"
-            onChange={item => {
-              setTotalBathrooms(item.label);
-            }}
+          <TextInput
+            style={styles.propertyDescription}
+            multiline={true}
+            onChangeText={setPropertyDescription}
+            value={propertyDescription}
+            placeholder="What makes your home unique?"
           />
         </View>
         <View style={{marginBottom: '20%'}} />
@@ -321,7 +328,7 @@ const RentalPostScreen: React.FC<PostPropertyScreen> = ({navigation}) => {
           <Text style={{fontWeight: 'bold', color: '#424242'}}>Cancel</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.saveButton} onPress={handlePostSubmit}>
-          <Text style={{fontWeight: 'bold', color: 'white'}}>Post</Text>
+          <Text style={{fontWeight: 'bold', color: 'white'}}>Save</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -338,6 +345,17 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     justifyContent: 'center',
     borderRadius: 20,
+  },
+  propertyDescription: {
+    height: 180,
+    margin: 15,
+    borderWidth: 0.8,
+    borderRadius: 10,
+    textAlignVertical: 'top',
+    padding: '2%',
+    fontSize: 16,
+    marginTop: '5%',
+    marginBottom: '20%',
   },
   saveButton: {
     alignItems: 'center',
