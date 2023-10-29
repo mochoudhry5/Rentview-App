@@ -1,5 +1,8 @@
 import React, {useState, useEffect} from 'react';
-import {NavigationContainer} from '@react-navigation/native';
+import {
+  NavigationContainer,
+  getFocusedRouteNameFromRoute,
+} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import LoginView from './src/screens/LoginScreen';
 import SignupView from './src/screens/SignupScreen';
@@ -68,6 +71,21 @@ function LoggedInLayout() {
           }
           return <Icon name={iconName} color="black" size={36} />;
         },
+        tabBarStyle: (route => {
+          const routeName = getFocusedRouteNameFromRoute(route) ?? '';
+          if (
+            routeName === 'RentalDescription' ||
+            routeName === 'ProfileScreen' ||
+            routeName === 'CreateReview' ||
+            routeName === 'ActivityScreen' ||
+            routeName === 'PropertiesScreen' ||
+            routeName === 'RentalPostScreen'
+          ) {
+            return {display: 'none'};
+          }
+          return;
+        })(route),
+
         tabBarLabel: () => {
           return null;
         },

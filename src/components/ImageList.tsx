@@ -5,16 +5,15 @@ type Props = {
   images: string[];
   onPress: (index: number) => void;
   shift?: number;
+  width: number;
+  height: number;
 };
 
-const IMAGE_WIDTH = 220;
-const IMAGE_HEIGHT = 220;
-
-const ImageList = ({images, shift = 0, onPress}: Props) => (
+const ImageList = ({images, shift = 0, onPress, width, height}: Props) => (
   <ScrollView
     horizontal
     style={styles.root}
-    contentOffset={{x: shift * IMAGE_WIDTH, y: 0}}
+    contentOffset={{x: shift * width, y: 0}}
     contentContainerStyle={styles.container}>
     {images.map((imageUrl, index) => (
       <TouchableOpacity
@@ -22,7 +21,10 @@ const ImageList = ({images, shift = 0, onPress}: Props) => (
         key={`${imageUrl}_${index}`}
         activeOpacity={0.8}
         onPress={() => onPress(index)}>
-        <Image source={{uri: imageUrl}} style={styles.image} />
+        <Image
+          source={{uri: imageUrl}}
+          style={{width: width, height: height, borderRadius: 5}}
+        />
       </TouchableOpacity>
     ))}
   </ScrollView>
@@ -32,17 +34,12 @@ const styles = StyleSheet.create({
   root: {flexGrow: 0, backgroundColor: 'white'},
   container: {
     flex: 0,
-    paddingLeft: 10,
+    paddingLeft: 2,
     marginBottom: 10,
     backgroundColor: 'white',
   },
   button: {
-    marginRight: 10,
-  },
-  image: {
-    width: IMAGE_WIDTH,
-    height: IMAGE_HEIGHT,
-    borderRadius: 10,
+    marginRight: 2,
   },
 });
 

@@ -4,12 +4,7 @@ import ImagePicker from 'react-native-image-crop-picker';
 import ImageList from './ImageList';
 import ImageViewing from 'react-native-image-viewing/dist/ImageViewing';
 import ImageFooter from './ImageFooter';
-
-type ImageType = {
-  filename: string | undefined;
-  uri: string | undefined;
-  data: string | null | undefined;
-};
+import {ImageType} from '../utils/types';
 
 const ImageCarousel = () => {
   const [currentImageIndex, setImageIndex] = useState(0);
@@ -55,7 +50,8 @@ const ImageCarousel = () => {
       <ImageList
         images={images.map(image => (image.uri ? image.uri : 'NULL'))}
         onPress={index => onSelect(images, index)}
-        shift={0.75}
+        width={220}
+        height={220}
       />
       <ImageViewing
         images={images}

@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import {doc, getDoc, updateDoc} from 'firebase/firestore';
 import React, {useState} from 'react';
-import ImageCarousel from '../components/ImageCarousel';
+import TinyImageViewer from '../components/TinyImageViewer';
 import {Country, State, City} from 'country-state-city';
 import {Dropdown} from 'react-native-element-dropdown';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
@@ -114,7 +114,7 @@ const RentalPostScreen: React.FC<PostPropertyScreen> = ({
   return (
     <View style={{flex: 1, paddingTop: '2%', backgroundColor: 'white'}}>
       <ScrollView>
-        <ImageCarousel />
+        <TinyImageViewer />
         <View>
           <Text
             style={{

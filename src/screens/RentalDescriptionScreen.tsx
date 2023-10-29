@@ -5,8 +5,6 @@ import {
   Text,
   TouchableOpacity,
   Image,
-  NativeSyntheticEvent,
-  NativeScrollEvent,
   Dimensions,
   ActivityIndicator,
 } from 'react-native';
@@ -29,15 +27,10 @@ import {auth} from '../config/firebase';
 import Icon from 'react-native-vector-icons/Ionicons';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {ListItem} from '@rneui/themed';
+import BigImageViewer from '../components/BigImageViewer';
 
 const {width} = Dimensions.get('screen');
 const height = width * 0.9;
-const images = [
-  'https://source.unsplash.com/1024x768/?house',
-  'https://source.unsplash.com/1024x768/?interior',
-  'https://source.unsplash.com/1024x768/?backyard',
-  'https://source.unsplash.com/1024x768/?garage',
-];
 
 type RentalDescriptionProps = NativeStackScreenProps<
   HomeStackParamList,
@@ -81,7 +74,6 @@ const RentalDescription: React.FC<RentalDescriptionProps> = ({
   const [furnished, setFurnished] = useState<string>('');
   const [applianceIncluded, setApplianceIncluded] = useState<string>('');
   const [ownerFullName, setOwnerFullName] = useState<string>('');
-  const [active, setActive] = useState(0);
   const [expandedPropInfo, setExpandedPropInfo] = useState<boolean>(false);
   const [expandedOwnerInfo, setExpandedOwnerInfo] = useState<boolean>(false);
   const [currUserReviewed, setCurrUserReviewed] = useState<boolean>(false);
@@ -178,16 +170,6 @@ const RentalDescription: React.FC<RentalDescriptionProps> = ({
     });
   };
 
-  const onScrollChange = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
-    const slide = Math.ceil(
-      event.nativeEvent.contentOffset.x /
-        event.nativeEvent.layoutMeasurement.width,
-    );
-    if (slide !== active) {
-      setActive(slide);
-    }
-  };
-
   const handleCreateReview = () => {
     navigation.navigate('CreateReview', {homeId: route.params.homeId});
   };
@@ -200,21 +182,7 @@ const RentalDescription: React.FC<RentalDescriptionProps> = ({
         <>
           <ScrollView>
             <View>
-              <ScrollView
-                pagingEnabled
-                horizontal
-                onScroll={onScrollChange}
-                scrollEventThrottle={16}
-                showsHorizontalScrollIndicator={false}
-                style={{width: width, height}}>
-                {images.map(image => (
-                  <Image
-                    key={image}
-                    source={{uri: image}}
-                    style={styles.image}
-                  />
-                ))}
-              </ScrollView>
+              <BigImageViewer />
               {userId === ownerUserId ? (
                 <View style={styles.editButton}>
                   <TouchableOpacity
