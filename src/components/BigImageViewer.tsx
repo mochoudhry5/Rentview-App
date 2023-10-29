@@ -1,9 +1,12 @@
-import {View, Text, SafeAreaView, StyleSheet} from 'react-native';
+import {SafeAreaView, StyleSheet, Dimensions} from 'react-native';
 import React, {useState} from 'react';
 import ImageList from './ImageList';
 import ImageViewing from 'react-native-image-viewing/dist/ImageViewing';
 import ImageFooter from './ImageFooter';
 import {ImageType} from '../utils/types';
+
+const {width} = Dimensions.get('screen');
+const height = width * 0.7;
 
 const imageData = [
   {
@@ -41,8 +44,9 @@ const RentalDescripImageViewer = () => {
       <ImageList
         images={images.map(image => (image.uri ? image.uri : 'NULL'))}
         onPress={index => onSelect(images, index)}
-        width={386}
-        height={260}
+        width={width - 4}
+        height={height}
+        snapEnabled={true}
       />
       <ImageViewing
         images={images}

@@ -92,33 +92,11 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     alignItems: 'center',
   },
-  about: {
-    flex: 1,
-    marginTop: -12,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  name: {
-    textAlign: 'center',
-    fontSize: 24,
-    fontWeight: '200',
-    color: '#FFFFFFEE',
-  },
-  container: {
-    flex: 1,
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-    paddingTop: '0%',
-  },
   noPictures: {
     width: 300,
     height: 150,
     borderRadius: 10,
     marginBottom: '5%',
     opacity: 0.2,
-  },
-  userName: {
-    fontSize: 24,
-    marginBottom: 20,
   },
 });

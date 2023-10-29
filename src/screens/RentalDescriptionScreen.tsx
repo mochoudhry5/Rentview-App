@@ -142,10 +142,8 @@ const RentalDescription: React.FC<RentalDescriptionProps> = ({
           userId: userId,
         },
       });
-      const homeInfoSnapshotUpdate = await getDoc(homeInfoRef);
-      if (homeInfoSnapshotUpdate.exists()) {
-        setOwnerUserId(homeInfoSnapshotUpdate.data().owner.userId);
-      }
+
+      setOwnerUserId(userId);
     }
   };
 
