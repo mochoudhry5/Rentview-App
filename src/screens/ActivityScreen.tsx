@@ -4,6 +4,7 @@ import {
   ScrollView,
   TouchableOpacity,
   StyleSheet,
+  SafeAreaView,
 } from 'react-native';
 import React, {useCallback, useRef, useState} from 'react';
 import {AccountStackParamList} from '../utils/types';
@@ -80,7 +81,7 @@ const MyReviews: React.FC<MyReviewProps> = ({route, navigation}) => {
                     justifyContent: 'space-evenly',
                   }}>
                   <TouchableOpacity
-                    style={styles.cancelButton}
+                    style={styles.viewProperty}
                     onPress={() => {
                       handleViewProperty(review.review.homeId);
                     }}>
@@ -89,7 +90,7 @@ const MyReviews: React.FC<MyReviewProps> = ({route, navigation}) => {
                     </Text>
                   </TouchableOpacity>
                   <TouchableOpacity
-                    style={styles.saveButton}
+                    style={styles.editReview}
                     onPress={() => {
                       handleEditReview(review);
                     }}>
@@ -131,11 +132,13 @@ const MyReviews: React.FC<MyReviewProps> = ({route, navigation}) => {
           <BottomSheetScrollView>
             <EditReviewScreen currentProperty={currentProperty} />
           </BottomSheetScrollView>
-          <TouchableOpacity style={styles.submitButton}>
-            <Text style={{fontSize: 16, fontWeight: 'bold', color: 'white'}}>
-              Update Review
-            </Text>
-          </TouchableOpacity>
+          <SafeAreaView style={{width:'100%', height:'15%', justifyContent:'center', borderTopWidth:.2, borderColor:'gray'}}>
+            <TouchableOpacity style={styles.submitButton}>
+              <Text style={{fontSize: 16, fontWeight: 'bold', color: 'white'}}>
+                Update Review
+              </Text>
+            </TouchableOpacity>
+          </SafeAreaView>
         </BottomSheet>
       ) : null}
     </View>
@@ -147,7 +150,7 @@ const MyReviews: React.FC<MyReviewProps> = ({route, navigation}) => {
 };
 
 const styles = StyleSheet.create({
-  cancelButton: {
+  viewProperty: {
     alignItems: 'center',
     backgroundColor: 'white',
     borderWidth: 1,
@@ -157,7 +160,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     borderRadius: 20,
   },
-  saveButton: {
+  editReview: {
     alignItems: 'center',
     backgroundColor: '#1f3839',
     borderWidth: 1,
@@ -191,10 +194,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#1f3839',
     borderWidth: 1,
-    width: '100%',
-    height: '7%',
+    width: '92%',
+    height: '35%',
     alignSelf: 'center',
     justifyContent: 'center',
+    borderRadius: 20,
+    marginBottom:'10%'
   },
 });
 export default MyReviews;

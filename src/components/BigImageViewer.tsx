@@ -1,4 +1,4 @@
-import {SafeAreaView, StyleSheet, Dimensions} from 'react-native';
+import {SafeAreaView, StyleSheet, Dimensions, View} from 'react-native';
 import React, {useState} from 'react';
 import ImageList from './ImageList';
 import ImageViewing from 'react-native-image-viewing/dist/ImageViewing';
@@ -6,7 +6,7 @@ import ImageFooter from './ImageFooter';
 import {ImageType} from '../utils/types';
 
 const {width} = Dimensions.get('screen');
-const height = width * 0.7;
+const height = width * .9;
 
 const imageData = [
   {
@@ -40,11 +40,11 @@ const RentalDescripImageViewer = () => {
   const onRequestClose = () => setIsVisible(false);
 
   return (
-    <SafeAreaView style={styles.root}>
+    <View style={styles.root}>
       <ImageList
         images={images.map(image => (image.uri ? image.uri : 'NULL'))}
         onPress={index => onSelect(images, index)}
-        width={width - 4}
+        width={width}
         height={height}
         snapEnabled={true}
       />
@@ -59,7 +59,7 @@ const RentalDescripImageViewer = () => {
           <ImageFooter imageIndex={imageIndex} imagesCount={images.length} />
         )}
       />
-    </SafeAreaView>
+    </View>
   );
 };
 

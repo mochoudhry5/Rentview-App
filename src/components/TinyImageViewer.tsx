@@ -52,6 +52,8 @@ const ImageCarousel = () => {
         onPress={index => onSelect(images, index)}
         width={220}
         height={220}
+        margin={2}
+        borderRadius={7}
       />
       <ImageViewing
         images={images}

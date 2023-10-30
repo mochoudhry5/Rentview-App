@@ -214,7 +214,7 @@ const RentalDescription: React.FC<RentalDescriptionProps> = ({
                 <TouchableOpacity
                   style={styles.roundButton1}
                   onPress={() => navigation.goBack()}>
-                  <Icon name={'chevron-back-outline'} color="black" size={30} />
+                  <Icon name={'chevron-back-outline'} color="black" size={25} />
                 </TouchableOpacity>
               </View>
             </View>
@@ -842,14 +842,14 @@ const styles = StyleSheet.create({
   },
   backButton: {
     position: 'absolute',
-    top: '14%',
+    top: '15%',
     left: '5%',
     flexDirection: 'row',
     width: 200,
   },
   claimButton: {
     position: 'absolute',
-    top: '16%',
+    top: '15%',
     left: '73%',
     flexDirection: 'row',
     width: 250,
@@ -884,7 +884,7 @@ const styles = StyleSheet.create({
   },
   editButton: {
     position: 'absolute',
-    top: '16%',
+    top: '15%',
     left: '78%',
     flexDirection: 'row',
     width: 250,
@@ -894,7 +894,7 @@ const styles = StyleSheet.create({
   },
   alreadyClaimedButton: {
     position: 'absolute',
-    top: '16%',
+    top: '15%',
     left: '67%',
     flexDirection: 'row',
     width: 250,

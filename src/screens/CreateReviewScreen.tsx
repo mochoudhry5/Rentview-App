@@ -8,6 +8,7 @@ import {
   ScrollView,
   TextInput,
   Switch,
+  SafeAreaView,
 } from 'react-native';
 import {
   addDoc,
@@ -428,13 +429,15 @@ const CreateReviewScreen: React.FC<CreateReviewProps> = ({
           />
         </View>
       </ScrollView>
-      <TouchableOpacity
-        style={styles.submitButton}
-        onPress={handleReviewSubmit}>
-        <Text style={{fontSize: 16, fontWeight: 'bold', color: 'white'}}>
-          Publish Review
-        </Text>
-      </TouchableOpacity>
+      <SafeAreaView  style={{flexDirection: 'row', justifyContent: 'center', width:'100%', height:'15%',borderTopWidth:.2, borderColor:'gray'}}>
+        <TouchableOpacity
+          style={styles.submitButton}
+          onPress={handleReviewSubmit}>
+          <Text style={{fontSize: 16, fontWeight: 'bold', color: 'white'}}>
+            Publish Review
+          </Text>
+        </TouchableOpacity>
+      </SafeAreaView>
     </View>
   );
 };
@@ -456,10 +459,11 @@ const makeStyles = (fontScale: any) =>
       alignItems: 'center',
       backgroundColor: '#1f3839',
       borderWidth: 1,
-      width: '100%',
-      height: '7%',
+      width: '92%',
+      height: '50%',
       alignSelf: 'center',
       justifyContent: 'center',
+      borderRadius:20,
     },
     yesButton: {
       alignItems: 'center',

@@ -5,6 +5,7 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
+  SafeAreaView,
 } from 'react-native';
 import {doc, getDoc, updateDoc} from 'firebase/firestore';
 import React, {useState} from 'react';
@@ -313,14 +314,19 @@ const RentalPostScreen: React.FC<PostPropertyScreen> = ({
         </View>
         <View style={{marginBottom: '20%'}} />
       </ScrollView>
-      <View style={{flexDirection: 'row', justifyContent: 'space-evenly'}}>
-        <TouchableOpacity style={styles.cancelButton} onPress={handleCancel}>
-          <Text style={{fontWeight: 'bold', color: '#424242'}}>Cancel</Text>
-        </TouchableOpacity>
+      <SafeAreaView
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'center',
+          width: '100%',
+          height: '15%',
+          borderTopWidth: 0.2,
+          borderColor: 'gray',
+        }}>
         <TouchableOpacity style={styles.saveButton} onPress={handlePostSubmit}>
-          <Text style={{fontWeight: 'bold', color: 'white'}}>Save</Text>
+          <Text style={{fontSize: 16, fontWeight: 'bold', color: 'white'}}>Save</Text>
         </TouchableOpacity>
-      </View>
+      </SafeAreaView>
     </View>
   );
 };
@@ -351,8 +357,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#1f3839',
     borderWidth: 1,
-    width: '30%',
-    height: 30,
+    width: '92%',
+    height: '50%',
     alignSelf: 'center',
     justifyContent: 'center',
     borderRadius: 20,

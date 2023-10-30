@@ -7,6 +7,8 @@ type Props = {
   width: number;
   height: number;
   snapEnabled?: boolean;
+  margin?: number;
+  borderRadius?: number;
 };
 
 const ImageList = ({
@@ -15,6 +17,8 @@ const ImageList = ({
   width,
   height,
   snapEnabled = false,
+  margin = 0,
+  borderRadius = 0,
 }: Props) => {
   return (
     <ScrollView horizontal pagingEnabled={snapEnabled} scrollEventThrottle={16}>
@@ -26,11 +30,11 @@ const ImageList = ({
           <Image
             source={{uri: imageUrl}}
             style={{
-              margin: 2,
+              margin: margin,
               marginBottom: 7,
               width: width,
               height: height,
-              borderRadius: 7,
+              borderRadius: borderRadius,
             }}
           />
         </TouchableOpacity>

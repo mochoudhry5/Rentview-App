@@ -27,7 +27,11 @@ const HomeStack = () => {
       />
       <Stack.Screen
         name="CreateReview"
-        options={{title: 'Review Home'}}
+        options={{
+          title: 'Post Review',
+          headerBackTitleVisible: false,
+          headerTintColor: 'black',
+        }}
         component={CreateReviewScreen}
       />
       <Stack.Screen

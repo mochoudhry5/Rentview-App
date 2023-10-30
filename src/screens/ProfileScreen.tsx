@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {
   Image,
+  SafeAreaView,
   StyleSheet,
   Text,
   TextInput,
@@ -148,16 +149,11 @@ const ProfileScreen: React.FC<ProfileProps> = ({route, navigation}) => {
           keyboardType="numeric"
         />
       </ScrollView>
-      <View style={{flexDirection: 'row', justifyContent: 'space-evenly'}}>
-        <TouchableOpacity
-          style={styles.cancelButton}
-          onPress={cancelProfileInfo}>
-          <Text style={{fontWeight: 'bold', color: '#424242'}}>Cancel</Text>
-        </TouchableOpacity>
+      <SafeAreaView  style={{flexDirection: 'row', justifyContent: 'center', width:'100%', height:'15%',borderTopWidth:.2, borderColor:'gray'}}>
         <TouchableOpacity style={styles.saveButton} onPress={updateProfileInfo}>
-          <Text style={{fontWeight: 'bold', color: 'white'}}>Save</Text>
+          <Text style={{fontWeight: 'bold', color: 'white', fontSize:16}}>Save</Text>
         </TouchableOpacity>
-      </View>
+      </SafeAreaView>
     </View>
   );
 };
@@ -186,25 +182,15 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: 'gray',
   },
-  cancelButton: {
-    alignItems: 'center',
-    backgroundColor: 'white',
-    borderWidth: 1,
-    width: '40%',
-    height: 35,
-    alignSelf: 'center',
-    justifyContent: 'center',
-    borderRadius: 20,
-  },
   saveButton: {
     alignItems: 'center',
     backgroundColor: '#1f3839',
     borderWidth: 1,
-    width: '40%',
-    height: 35,
+    width: '92%',
+    height: '50%',
     alignSelf: 'center',
     justifyContent: 'center',
-    borderRadius: 20,
+    borderRadius: 20
   },
 });
 export default ProfileScreen;
