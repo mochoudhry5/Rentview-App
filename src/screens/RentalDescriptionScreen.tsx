@@ -116,19 +116,17 @@ const RentalDescription: React.FC<RentalDescriptionProps> = ({
   }, []);
 
   useEffect(() => {
-    const getData = () => {
-      onSnapshot(homeReviewsQuery, docSnapshot => {
-        if (docSnapshot.size >= 1) {
-          setAllReviews([]);
-          docSnapshot.forEach(doc => {
-            if (doc.data().reviewerEmail === user?.email) {
-              setCurrUserReviewed(true);
-            }
-            setAllReviews(prevArr => [...prevArr, doc.data()]);
-          });
-        }
-      });
-    };
+    const getData = onSnapshot(homeReviewsQuery, docSnapshot => {
+      if (docSnapshot.size >= 1) {
+        setAllReviews([]);
+        docSnapshot.forEach(doc => {
+          if (doc.data().reviewerEmail === user?.email) {
+            setCurrUserReviewed(true);
+          }
+          setAllReviews(prevArr => [...prevArr, doc.data()]);
+        });
+      }
+    });
     return () => getData();
   }, []);
 
