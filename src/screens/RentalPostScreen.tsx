@@ -6,6 +6,8 @@ import {
   TouchableOpacity,
   StyleSheet,
   SafeAreaView,
+  Pressable,
+  TouchableHighlight,
 } from 'react-native';
 import {doc, getDoc, updateDoc} from 'firebase/firestore';
 import React, {useState} from 'react';
@@ -16,24 +18,13 @@ import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {HomeStackParamList} from '../utils/types';
 import {auth, db} from '../config/firebase';
 import {User} from 'firebase/auth';
+import {CheckBox} from '@rneui/themed';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 type PostPropertyScreen = NativeStackScreenProps<
   HomeStackParamList,
   'RentalPostScreen'
 >;
-
-const bedAndBath = [
-  {label: '1', value: '1'},
-  {label: '2', value: '2'},
-  {label: '3', value: '3'},
-  {label: '4', value: '4'},
-  {label: '5', value: '5'},
-  {label: '6', value: '6'},
-  {label: '7', value: '7'},
-  {label: '8', value: '8'},
-  {label: '9', value: '9'},
-  {label: '10+', value: '10+'},
-];
 
 const rentalStatus = [
   {label: 'Available', value: 'Available'},
@@ -76,10 +67,28 @@ const RentalPostScreen: React.FC<PostPropertyScreen> = ({
   const [monthlyRent, setMonthlyRent] = useState<string>(
     homeDetails.monthlyRent,
   );
-  const [furnished, setFurnished] = useState<string>(homeDetails.furnished);
-  const [applianceIncluded, setApplianceIncluded] = useState<string>(
-    homeDetails.applianceIncluded,
+  const [isFurnished, setIsFurnished] = useState<boolean>(
+    homeDetails.furnished,
   );
+  const [isWasherDryer, setIsWasherDryer] = useState<boolean>(
+    homeDetails.washerDryer,
+  );
+  const [isFreeParking, setIsFreeParking] = useState<boolean>(
+    homeDetails.parking,
+  );
+  const [isInternet, setIsInternet] = useState<boolean>(homeDetails.internet);
+  const [isAirConditioning, setIsAirConditioning] = useState<boolean>(
+    homeDetails.airConditioning,
+  );
+  const [isPrivateBathroom, setIsPrivateBathroom] = useState<boolean>(
+    homeDetails.privateBathroom,
+  );
+  const [isDishwasher, setIsDishwasher] = useState<boolean>(
+    homeDetails.dishwasher,
+  );
+  const [isYard, setIsYard] = useState<boolean>(homeDetails.yard);
+  const [isPool, setIsPool] = useState<boolean>(homeDetails.pool);
+
   const userId = user ? user.uid : '';
 
   const handlePostSubmit = async () => {
@@ -95,17 +104,17 @@ const RentalPostScreen: React.FC<PostPropertyScreen> = ({
         propertyDescription: propertyDescription,
         rentalArea: rentalArea,
         monthlyRent: monthlyRent,
-        furnished: furnished,
-        applianceIncluded: applianceIncluded,
+        furnished: isFurnished,
+        washerDryer: isWasherDryer,
+        parking: isFreeParking,
+        airConditioning: isAirConditioning,
+        privateBathroom: isPrivateBathroom,
+        dishwasher: isDishwasher,
+        yard: isYard,
+        pool: isPool,
+        internet: isInternet,
       });
     }
-    navigation.navigate('RentalDescription', {
-      homeId: route.params.homeId,
-      ownerId: userId,
-    });
-  };
-
-  const handleCancel = async () => {
     navigation.navigate('RentalDescription', {
       homeId: route.params.homeId,
       ownerId: userId,
@@ -116,188 +125,355 @@ const RentalPostScreen: React.FC<PostPropertyScreen> = ({
     <View style={{flex: 1, paddingTop: '2%', backgroundColor: 'white'}}>
       <ScrollView>
         <TinyImageViewer />
+        <Text
+          style={{
+            fontSize: 18,
+            fontWeight: 'bold',
+            marginTop: '2%',
+            marginLeft: '4%',
+          }}>
+          Renting Out
+        </Text>
+        <Dropdown
+          style={styles.dropdown}
+          placeholderStyle={styles.placeholderStyle}
+          selectedTextStyle={styles.selectedTextStyle}
+          iconStyle={styles.iconStyle}
+          data={rentalAreaSelections}
+          maxHeight={300}
+          labelField="label"
+          valueField="value"
+          value={rentalArea}
+          onChange={item => {
+            setRentalArea(item.label);
+          }}
+        />
+        <Text
+          style={{
+            fontSize: 18,
+            fontWeight: 'bold',
+            marginLeft: '4%',
+            marginBottom: '2%',
+            marginTop: '2%',
+          }}>
+          Monthly Rent
+        </Text>
+        <TextInput
+          style={[styles.dropdown, {fontSize: 18}]}
+          onChangeText={setMonthlyRent}
+          value={monthlyRent}
+          maxLength={20}
+          placeholder="Monthly Rent"
+          keyboardType="numeric"
+        />
         <View>
           <Text
             style={{
-              fontSize: 20,
+              fontSize: 18,
               fontWeight: 'bold',
-              marginTop: '2%',
               marginLeft: '4%',
+              marginTop: '2%',
             }}>
-            Renting Out
+            Status of Rental
           </Text>
           <Dropdown
             style={styles.dropdown}
             placeholderStyle={styles.placeholderStyle}
             selectedTextStyle={styles.selectedTextStyle}
             iconStyle={styles.iconStyle}
-            data={rentalAreaSelections}
+            data={rentalStatus}
             maxHeight={300}
             labelField="label"
             valueField="value"
-            value={rentalArea}
+            value={statusOfRental}
             onChange={item => {
-              setRentalArea(item.label);
+              setStatusOfRental(item.label);
             }}
           />
           <Text
             style={{
-              fontSize: 20,
+              fontSize: 18,
               fontWeight: 'bold',
-              marginTop: '2%',
               marginLeft: '4%',
+              marginBottom: '2%',
+              marginTop: '2%',
             }}>
-            Monthly Rent
+            Square Feet
           </Text>
           <TextInput
             style={[styles.dropdown, {fontSize: 18}]}
-            onChangeText={setMonthlyRent}
-            value={monthlyRent}
+            onChangeText={setTotalSquareFeet}
+            value={totalSquareFeet}
             maxLength={20}
-            placeholder="1500"
+            placeholder="Total Square Footage"
             keyboardType="numeric"
           />
-          <View>
-            <Text
-              style={{
-                fontSize: 20,
-                fontWeight: 'bold',
-                marginTop: '2%',
-                marginLeft: '4%',
-              }}>
-              Status of Rental
-            </Text>
-            <Dropdown
-              style={styles.dropdown}
-              placeholderStyle={styles.placeholderStyle}
-              selectedTextStyle={styles.selectedTextStyle}
-              iconStyle={styles.iconStyle}
-              data={rentalStatus}
-              maxHeight={300}
-              labelField="label"
-              valueField="value"
-              value={statusOfRental}
-              onChange={item => {
-                setStatusOfRental(item.label);
-              }}
-            />
-            <Text
-              style={{
-                fontSize: 20,
-                fontWeight: 'bold',
-                marginTop: '2%',
-                marginLeft: '4%',
-              }}>
-              Square Feet
-            </Text>
-            <TextInput
-              style={[styles.dropdown, {fontSize: 18}]}
-              onChangeText={setTotalSquareFeet}
-              value={totalSquareFeet}
-              maxLength={20}
-              placeholder="2500"
-              keyboardType="numeric"
-            />
-            <Text
-              style={{
-                fontSize: 20,
-                fontWeight: 'bold',
-                marginTop: '3%',
-                marginLeft: '4%',
-              }}>
-              Bedrooms
-            </Text>
-            <Dropdown
-              style={styles.dropdown}
-              placeholderStyle={styles.placeholderStyle}
-              selectedTextStyle={styles.selectedTextStyle}
-              inputSearchStyle={styles.inputSearchStyle}
-              iconStyle={styles.iconStyle}
-              data={bedAndBath}
-              maxHeight={300}
-              labelField="label"
-              valueField="value"
-              value={totalBedrooms}
-              onChange={item => {
-                setTotalBedrooms(item.label);
-              }}
-            />
-            <Text
-              style={{
-                fontSize: 20,
-                fontWeight: 'bold',
-                marginTop: '5%',
-                marginLeft: '4%',
-              }}>
-              Bathrooms
-            </Text>
-            <Dropdown
-              style={styles.dropdown}
-              placeholderStyle={styles.placeholderStyle}
-              selectedTextStyle={styles.selectedTextStyle}
-              inputSearchStyle={styles.inputSearchStyle}
-              iconStyle={styles.iconStyle}
-              data={bedAndBath}
-              maxHeight={300}
-              labelField="label"
-              valueField="value"
-              value={totalBathrooms}
-              onChange={item => {
-                setTotalBathrooms(item.label);
-              }}
-            />
-            <Text
-              style={{
-                fontSize: 20,
-                fontWeight: 'bold',
-                marginTop: '5%',
-                marginLeft: '4%',
-              }}>
-              Furnished
-            </Text>
-            <Dropdown
-              style={styles.dropdown}
-              placeholderStyle={styles.placeholderStyle}
-              selectedTextStyle={styles.selectedTextStyle}
-              inputSearchStyle={styles.inputSearchStyle}
-              iconStyle={styles.iconStyle}
-              data={yesOrNo}
-              maxHeight={300}
-              labelField="label"
-              valueField="value"
-              value={furnished}
-              onChange={item => {
-                setFurnished(item.label);
-              }}
-            />
-            <Text
-              style={{
-                fontSize: 20,
-                fontWeight: 'bold',
-                marginTop: '5%',
-                marginLeft: '4%',
-              }}>
-              Washer/Dryer Included
-            </Text>
-            <Dropdown
-              style={styles.dropdown}
-              placeholderStyle={styles.placeholderStyle}
-              selectedTextStyle={styles.selectedTextStyle}
-              inputSearchStyle={styles.inputSearchStyle}
-              iconStyle={styles.iconStyle}
-              data={yesOrNo}
-              maxHeight={300}
-              labelField="label"
-              valueField="value"
-              value={applianceIncluded}
-              onChange={item => {
-                setApplianceIncluded(item.label);
-              }}
-            />
-          </View>
           <Text
             style={{
-              fontSize: 20,
+              fontSize: 18,
+              fontWeight: 'bold',
+              marginLeft: '4%',
+              marginBottom: '2%',
+              marginTop: '2%',
+            }}>
+            Bedrooms
+          </Text>
+          <TextInput
+            style={[styles.dropdown, {fontSize: 18}]}
+            onChangeText={setTotalBedrooms}
+            value={totalBedrooms}
+            maxLength={3}
+            placeholder="Total Bedrooms"
+            keyboardType="numeric"
+          />
+          <Text
+            style={{
+              fontSize: 18,
+              fontWeight: 'bold',
+              marginLeft: '4%',
+              marginBottom: '2%',
+              marginTop: '2%',
+            }}>
+            Bathrooms
+          </Text>
+          <TextInput
+            style={[styles.dropdown, {fontSize: 18}]}
+            onChangeText={setTotalBathrooms}
+            value={totalBathrooms}
+            maxLength={3}
+            placeholder="Total Bathrooms"
+            keyboardType="numeric"
+          />
+          <View
+            style={{
+              flexDirection: 'row',
+              marginLeft: '4%',
+              marginRight: '4%',
+              marginTop: '3%',
+              justifyContent: 'space-between',
+              flexWrap: 'wrap',
+            }}>
+            <TouchableOpacity
+              style={isFurnished ? styles.optionsActvie : styles.options}
+              onPress={() => setIsFurnished(!isFurnished)}>
+              <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                <Text
+                  style={{
+                    paddingTop: '1%',
+                    paddingBottom: '1%',
+                    paddingLeft: '2%',
+                    paddingRight: '1%',
+                    color: 'white',
+                    fontWeight: 'bold',
+                    alignContent: 'center',
+                    textAlign: 'center',
+                  }}>
+                  Furnished
+                </Text>
+                <Icon
+                  name="add-outline"
+                  style={{color: 'white', paddingRight: '1%'}}
+                  size={20}
+                />
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={isWasherDryer ? styles.optionsActvie : styles.options}
+              onPress={() => setIsWasherDryer(!isWasherDryer)}>
+              <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                <Text
+                  style={{
+                    paddingTop: '1%',
+                    paddingBottom: '1%',
+                    paddingLeft: '2%',
+                    paddingRight: '1%',
+                    color: 'white',
+                    fontWeight: 'bold',
+                    alignContent: 'center',
+                    textAlign: 'center',
+                  }}>
+                  Washer/Dryer
+                </Text>
+                <Icon
+                  name="add-outline"
+                  style={{color: 'white', paddingRight: '1%'}}
+                  size={20}
+                />
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={isFreeParking ? styles.optionsActvie : styles.options}
+              onPress={() => setIsFreeParking(!isFreeParking)}>
+              <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                <Text
+                  style={{
+                    paddingTop: '1%',
+                    paddingBottom: '1%',
+                    paddingLeft: '2%',
+                    paddingRight: '1%',
+                    color: 'white',
+                    fontWeight: 'bold',
+                    alignContent: 'center',
+                    textAlign: 'center',
+                  }}>
+                  Free Parking
+                </Text>
+                <Icon
+                  name="add-outline"
+                  style={{color: 'white', paddingRight: '1%'}}
+                  size={20}
+                />
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={isPool ? styles.optionsActvie : styles.options}
+              onPress={() => setIsPool(!isPool)}>
+              <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                <Text
+                  style={{
+                    paddingTop: '1%',
+                    paddingBottom: '1%',
+                    paddingLeft: '2%',
+                    paddingRight: '1%',
+                    color: 'white',
+                    fontWeight: 'bold',
+                    alignContent: 'center',
+                    textAlign: 'center',
+                  }}>
+                  Pool/Spa
+                </Text>
+                <Icon
+                  name="add-outline"
+                  style={{color: 'white', paddingRight: '1%'}}
+                  size={20}
+                />
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={isPrivateBathroom ? styles.optionsActvie : styles.options}
+              onPress={() => setIsPrivateBathroom(!isPrivateBathroom)}>
+              <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                <Text
+                  style={{
+                    paddingTop: '1%',
+                    paddingBottom: '1%',
+                    paddingLeft: '2%',
+                    paddingRight: '1%',
+                    color: 'white',
+                    fontWeight: 'bold',
+                    alignContent: 'center',
+                    textAlign: 'center',
+                  }}>
+                  Private Bathroom
+                </Text>
+                <Icon
+                  name="add-outline"
+                  style={{color: 'white', paddingRight: '1%'}}
+                  size={20}
+                />
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={isInternet ? styles.optionsActvie : styles.options}
+              onPress={() => setIsInternet(!isInternet)}>
+              <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                <Text
+                  style={{
+                    paddingTop: '1%',
+                    paddingBottom: '1%',
+                    paddingLeft: '2%',
+                    paddingRight: '1%',
+                    color: 'white',
+                    fontWeight: 'bold',
+                    alignContent: 'center',
+                    textAlign: 'center',
+                  }}>
+                  Internet
+                </Text>
+                <Icon
+                  name="add-outline"
+                  style={{color: 'white', paddingRight: '1%'}}
+                  size={20}
+                />
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={isDishwasher ? styles.optionsActvie : styles.options}
+              onPress={() => setIsDishwasher(!isDishwasher)}>
+              <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                <Text
+                  style={{
+                    paddingTop: '1%',
+                    paddingBottom: '1%',
+                    paddingLeft: '2%',
+                    paddingRight: '1%',
+                    color: 'white',
+                    fontWeight: 'bold',
+                    alignContent: 'center',
+                    textAlign: 'center',
+                  }}>
+                  Dishwasher
+                </Text>
+                <Icon
+                  name="add-outline"
+                  style={{color: 'white', paddingRight: '1%'}}
+                  size={20}
+                />
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={isAirConditioning ? styles.optionsActvie : styles.options}
+              onPress={() => setIsAirConditioning(!isAirConditioning)}>
+              <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                <Text
+                  style={{
+                    paddingTop: '1%',
+                    paddingBottom: '1%',
+                    paddingLeft: '2%',
+                    paddingRight: '1%',
+                    color: 'white',
+                    fontWeight: 'bold',
+                    alignContent: 'center',
+                    textAlign: 'center',
+                  }}>
+                  Air Conditioning
+                </Text>
+                <Icon
+                  name="add-outline"
+                  style={{color: 'white', paddingRight: '1%'}}
+                  size={20}
+                />
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={isYard ? styles.optionsActvie : styles.options}
+              onPress={() => setIsYard(!isYard)}>
+              <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                <Text
+                  style={{
+                    paddingTop: '1%',
+                    paddingBottom: '1%',
+                    paddingLeft: '2%',
+                    paddingRight: '1%',
+                    color: 'white',
+                    fontWeight: 'bold',
+                    alignContent: 'center',
+                    textAlign: 'center',
+                  }}>
+                  Yard
+                </Text>
+                <Icon
+                  name="add-outline"
+                  style={{color: 'white', paddingRight: '1%'}}
+                  size={20}
+                />
+              </View>
+            </TouchableOpacity>
+          </View>
+
+          <Text
+            style={{
+              fontSize: 18,
               fontWeight: 'bold',
               marginTop: '5%',
               marginLeft: '4%',
@@ -324,7 +500,9 @@ const RentalPostScreen: React.FC<PostPropertyScreen> = ({
           borderColor: 'gray',
         }}>
         <TouchableOpacity style={styles.saveButton} onPress={handlePostSubmit}>
-          <Text style={{fontSize: 16, fontWeight: 'bold', color: 'white'}}>Save</Text>
+          <Text style={{fontSize: 16, fontWeight: 'bold', color: 'white'}}>
+            Save
+          </Text>
         </TouchableOpacity>
       </SafeAreaView>
     </View>
@@ -332,6 +510,17 @@ const RentalPostScreen: React.FC<PostPropertyScreen> = ({
 };
 
 const styles = StyleSheet.create({
+  options: {
+    backgroundColor: '#1f3839',
+    opacity: 0.6,
+    borderRadius: 30,
+    marginTop: '2%',
+  },
+  optionsActvie: {
+    backgroundColor: '#1f3839',
+    borderRadius: 30,
+    marginTop: '2%',
+  },
   cancelButton: {
     alignItems: 'center',
     backgroundColor: 'white',
@@ -364,7 +553,9 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
   dropdown: {
-    margin: 16,
+    marginLeft: '4%',
+    marginRight: '4%',
+    marginBottom: '4%',
     borderBottomColor: 'gray',
     borderBottomWidth: 0.5,
   },
@@ -381,6 +572,9 @@ const styles = StyleSheet.create({
   inputSearchStyle: {
     height: 40,
     fontSize: 16,
+  },
+  checkboxText: {
+    fontSize: 18,
   },
 });
 

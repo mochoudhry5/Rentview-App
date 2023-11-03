@@ -28,6 +28,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {ListItem} from '@rneui/themed';
 import BigImageViewer from '../components/BigImageViewer';
+import {Modal} from '../components/Modal';
 
 const {width} = Dimensions.get('screen');
 const height = width * 0.9;
@@ -45,8 +46,15 @@ let detailObj = {
   propertyDescription: '',
   rentalArea: '',
   monthlyRent: '',
-  furnished: '',
-  applianceIncluded: '',
+  furnished: false,
+  washerDryer: false,
+  parking: false,
+  internet: false,
+  pool: false,
+  airConditioning: false,
+  dishwasher: false,
+  privateBathroom: false,
+  yard: false,
 };
 
 const RentalDescription: React.FC<RentalDescriptionProps> = ({
@@ -77,6 +85,7 @@ const RentalDescription: React.FC<RentalDescriptionProps> = ({
   const [expandedPropInfo, setExpandedPropInfo] = useState<boolean>(false);
   const [expandedOwnerInfo, setExpandedOwnerInfo] = useState<boolean>(false);
   const [currUserReviewed, setCurrUserReviewed] = useState<boolean>(false);
+  const [isModalVisible, setIsModalVisible] = useState(false);
   const user = auth.currentUser;
   const userId = user?.uid ? user.uid : '';
   const sheetRef = useRef<BottomSheet>(null);
@@ -140,8 +149,8 @@ const RentalDescription: React.FC<RentalDescriptionProps> = ({
           userId: userId,
         },
       });
-
       setOwnerUserId(userId);
+      setIsModalVisible(false);
     }
   };
 
@@ -156,9 +165,16 @@ const RentalDescription: React.FC<RentalDescriptionProps> = ({
         (detailObj.statusOfRental = refData.statusOfRental),
         (detailObj.propertyDescription = refData.propertyDescription),
         (detailObj.monthlyRent = refData.monthlyRent),
+        (detailObj.rentalArea = refData.rentalArea),
         (detailObj.furnished = refData.furnished),
-        (detailObj.applianceIncluded = refData.applianceIncluded),
-        (detailObj.rentalArea = refData.rentalArea);
+        (detailObj.washerDryer = refData.washerDryer),
+        (detailObj.dishwasher = refData.dishwasher),
+        (detailObj.privateBathroom = refData.privateBathroom),
+        (detailObj.yard = refData.yard),
+        (detailObj.pool = refData.pool),
+        (detailObj.internet = refData.internet),
+        (detailObj.airConditioning = refData.airConditioning),
+        (detailObj.parking = refData.parking);
     }
     navigation.navigate('RentalPostScreen', {
       homeId: route.params.homeId,
@@ -177,6 +193,52 @@ const RentalDescription: React.FC<RentalDescriptionProps> = ({
       ) : (
         <>
           <ScrollView>
+            <Modal isVisible={isModalVisible}>
+              <Modal.Container>
+                <Modal.Header title="Claim this home?" />
+                <Modal.Body>
+                  <Text>
+                    Are you sure you want to claim this home? By clicking
+                    Confirm you accept all terms and agreements.
+                  </Text>
+                </Modal.Body>
+                <Modal.Footer>
+                  <View
+                    style={{
+                      flex: 1,
+                      flexDirection: 'row',
+                      justifyContent: 'space-evenly',
+                    }}>
+                    <TouchableOpacity
+                      style={styles.modalCancelButton}
+                      onPress={() => {
+                        setIsModalVisible(!isModalVisible);
+                      }}>
+                      <Text
+                        style={{
+                          fontSize: 16,
+                          fontWeight: 'bold',
+                          color: '#4C4E52',
+                        }}>
+                        Cancel
+                      </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={styles.modalConfirmButton}
+                      onPress={handleClaimHome}>
+                      <Text
+                        style={{
+                          fontSize: 16,
+                          fontWeight: 'bold',
+                          color: 'white',
+                        }}>
+                        Confirm
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                </Modal.Footer>
+              </Modal.Container>
+            </Modal>
             <View>
               <BigImageViewer />
               {userId === ownerUserId ? (
@@ -193,7 +255,9 @@ const RentalDescription: React.FC<RentalDescriptionProps> = ({
                 <View style={styles.claimButton}>
                   <TouchableOpacity
                     style={styles.roundButton1}
-                    onPress={handleClaimHome}>
+                    onPress={() => {
+                      setIsModalVisible(true);
+                    }}>
                     <Text style={{paddingLeft: '2%', paddingRight: '2%'}}>
                       Claim Home
                     </Text>
@@ -216,354 +280,421 @@ const RentalDescription: React.FC<RentalDescriptionProps> = ({
                 </TouchableOpacity>
               </View>
             </View>
-            <View>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  paddingRight: '3%',
-                  paddingLeft: '3%',
-                  marginTop: '1%',
-                }}>
-                {monthlyRent !== '' ? (
-                  <Text
-                    style={{
-                      fontSize: 25,
-                      fontWeight: 'bold',
-                      paddingRight: '3%',
-                    }}>
-                    ${monthlyRent}/month
-                  </Text>
-                ) : (
-                  <Text
-                    style={{
-                      fontSize: 23,
-                      fontWeight: 'bold',
-                    }}>
-                    Monthly Rent: N/A
-                  </Text>
-                )}
+            {ownerUserId !== '' ? (
+              <View>
                 <View
                   style={{
-                    backgroundColor: '#1f3839',
-                    borderRadius: 5,
-                    alignSelf: 'center',
+                    flexDirection: 'row',
+                    paddingRight: '3%',
+                    paddingLeft: '3%',
+                    marginTop: '1%',
                   }}>
-                  {rentalArea !== '' ? (
+                  {monthlyRent !== '' ? (
                     <Text
                       style={{
-                        padding: '1%',
-                        color: 'white',
+                        fontSize: 25,
+                        fontWeight: 'bold',
+                        paddingRight: '3%',
+                      }}>
+                      ${monthlyRent}/month
+                    </Text>
+                  ) : (
+                    <Text
+                      style={{
+                        fontSize: 23,
                         fontWeight: 'bold',
                       }}>
-                      {rentalArea}
-                    </Text>
-                  ) : (
-                    <Text
-                      style={{
-                        padding: '1%',
-                        color: 'white',
-                        fontWeight: 'bold',
-                      }}>
-                      Type: N/A
+                      Monthly Rent: N/A
                     </Text>
                   )}
-                </View>
-              </View>
-              <Text style={styles.addressLine2}>
-                <MaterialIcon name="map-marker" color={'gray'} size={15} />
-                {street},{city},{state}, {postalCode}
-              </Text>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-evenly',
-                  marginTop: '2%',
-                }}>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    backgroundColor: '#F7F7F7',
-                    borderRadius: 7,
-                  }}>
-                  <Icon
-                    name="home-outline"
-                    size={25}
-                    style={{paddingLeft: '3%'}}
-                  />
-                  {totalSquareFeet !== '' ? (
-                    <Text
-                      style={{
-                        fontSize: 15,
-                        paddingLeft: '2%',
-                        paddingRight: '3%',
-                      }}>
-                      {totalSquareFeet} sqft.
-                    </Text>
-                  ) : (
-                    <Text
-                      style={{
-                        fontSize: 15,
-                        paddingLeft: '2%',
-                        paddingRight: '3%',
-                      }}>
-                      N/A
-                    </Text>
-                  )}
-                </View>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    backgroundColor: '#F7F7F7',
-                    borderRadius: 7,
-                  }}>
-                  <MaterialIcon
-                    name="bathtub-outline"
-                    size={30}
-                    style={{paddingLeft: '3%'}}
-                  />
-                  {totalBathrooms !== '' ? (
-                    <Text
-                      style={{
-                        fontSize: 15,
-                        paddingLeft: '2%',
-                        paddingRight: '3%',
-                      }}>
-                      {totalBathrooms} Bath
-                    </Text>
-                  ) : (
-                    <Text
-                      style={{
-                        fontSize: 15,
-                        paddingLeft: '2%',
-                        paddingRight: '3%',
-                      }}>
-                      N/A
-                    </Text>
-                  )}
-                </View>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    backgroundColor: '#F7F7F7',
-                    borderRadius: 7,
-                  }}>
-                  <Icon
-                    name="bed-outline"
-                    size={30}
-                    style={{paddingLeft: '3%'}}
-                  />
-                  {totalBedrooms !== '' ? (
-                    <Text
-                      style={{
-                        fontSize: 15,
-                        paddingLeft: '2%',
-                        paddingRight: '3%',
-                      }}>
-                      {totalBedrooms} Beds
-                    </Text>
-                  ) : (
-                    <Text
-                      style={{
-                        fontSize: 15,
-                        paddingLeft: '2%',
-                        paddingRight: '3%',
-                      }}>
-                      N/A
-                    </Text>
-                  )}
-                </View>
-              </View>
-            </View>
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                marginTop: '4%',
-                paddingLeft: '4%',
-              }}>
-              <Text style={{fontSize: 17, fontWeight: 'bold'}}>
-                Rental Status:
-              </Text>
-              <View style={styles.status}>
-                <TouchableOpacity
-                  style={styles.roundButton2}
-                  onPress={handleEdit}>
-                  {statusOfRental === 'Available' ? (
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        justifyContent: 'center',
-                        paddingLeft: '2%',
-                      }}>
-                      <View style={styles.AvailableStatus} />
-                      <Text
-                        style={{
-                          fontSize: 14,
-                          textAlign: 'center',
-                          padding: '1%',
-                        }}>
-                        {statusOfRental}
-                      </Text>
-                    </View>
-                  ) : statusOfRental === 'Not Renting' ? (
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        justifyContent: 'center',
-                        paddingLeft: '2%',
-                      }}>
-                      <View style={styles.notRentingStatus} />
-                      <Text
-                        style={{
-                          fontSize: 14,
-                          textAlign: 'center',
-                          padding: '1%',
-                        }}>
-                        {statusOfRental}
-                      </Text>
-                    </View>
-                  ) : statusOfRental === 'Occupied' ? (
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        justifyContent: 'center',
-                        paddingLeft: '2%',
-                      }}>
-                      <View style={styles.occupiedStatus} />
-                      <Text
-                        style={{
-                          fontSize: 14,
-                          textAlign: 'center',
-                          padding: '1%',
-                        }}>
-                        {statusOfRental}
-                      </Text>
-                    </View>
-                  ) : (
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        justifyContent: 'center',
-                        paddingLeft: '2%',
-                      }}>
-                      <View style={styles.unknownStatus} />
-                      <Text
-                        style={{
-                          fontSize: 14,
-                          textAlign: 'center',
-                          padding: '1%',
-                        }}>
-                        Unknown
-                      </Text>
-                    </View>
-                  )}
-                </TouchableOpacity>
-              </View>
-            </View>
-            <ListItem.Accordion
-              content={
-                <ListItem.Content>
-                  <ListItem.Title
+                  <View
                     style={{
-                      fontSize: 17,
-                      color: 'black',
-                      fontWeight: 'bold',
-                      marginTop: '3%',
+                      backgroundColor: '#1f3839',
+                      borderRadius: 5,
+                      alignSelf: 'center',
                     }}>
-                    Property Information
-                  </ListItem.Title>
-                </ListItem.Content>
-              }
-              isExpanded={expandedPropInfo}
-              onPress={() => {
-                setExpandedPropInfo(!expandedPropInfo);
-              }}>
-              <ListItem containerStyle={{paddingTop: 0, paddingBottom: 0}}>
-                <ListItem.Content>
-                  <View style={styles.rentalInfo}>
-                    <View style={{width: '100%'}}>
-                      {applianceIncluded !== '' ? (
-                        <Text>
-                          <Text
-                            style={{fontWeight: 'bold', textAlign: 'center'}}>
-                            Washer/Dryer:
-                          </Text>{' '}
-                          {applianceIncluded}
-                        </Text>
-                      ) : (
-                        <Text>
-                          <Text
-                            style={{fontWeight: 'bold', textAlign: 'center'}}>
-                            Washer/Dryer:
-                          </Text>{' '}
-                          N/A
-                        </Text>
-                      )}
-                      {furnished !== '' ? (
-                        <Text>
-                          <Text
-                            style={{fontWeight: 'bold', textAlign: 'center'}}>
-                            Furnished:
-                          </Text>{' '}
-                          {furnished}
-                        </Text>
-                      ) : (
-                        <Text>
-                          <Text
-                            style={{fontWeight: 'bold', textAlign: 'center'}}>
-                            Furnished:
-                          </Text>{' '}
-                          N/A
-                        </Text>
-                      )}
-                    </View>
+                    {rentalArea !== '' ? (
+                      <Text
+                        style={{
+                          padding: '1%',
+                          color: 'white',
+                          fontWeight: 'bold',
+                        }}>
+                        {rentalArea}
+                      </Text>
+                    ) : (
+                      <Text
+                        style={{
+                          padding: '1%',
+                          color: 'white',
+                          fontWeight: 'bold',
+                        }}>
+                        Type: N/A
+                      </Text>
+                    )}
                   </View>
-                </ListItem.Content>
-              </ListItem>
-            </ListItem.Accordion>
-            <ListItem.Accordion
-              content={
-                <ListItem.Content>
-                  <ListItem.Title
+                </View>
+                <Text style={styles.addressLine2}>
+                  <MaterialIcon name="map-marker" color={'gray'} size={15} />
+                  {street},{city},{state}, {postalCode}
+                </Text>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-evenly',
+                    marginTop: '2%',
+                  }}>
+                  <View
                     style={{
-                      fontSize: 17,
-                      color: 'black',
-                      fontWeight: 'bold',
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      backgroundColor: '#F7F7F7',
+                      borderRadius: 7,
                     }}>
-                    Owner Details
-                  </ListItem.Title>
-                </ListItem.Content>
-              }
-              isExpanded={expandedOwnerInfo}
-              onPress={() => {
-                setExpandedOwnerInfo(!expandedOwnerInfo);
-              }}>
-              <ListItem containerStyle={{paddingTop: 0, paddingBottom: 0}}>
-                <ListItem.Content>
-                  <View style={{flexDirection: 'row'}}>
-                    <Text style={{fontSize: 15, fontWeight: 'bold'}}>
-                      Name:
-                    </Text>
-                    <Text style={{fontSize: 15, paddingLeft: '1%'}}>
-                      {ownerFullName}
-                    </Text>
+                    <Icon
+                      name="home-outline"
+                      size={25}
+                      style={{paddingLeft: '3%'}}
+                    />
+                    {totalSquareFeet !== '' ? (
+                      <Text
+                        style={{
+                          fontSize: 15,
+                          paddingLeft: '2%',
+                          paddingRight: '3%',
+                        }}>
+                        {totalSquareFeet} sqft.
+                      </Text>
+                    ) : (
+                      <Text
+                        style={{
+                          fontSize: 15,
+                          paddingLeft: '2%',
+                          paddingRight: '3%',
+                        }}>
+                        N/A
+                      </Text>
+                    )}
                   </View>
-                  <TouchableOpacity style={styles.submitButton}>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      backgroundColor: '#F7F7F7',
+                      borderRadius: 7,
+                    }}>
+                    <MaterialIcon
+                      name="bathtub-outline"
+                      size={30}
+                      style={{paddingLeft: '3%'}}
+                    />
+                    {totalBathrooms !== '' ? (
+                      <Text
+                        style={{
+                          fontSize: 15,
+                          paddingLeft: '2%',
+                          paddingRight: '3%',
+                        }}>
+                        {totalBathrooms} Bath
+                      </Text>
+                    ) : (
+                      <Text
+                        style={{
+                          fontSize: 15,
+                          paddingLeft: '2%',
+                          paddingRight: '3%',
+                        }}>
+                        N/A
+                      </Text>
+                    )}
+                  </View>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      backgroundColor: '#F7F7F7',
+                      borderRadius: 7,
+                    }}>
+                    <Icon
+                      name="bed-outline"
+                      size={30}
+                      style={{paddingLeft: '3%'}}
+                    />
+                    {totalBedrooms !== '' ? (
+                      <Text
+                        style={{
+                          fontSize: 15,
+                          paddingLeft: '2%',
+                          paddingRight: '3%',
+                        }}>
+                        {totalBedrooms} Beds
+                      </Text>
+                    ) : (
+                      <Text
+                        style={{
+                          fontSize: 15,
+                          paddingLeft: '2%',
+                          paddingRight: '3%',
+                        }}>
+                        N/A
+                      </Text>
+                    )}
+                  </View>
+                </View>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    marginTop: '4%',
+                    paddingLeft: '4%',
+                  }}>
+                  <Text style={{fontSize: 17, fontWeight: 'bold'}}>
+                    Rental Status:
+                  </Text>
+                  <View style={styles.status}>
+                    <TouchableOpacity
+                      style={styles.roundButton2}
+                      onPress={handleEdit}>
+                      {statusOfRental === 'Available' ? (
+                        <View
+                          style={{
+                            flexDirection: 'row',
+                            justifyContent: 'center',
+                            paddingLeft: '2%',
+                          }}>
+                          <View style={styles.AvailableStatus} />
+                          <Text
+                            style={{
+                              fontSize: 14,
+                              textAlign: 'center',
+                              padding: '1%',
+                            }}>
+                            {statusOfRental}
+                          </Text>
+                        </View>
+                      ) : statusOfRental === 'Not Renting' ? (
+                        <View
+                          style={{
+                            flexDirection: 'row',
+                            justifyContent: 'center',
+                            paddingLeft: '2%',
+                          }}>
+                          <View style={styles.notRentingStatus} />
+                          <Text
+                            style={{
+                              fontSize: 14,
+                              textAlign: 'center',
+                              padding: '1%',
+                            }}>
+                            {statusOfRental}
+                          </Text>
+                        </View>
+                      ) : statusOfRental === 'Occupied' ? (
+                        <View
+                          style={{
+                            flexDirection: 'row',
+                            justifyContent: 'center',
+                            paddingLeft: '2%',
+                          }}>
+                          <View style={styles.occupiedStatus} />
+                          <Text
+                            style={{
+                              fontSize: 14,
+                              textAlign: 'center',
+                              padding: '1%',
+                            }}>
+                            {statusOfRental}
+                          </Text>
+                        </View>
+                      ) : (
+                        <View
+                          style={{
+                            flexDirection: 'row',
+                            justifyContent: 'center',
+                            paddingLeft: '2%',
+                          }}>
+                          <View style={styles.unknownStatus} />
+                          <Text
+                            style={{
+                              fontSize: 14,
+                              textAlign: 'center',
+                              padding: '1%',
+                            }}>
+                            Unknown
+                          </Text>
+                        </View>
+                      )}
+                    </TouchableOpacity>
+                  </View>
+                </View>
+                <ListItem.Accordion
+                  content={
+                    <ListItem.Content>
+                      <ListItem.Title
+                        style={{
+                          fontSize: 17,
+                          color: 'black',
+                          fontWeight: 'bold',
+                          marginTop: '3%',
+                        }}>
+                        Property Information
+                      </ListItem.Title>
+                    </ListItem.Content>
+                  }
+                  isExpanded={expandedPropInfo}
+                  onPress={() => {
+                    setExpandedPropInfo(!expandedPropInfo);
+                  }}>
+                  <ListItem containerStyle={{paddingTop: 0, paddingBottom: 0}}>
+                    <ListItem.Content>
+                      <View style={styles.rentalInfo}>
+                        <View style={{width: '100%'}}>
+                          {applianceIncluded !== '' ? (
+                            <Text>
+                              <Text
+                                style={{
+                                  fontWeight: 'bold',
+                                  textAlign: 'center',
+                                }}>
+                                Washer/Dryer:
+                              </Text>{' '}
+                              {applianceIncluded}
+                            </Text>
+                          ) : (
+                            <Text>
+                              <Text
+                                style={{
+                                  fontWeight: 'bold',
+                                  textAlign: 'center',
+                                }}>
+                                Washer/Dryer:
+                              </Text>{' '}
+                              N/A
+                            </Text>
+                          )}
+                          {furnished !== '' ? (
+                            <Text>
+                              <Text
+                                style={{
+                                  fontWeight: 'bold',
+                                  textAlign: 'center',
+                                }}>
+                                Furnished:
+                              </Text>{' '}
+                              {furnished}
+                            </Text>
+                          ) : (
+                            <Text>
+                              <Text
+                                style={{
+                                  fontWeight: 'bold',
+                                  textAlign: 'center',
+                                }}>
+                                Furnished:
+                              </Text>{' '}
+                              N/A
+                            </Text>
+                          )}
+                        </View>
+                      </View>
+                    </ListItem.Content>
+                  </ListItem>
+                </ListItem.Accordion>
+                <ListItem.Accordion
+                  content={
+                    <ListItem.Content>
+                      <ListItem.Title
+                        style={{
+                          fontSize: 17,
+                          color: 'black',
+                          fontWeight: 'bold',
+                        }}>
+                        Owner Details
+                      </ListItem.Title>
+                    </ListItem.Content>
+                  }
+                  isExpanded={expandedOwnerInfo}
+                  onPress={() => {
+                    setExpandedOwnerInfo(!expandedOwnerInfo);
+                  }}>
+                  <ListItem containerStyle={{paddingTop: 0, paddingBottom: 0}}>
+                    <ListItem.Content>
+                      <View style={{flexDirection: 'row'}}>
+                        <Text style={{fontSize: 15, fontWeight: 'bold'}}>
+                          Name:
+                        </Text>
+                        <Text style={{fontSize: 15, paddingLeft: '1%'}}>
+                          {ownerFullName}
+                        </Text>
+                      </View>
+                      <TouchableOpacity style={styles.submitButton}>
+                        <Text
+                          style={{
+                            fontSize: 14,
+                            fontWeight: 'bold',
+                            color: 'white',
+                          }}>
+                          Message
+                        </Text>
+                      </TouchableOpacity>
+                    </ListItem.Content>
+                  </ListItem>
+                </ListItem.Accordion>
+              </View>
+            ) : (
+              <View>
+                <Text style={styles.addressLine1}>{street}</Text>
+                <Text
+                  style={[
+                    styles.addressLine2,
+                    {color: 'gray', textAlign: 'center'},
+                  ]}>
+                  {city},{state}, {postalCode}
+                </Text>
+
+                <View style={{justifyContent: 'center', marginTop: '5%'}}>
+                  <View
+                    style={{
+                      backgroundColor: '#ededed',
+                      marginLeft: '4%',
+                      marginRight: '4%',
+                      borderRadius: 20,
+                    }}>
                     <Text
                       style={{
-                        fontSize: 14,
+                        fontSize: 18,
                         fontWeight: 'bold',
-                        color: 'white',
+                        textAlign: 'center',
+                        paddingTop: '2%',
                       }}>
-                      Message
+                      Home Not Claimed
                     </Text>
-                  </TouchableOpacity>
-                </ListItem.Content>
-              </ListItem>
-            </ListItem.Accordion>
+                    <Text
+                      style={{
+                        marginLeft: '4%',
+                        marginRight: '4%',
+                        marginTop: '2%',
+                        paddingBottom: '3%',
+                      }}>
+                      <Text style={{fontWeight: '300'}}>Owner: </Text>If this is
+                      your property, click{' '}
+                      <Text style={{fontWeight: 'bold'}}>Claim Home</Text> and
+                      enter all necessary details.
+                    </Text>
+                    <Text
+                      style={{
+                        marginLeft: '4%',
+                        marginRight: '4%',
+                        paddingBottom: '5%',
+                      }}>
+                      <Text style={{fontWeight: '300'}}>Tenant: </Text>If you
+                      have stayed at this property, feel free to leave a review
+                      to help others.
+                    </Text>
+                  </View>
+                </View>
+              </View>
+            )}
           </ScrollView>
           <BottomSheet
             style={styles.bottomSheetShadow}
@@ -834,6 +965,24 @@ const styles = StyleSheet.create({
     paddingRight: '3%',
     alignSelf: 'center',
     justifyContent: 'center',
+  },
+  modalConfirmButton: {
+    alignItems: 'center',
+    backgroundColor: '#1f3839',
+    borderWidth: 1,
+    borderRadius: 50,
+    width: '45%',
+    paddingTop: '2%',
+    paddingBottom: '2%',
+  },
+  modalCancelButton: {
+    alignItems: 'center',
+    backgroundColor: 'white',
+    borderWidth: 1,
+    borderRadius: 50,
+    width: '45%',
+    paddingTop: '2%',
+    paddingBottom: '2%',
   },
   miscRating: {
     marginTop: '5%',
