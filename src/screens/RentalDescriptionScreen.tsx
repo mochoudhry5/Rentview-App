@@ -317,6 +317,7 @@ const RentalDescription: React.FC<RentalDescriptionProps> = ({
                       style={{
                         fontSize: 23,
                         fontWeight: 'bold',
+                        paddingRight: '3%',
                       }}>
                       Monthly Rent: N/A
                     </Text>
