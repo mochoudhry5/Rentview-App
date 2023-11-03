@@ -80,7 +80,14 @@ const RentalDescription: React.FC<RentalDescriptionProps> = ({
   const [statusOfRental, setStatusOfRental] = useState<string>('');
   const [monthlyRent, setMonthlyRent] = useState<string>('');
   const [furnished, setFurnished] = useState<string>('');
-  const [applianceIncluded, setApplianceIncluded] = useState<string>('');
+  const [washerDryer, setWasherDryer] = useState<string>('');
+  const [internet, setInternet] = useState<string>('');
+  const [privateBathroom, setPrivateBathroom] = useState<string>('');
+  const [yard, setYard] = useState<string>('');
+  const [pool, setPool] = useState<string>('');
+  const [airConditioning, setAirConditioning] = useState<string>('');
+  const [dishwasher, setDishwasher] = useState<string>('');
+  const [parking, setParking] = useState<string>('');
   const [ownerFullName, setOwnerFullName] = useState<string>('');
   const [expandedPropInfo, setExpandedPropInfo] = useState<boolean>(false);
   const [expandedOwnerInfo, setExpandedOwnerInfo] = useState<boolean>(false);
@@ -117,7 +124,14 @@ const RentalDescription: React.FC<RentalDescriptionProps> = ({
         setRentalArea(docSnapshot.data().rentalArea);
         setMonthlyRent(docSnapshot.data().monthlyRent);
         setFurnished(docSnapshot.data().furnished);
-        setApplianceIncluded(docSnapshot.data().applianceIncluded);
+        setWasherDryer(docSnapshot.data().washerDryer);
+        setInternet(docSnapshot.data().internet);
+        setPrivateBathroom(docSnapshot.data().privateBathroom);
+        setYard(docSnapshot.data().yard);
+        setPool(docSnapshot.data().pool);
+        setAirConditioning(docSnapshot.data().airConditioning);
+        setDishwasher(docSnapshot.data().dishwasher);
+        setParking(docSnapshot.data().parking);
       }
       setIsLoading(false);
     });
@@ -548,8 +562,8 @@ const RentalDescription: React.FC<RentalDescriptionProps> = ({
                   <ListItem containerStyle={{paddingTop: 0, paddingBottom: 0}}>
                     <ListItem.Content>
                       <View style={styles.rentalInfo}>
-                        <View style={{width: '100%'}}>
-                          {applianceIncluded !== '' ? (
+                        {washerDryer && (
+                          <View style={{width: '50%'}}>
                             <Text>
                               <Text
                                 style={{
@@ -557,22 +571,13 @@ const RentalDescription: React.FC<RentalDescriptionProps> = ({
                                   textAlign: 'center',
                                 }}>
                                 Washer/Dryer:
-                              </Text>{' '}
-                              {applianceIncluded}
+                              </Text>
+                              <Text>Yes</Text>
                             </Text>
-                          ) : (
-                            <Text>
-                              <Text
-                                style={{
-                                  fontWeight: 'bold',
-                                  textAlign: 'center',
-                                }}>
-                                Washer/Dryer:
-                              </Text>{' '}
-                              N/A
-                            </Text>
-                          )}
-                          {furnished !== '' ? (
+                          </View>
+                        )}
+                        {furnished && (
+                          <View style={{width: '50%'}}>
                             <Text>
                               <Text
                                 style={{
@@ -580,22 +585,109 @@ const RentalDescription: React.FC<RentalDescriptionProps> = ({
                                   textAlign: 'center',
                                 }}>
                                 Furnished:
-                              </Text>{' '}
-                              {furnished}
+                              </Text>
+                              <Text>Yes</Text>
                             </Text>
-                          ) : (
+                          </View>
+                        )}
+                        {internet && (
+                          <View style={{width: '50%'}}>
                             <Text>
                               <Text
                                 style={{
                                   fontWeight: 'bold',
                                   textAlign: 'center',
                                 }}>
-                                Furnished:
-                              </Text>{' '}
-                              N/A
+                                Internet:
+                              </Text>
+                              <Text>Yes</Text>
                             </Text>
-                          )}
-                        </View>
+                          </View>
+                        )}
+                        {privateBathroom && (
+                          <View style={{width: '50%'}}>
+                            <Text>
+                              <Text
+                                style={{
+                                  fontWeight: 'bold',
+                                  textAlign: 'center',
+                                }}>
+                                Private Bathroom:
+                              </Text>
+                              <Text>Yes</Text>
+                            </Text>
+                          </View>
+                        )}
+                        {parking && (
+                          <View style={{width: '50%'}}>
+                            <Text>
+                              <Text
+                                style={{
+                                  fontWeight: 'bold',
+                                  textAlign: 'center',
+                                }}>
+                                Free Parking:
+                              </Text>
+                              <Text>Yes</Text>
+                            </Text>
+                          </View>
+                        )}
+                        {dishwasher && (
+                          <View style={{width: '50%'}}>
+                            <Text>
+                              <Text
+                                style={{
+                                  fontWeight: 'bold',
+                                  textAlign: 'center',
+                                }}>
+                                Dishwasher:
+                              </Text>
+                              <Text>Yes</Text>
+                            </Text>
+                          </View>
+                        )}
+                        {pool && (
+                          <View style={{width: '50%'}}>
+                            <Text>
+                              <Text
+                                style={{
+                                  fontWeight: 'bold',
+                                  textAlign: 'center',
+                                }}>
+                                Pool:
+                              </Text>
+                              <Text>Yes</Text>
+                            </Text>
+                          </View>
+                        )}
+                        {yard && (
+                          <View style={{width: '50%'}}>
+                            <Text>
+                              <Text
+                                style={{
+                                  fontWeight: 'bold',
+                                  textAlign: 'center',
+                                }}>
+                                Yard:
+                              </Text>
+                              <Text>Yes</Text>
+                            </Text>
+                          </View>
+                        )}
+                        {airConditioning && (
+                          <View style={{width: '50%'}}>
+                            <Text>
+                              <Text
+                                style={{
+                                  fontWeight: 'bold',
+                                  textAlign: 'center',
+                                }}>
+                                Air Conditioning:
+                              </Text>
+                              <Text>Yes</Text>
+                            </Text>
+                          </View>
+                        )}
                       </View>
                     </ListItem.Content>
                   </ListItem>
@@ -892,7 +984,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     alignContent: 'center',
-    justifyContent: 'space-evenly',
   },
   bottomSheetShadow: {
     backgroundColor: 'white',
