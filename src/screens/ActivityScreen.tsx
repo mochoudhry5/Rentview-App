@@ -46,6 +46,7 @@ const MyReviews: React.FC<MyReviewProps> = ({route, navigation}) => {
     if (homeInfoSnapshot.exists()) {
       ownerId = homeInfoSnapshot.data().owner.userId;
     }
+    navigation.removeListener;
     navigation.navigate('RentalDescription', {
       homeId: homeId,
       ownerId: ownerId,
@@ -132,7 +133,14 @@ const MyReviews: React.FC<MyReviewProps> = ({route, navigation}) => {
           <BottomSheetScrollView>
             <EditReviewScreen currentProperty={currentProperty} />
           </BottomSheetScrollView>
-          <SafeAreaView style={{width:'100%', height:'15%', justifyContent:'center', borderTopWidth:.2, borderColor:'gray'}}>
+          <SafeAreaView
+            style={{
+              width: '100%',
+              height: '15%',
+              justifyContent: 'center',
+              borderTopWidth: 0.2,
+              borderColor: 'gray',
+            }}>
             <TouchableOpacity style={styles.submitButton}>
               <Text style={{fontSize: 16, fontWeight: 'bold', color: 'white'}}>
                 Update Review
@@ -199,7 +207,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     justifyContent: 'center',
     borderRadius: 20,
-    marginBottom:'10%'
+    marginBottom: '10%',
   },
 });
 export default MyReviews;

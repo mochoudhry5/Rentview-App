@@ -76,7 +76,7 @@ const ProfileScreen: React.FC<ProfileProps> = ({route, navigation}) => {
         username: username,
       });
     }
-
+    navigation.removeListener;
     navigation.navigate('AccountScreen');
   };
 
@@ -149,9 +149,19 @@ const ProfileScreen: React.FC<ProfileProps> = ({route, navigation}) => {
           keyboardType="numeric"
         />
       </ScrollView>
-      <SafeAreaView  style={{flexDirection: 'row', justifyContent: 'center', width:'100%', height:'15%',borderTopWidth:.2, borderColor:'gray'}}>
+      <SafeAreaView
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'center',
+          width: '100%',
+          height: '15%',
+          borderTopWidth: 0.2,
+          borderColor: 'gray',
+        }}>
         <TouchableOpacity style={styles.saveButton} onPress={updateProfileInfo}>
-          <Text style={{fontWeight: 'bold', color: 'white', fontSize:16}}>Save</Text>
+          <Text style={{fontWeight: 'bold', color: 'white', fontSize: 16}}>
+            Save
+          </Text>
         </TouchableOpacity>
       </SafeAreaView>
     </View>
@@ -190,7 +200,7 @@ const styles = StyleSheet.create({
     height: '50%',
     alignSelf: 'center',
     justifyContent: 'center',
-    borderRadius: 20
+    borderRadius: 20,
   },
 });
 export default ProfileScreen;

@@ -197,6 +197,7 @@ const RentalDescription: React.FC<RentalDescriptionProps> = ({
   };
 
   const handleCreateReview = () => {
+    navigation.removeListener;
     navigation.navigate('CreateReview', {homeId: route.params.homeId});
   };
 

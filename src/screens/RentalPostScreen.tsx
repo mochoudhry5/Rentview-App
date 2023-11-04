@@ -6,19 +6,15 @@ import {
   TouchableOpacity,
   StyleSheet,
   SafeAreaView,
-  Pressable,
-  TouchableHighlight,
 } from 'react-native';
 import {doc, getDoc, updateDoc} from 'firebase/firestore';
 import React, {useState} from 'react';
 import TinyImageViewer from '../components/TinyImageViewer';
-import {Country, State, City} from 'country-state-city';
 import {Dropdown} from 'react-native-element-dropdown';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {HomeStackParamList} from '../utils/types';
-import {auth, db} from '../config/firebase';
+import {db} from '../config/firebase';
 import {User} from 'firebase/auth';
-import {CheckBox} from '@rneui/themed';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 type PostPropertyScreen = NativeStackScreenProps<

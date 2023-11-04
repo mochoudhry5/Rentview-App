@@ -64,7 +64,7 @@ const AccountScreen: React.FC<AccountProps> = ({navigation}) => {
       };
       reviews.push(reviewObj);
     });
-
+    navigation.removeListener;
     navigation.navigate('ActivityScreen', {reviews: reviews});
   };
 
@@ -73,6 +73,7 @@ const AccountScreen: React.FC<AccountProps> = ({navigation}) => {
     const userInfoSnapshot = await getDoc(userInfoRef);
 
     if (userInfoSnapshot.exists()) {
+      navigation.removeListener;
       navigation.navigate('ProfileScreen', {userId: userInfoSnapshot.id});
     }
   };

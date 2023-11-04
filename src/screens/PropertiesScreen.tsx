@@ -31,6 +31,7 @@ const PropertiesScreen: React.FC<PropertiesProps> = ({navigation}) => {
   }, []);
 
   const handleNewProperty = () => {
+    navigation.removeListener;
     navigation.navigate('RentalPostScreen');
   };
 

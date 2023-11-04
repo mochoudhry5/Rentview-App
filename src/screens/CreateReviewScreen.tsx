@@ -182,6 +182,10 @@ const CreateReviewScreen: React.FC<CreateReviewProps> = ({
       });
 
       if (user && userInfoSnapshot.exists()) {
+        const userName = isAnonymous
+          ? 'Spooky Reviewer'
+          : userInfoSnapshot.data().username;
+
         await setDoc(
           doc(db, 'HomeReviews', homeId, 'IndividualRatings', userId),
           {
@@ -192,7 +196,7 @@ const CreateReviewScreen: React.FC<CreateReviewProps> = ({
             additionalComment: text,
             dateOfReview: month + '/' + day + '/' + year,
             reviewerEmail: user.email,
-            reviewerUsername: userInfoSnapshot.data().username,
+            reviewerUsername: userName,
           },
         );
 
@@ -208,6 +212,7 @@ const CreateReviewScreen: React.FC<CreateReviewProps> = ({
         });
       }
     }
+    navigation.removeListener;
     navigation.navigate('RentalDescription', {
       homeId: homeId,
       ownerId: ownerId,
@@ -429,7 +434,15 @@ const CreateReviewScreen: React.FC<CreateReviewProps> = ({
           />
         </View>
       </ScrollView>
-      <SafeAreaView  style={{flexDirection: 'row', justifyContent: 'center', width:'100%', height:'15%',borderTopWidth:.2, borderColor:'gray'}}>
+      <SafeAreaView
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'center',
+          width: '100%',
+          height: '15%',
+          borderTopWidth: 0.2,
+          borderColor: 'gray',
+        }}>
         <TouchableOpacity
           style={styles.submitButton}
           onPress={handleReviewSubmit}>
@@ -463,7 +476,7 @@ const makeStyles = (fontScale: any) =>
       height: '50%',
       alignSelf: 'center',
       justifyContent: 'center',
-      borderRadius:20,
+      borderRadius: 20,
     },
     yesButton: {
       alignItems: 'center',

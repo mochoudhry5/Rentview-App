@@ -232,7 +232,7 @@ const NearbyRentalView: React.FC<SearchRentalsProps> = ({
         propertyDescription: '',
         statusOfRental: '',
         rentalArea: '',
-        monthlyRent:'',
+        monthlyRent: '',
         furnished: false,
         washerDryer: false,
         parking: false,
@@ -254,6 +254,7 @@ const NearbyRentalView: React.FC<SearchRentalsProps> = ({
         homeId = doc.id;
         ownerId = doc.data().owner.userId;
       });
+      navigation.removeListener;
       navigation.navigate('RentalDescription', {
         homeId: homeId,
         ownerId: ownerId,
