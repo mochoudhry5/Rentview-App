@@ -85,12 +85,6 @@ const ProfileScreen: React.FC<ProfileProps> = ({route, navigation}) => {
   return (
     <View style={{flex: 1, paddingTop: '5%', backgroundColor: 'white'}}>
       <ScrollView>
-        <View style={{alignItems: 'center', marginBottom: '5%'}}>
-          <Image
-            source={{uri: 'https://source.unsplash.com/1024x768/?male'}}
-            style={styles.profilePicture}
-          />
-        </View>
         <Text
           style={{
             fontSize: 20,

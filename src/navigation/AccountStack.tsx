@@ -12,7 +12,17 @@ const Stack = createStackNavigator<AccountStackParamList>();
 
 const AccountStack = () => {
   return (
-    <Stack.Navigator initialRouteName="AccountScreen">
+    <Stack.Navigator
+      initialRouteName="AccountScreen"
+      screenOptions={{
+        headerStyle: {
+          backgroundColor: '#1f3839',
+        },
+        headerTintColor: '#fff',
+        headerTitleStyle: {
+          fontWeight: 'bold',
+        },
+      }}>
       <Stack.Screen
         name="AccountScreen"
         component={AccountScreen}
@@ -27,7 +37,6 @@ const AccountStack = () => {
         options={{
           title: 'Activity',
           headerBackTitleVisible: false,
-          headerTintColor: 'black',
         }}
       />
       <Stack.Screen
@@ -36,7 +45,6 @@ const AccountStack = () => {
         options={{
           title: 'Profile',
           headerBackTitleVisible: false,
-          headerTintColor: 'black',
         }}
       />
       <Stack.Screen
@@ -54,7 +62,6 @@ const AccountStack = () => {
         options={{
           title: 'My Properties',
           headerBackTitleVisible: false,
-          headerTintColor: 'black',
         }}
       />
     </Stack.Navigator>
