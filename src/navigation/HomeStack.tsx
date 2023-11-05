@@ -10,7 +10,17 @@ const Stack = createStackNavigator<HomeStackParamList>();
 
 const HomeStack = () => {
   return (
-    <Stack.Navigator initialRouteName="SearchRentals">
+    <Stack.Navigator
+      initialRouteName="SearchRentals"
+      screenOptions={{
+        headerStyle: {
+          backgroundColor: '#1f3839',
+        },
+        headerTintColor: '#fff',
+        headerTitleStyle: {
+          fontWeight: 'bold',
+        },
+      }}>
       <Stack.Screen
         name="SearchRentals"
         component={NearbyRentalView}
@@ -30,7 +40,6 @@ const HomeStack = () => {
         options={{
           title: 'Post Review',
           headerBackTitleVisible: false,
-          headerTintColor: 'black',
         }}
         component={CreateReviewScreen}
       />
@@ -39,7 +48,6 @@ const HomeStack = () => {
         options={{
           title: 'Edit Your Rental',
           headerBackTitleVisible: false,
-          headerTintColor: 'black',
         }}
         component={RentalPostScreen}
       />
