@@ -69,7 +69,7 @@ function LoggedInLayout() {
           } else {
             iconName = focused ? 'chatbubbles' : 'chatbubbles-outline';
           }
-          return <Icon name={iconName} color="black" size={36} />;
+          return <Icon name={iconName} color="#1f3839" size={36} />;
         },
         tabBarStyle: (route => {
           const routeName = getFocusedRouteNameFromRoute(route) ?? '';
