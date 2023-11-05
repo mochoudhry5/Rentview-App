@@ -59,16 +59,18 @@ const ProfileScreen: React.FC<ProfileProps> = ({route, navigation}) => {
         const querySnapshot = await getDocs(q);
 
         querySnapshot.forEach(async document => {
-          const reviewRef = doc(
-            db,
-            'HomeReviews',
-            document.data().homeId,
-            'IndividualRatings',
-            userId,
-          );
-          await updateDoc(reviewRef, {
-            reviewerUsername: username,
-          });
+          if (!document.data().isAnonymous) {
+            const reviewRef = doc(
+              db,
+              'HomeReviews',
+              document.data().homeId,
+              'IndividualRatings',
+              userId,
+            );
+            await updateDoc(reviewRef, {
+              reviewerUsername: username,
+            });
+          }
         });
       }
       await updateDoc(userInfoRef, {
@@ -77,10 +79,6 @@ const ProfileScreen: React.FC<ProfileProps> = ({route, navigation}) => {
       });
     }
     navigation.removeListener;
-    navigation.navigate('AccountScreen');
-  };
-
-  const cancelProfileInfo = () => {
     navigation.navigate('AccountScreen');
   };
 
@@ -117,15 +115,6 @@ const ProfileScreen: React.FC<ProfileProps> = ({route, navigation}) => {
           onChangeText={onChangeUsername}
           value={username}
           maxLength={20}
-        />
-        <Text style={{marginLeft: '5%', marginTop: '5%', color: '#969696'}}>
-          Anonymous Username
-        </Text>
-        <TextInput
-          style={styles.nonEditInput}
-          maxLength={20}
-          editable={false}
-          value={'Nothing for now'}
         />
         <Text style={{marginLeft: '5%', marginTop: '5%', color: '#969696'}}>
           Email

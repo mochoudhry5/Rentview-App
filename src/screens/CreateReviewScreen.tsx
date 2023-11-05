@@ -211,6 +211,7 @@ const CreateReviewScreen: React.FC<CreateReviewProps> = ({
           recommendHouseRating: userRecommend,
           additionalComment: text,
           dateOfReview: month + '/' + day + '/' + year,
+          isAnonymous: isAnonymous,
         });
       }
     }
