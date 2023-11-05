@@ -204,7 +204,11 @@ const RentalDescription: React.FC<RentalDescriptionProps> = ({
   return (
     <GestureHandlerRootView style={styles.rootView}>
       {isLoading ? (
-        <ActivityIndicator size="large" color="#0000ff" />
+        <ActivityIndicator
+          style={{alignContent: 'center', justifyContent: 'center'}}
+          size="large"
+          color="#green"
+        />
       ) : (
         <>
           <ScrollView>

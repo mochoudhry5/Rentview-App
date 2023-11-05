@@ -186,6 +186,8 @@ const CreateReviewScreen: React.FC<CreateReviewProps> = ({
           ? 'Spooky Reviewer'
           : userInfoSnapshot.data().username;
 
+        const userEmail = isAnonymous ? 'Spooky Reviewer' : user.email;
+
         await setDoc(
           doc(db, 'HomeReviews', homeId, 'IndividualRatings', userId),
           {
@@ -195,7 +197,7 @@ const CreateReviewScreen: React.FC<CreateReviewProps> = ({
             overallRating: userOverallRating,
             additionalComment: text,
             dateOfReview: month + '/' + day + '/' + year,
-            reviewerEmail: user.email,
+            reviewerEmail: userEmail,
             reviewerUsername: userName,
           },
         );

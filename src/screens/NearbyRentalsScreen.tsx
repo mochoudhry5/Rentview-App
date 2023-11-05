@@ -243,6 +243,7 @@ const NearbyRentalView: React.FC<SearchRentalsProps> = ({
         privateBathroom: false,
         yard: false,
       });
+      navigation.removeListener;
       navigation.navigate('RentalDescription', {
         homeId: newHomeAdded.id,
         ownerId: '',
