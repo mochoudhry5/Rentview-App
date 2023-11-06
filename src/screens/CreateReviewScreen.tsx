@@ -202,7 +202,7 @@ const CreateReviewScreen: React.FC<CreateReviewProps> = ({
           },
         );
 
-        await addDoc(collection(db, 'UserReviews', userId, 'Reviews'), {
+        await setDoc(doc(db, 'UserReviews', userId, 'Reviews', homeId), {
           homeId: homeId,
           address: homeInfoSnapshot.data().address,
           landlordServiceRating: userLandlordRating,

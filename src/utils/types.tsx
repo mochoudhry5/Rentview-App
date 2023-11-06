@@ -8,7 +8,7 @@ export type HomeStackParamList = {
 };
 
 export type AccountStackParamList = {
-  ActivityScreen: {reviews: DocumentData[]};
+  ActivityScreen: undefined;
   AccountScreen: undefined;
   ProfileScreen: {userId: string};
   RentalDescription: {homeId: string; ownerId: string};

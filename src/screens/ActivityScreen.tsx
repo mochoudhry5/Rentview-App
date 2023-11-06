@@ -4,38 +4,50 @@ import {
   ScrollView,
   TouchableOpacity,
   StyleSheet,
-  SafeAreaView,
 } from 'react-native';
-import React, {useCallback, useRef, useState} from 'react';
+import {
+  DocumentData,
+  collection,
+  doc,
+  getDoc,
+  onSnapshot,
+  query,
+} from 'firebase/firestore';
+import React, {useEffect, useState} from 'react';
 import {AccountStackParamList} from '../utils/types';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import BottomSheet, {BottomSheetScrollView} from '@gorhom/bottom-sheet';
 import EditReviewScreen from './EditReviewScreen';
-import {DocumentData, doc, getDoc} from 'firebase/firestore';
 import {db} from '../config/firebase';
+import {auth} from '../config/firebase';
 
 type MyReviewProps = NativeStackScreenProps<
   AccountStackParamList,
   'ActivityScreen'
 >;
 
-const MyReviews: React.FC<MyReviewProps> = ({route, navigation}) => {
-  const sheetRef = useRef<BottomSheet>(null);
+const MyReviews: React.FC<MyReviewProps> = ({navigation}) => {
   const [onEdit, setOnEdit] = useState<boolean>(false);
-  const [currentProperty, setCurrentProperty] = useState<DocumentData>();
-  const snapPoints = ['1%', '100%'];
+  const [currentPropertyReview, setCurrentPropertyReview] =
+    useState<DocumentData>();
+  const [allReviews, setAllReviews] = useState<DocumentData[]>([]);
+  const userId = auth.currentUser ? auth.currentUser.uid : '';
+  const userReviewsRef = query(
+    collection(db, 'UserReviews', userId, 'Reviews'),
+  );
 
-  const handleSheetChanges = useCallback((index: number) => {
-    if (index == 0) {
-      if (sheetRef.current) {
-        sheetRef.current.close();
-      }
-      setOnEdit(false);
-    }
+  useEffect(() => {
+    const unsubscribe = onSnapshot(userReviewsRef, querySnapshot => {
+      setAllReviews([]);
+      querySnapshot.forEach(doc => {
+        setAllReviews(prevArr => [...prevArr, doc.data()]);
+      });
+    });
+
+    return () => unsubscribe();
   }, []);
 
   const handleEditReview = (review: DocumentData) => {
-    setCurrentProperty(review);
+    setCurrentPropertyReview(review);
     setOnEdit(true);
   };
 
@@ -53,11 +65,11 @@ const MyReviews: React.FC<MyReviewProps> = ({route, navigation}) => {
     });
   };
 
-  return route.params.reviews.length > 0 ? (
+  return allReviews.length > 0 ? (
     <View style={{flex: 1, backgroundColor: 'white'}}>
       <ScrollView style={{flex: 1}}>
-        {route.params.reviews.map(review => (
-          <View key={review.reviewId}>
+        {allReviews.map(review => (
+          <View key={review.homeId}>
             <View style={{marginTop: '3%'}}>
               <Text
                 style={{
@@ -66,7 +78,7 @@ const MyReviews: React.FC<MyReviewProps> = ({route, navigation}) => {
                   textAlign: 'center',
                   alignSelf: 'center',
                 }}>
-                {review.review.address.fullAddress}
+                {review.address.fullAddress}
               </Text>
               <View
                 style={{
@@ -84,7 +96,7 @@ const MyReviews: React.FC<MyReviewProps> = ({route, navigation}) => {
                   <TouchableOpacity
                     style={styles.viewProperty}
                     onPress={() => {
-                      handleViewProperty(review.review.homeId);
+                      handleViewProperty(review.homeId);
                     }}>
                     <Text style={{fontWeight: 'bold', color: '#424242'}}>
                       View Property
@@ -108,7 +120,7 @@ const MyReviews: React.FC<MyReviewProps> = ({route, navigation}) => {
                   }}>
                   <Text
                     style={{color: 'gray', fontSize: 12, paddingLeft: '2%'}}>
-                    {review.review.dateOfReview}
+                    {review.dateOfReview}
                   </Text>
                 </View>
                 <View
@@ -124,30 +136,10 @@ const MyReviews: React.FC<MyReviewProps> = ({route, navigation}) => {
         ))}
       </ScrollView>
       {onEdit ? (
-        <BottomSheet
-          style={styles.bottomSheetShadow}
-          ref={sheetRef}
-          snapPoints={snapPoints}
-          index={1}
-          onChange={handleSheetChanges}>
-          <BottomSheetScrollView>
-            <EditReviewScreen currentProperty={currentProperty} />
-          </BottomSheetScrollView>
-          <SafeAreaView
-            style={{
-              width: '100%',
-              height: '15%',
-              justifyContent: 'center',
-              borderTopWidth: 0.2,
-              borderColor: 'gray',
-            }}>
-            <TouchableOpacity style={styles.submitButton}>
-              <Text style={{fontSize: 16, fontWeight: 'bold', color: 'white'}}>
-                Update Review
-              </Text>
-            </TouchableOpacity>
-          </SafeAreaView>
-        </BottomSheet>
+        <EditReviewScreen
+          currentPropertyReview={currentPropertyReview}
+          setOnEdit={setOnEdit}
+        />
       ) : null}
     </View>
   ) : (

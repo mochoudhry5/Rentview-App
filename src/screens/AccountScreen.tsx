@@ -7,14 +7,7 @@ import {
   ScrollView,
   Alert,
 } from 'react-native';
-import {
-  collection,
-  getDoc,
-  doc,
-  query,
-  DocumentData,
-  getDocs,
-} from 'firebase/firestore';
+import {getDoc, doc, DocumentData} from 'firebase/firestore';
 import {auth} from '../config/firebase';
 import {signOut} from 'firebase/auth';
 import {db} from '../config/firebase';
@@ -26,10 +19,6 @@ type AccountProps = NativeStackScreenProps<
   'AccountScreen'
 >;
 
-type HomeReviewsProps = {
-  review: DocumentData;
-  reviewId: string;
-};
 const AccountScreen: React.FC<AccountProps> = ({navigation}) => {
   const userId = auth.currentUser ? auth.currentUser.uid : '';
 
@@ -51,21 +40,8 @@ const AccountScreen: React.FC<AccountProps> = ({navigation}) => {
   };
 
   const handleActivity = async () => {
-    const allReviewsRef = query(
-      collection(db, 'UserReviews', userId, 'Reviews'),
-    );
-    const allReviewsSnapshot = await getDocs(allReviewsRef);
-    let reviews: HomeReviewsProps[] = [];
-
-    allReviewsSnapshot.forEach(doc => {
-      const reviewObj = {
-        review: doc.data(),
-        reviewId: doc.id,
-      };
-      reviews.push(reviewObj);
-    });
     navigation.removeListener;
-    navigation.navigate('ActivityScreen', {reviews: reviews});
+    navigation.navigate('ActivityScreen');
   };
 
   const handleProfile = async () => {
