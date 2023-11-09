@@ -16,6 +16,7 @@ import {
   collection,
   DocumentData,
   updateDoc,
+  setDoc,
 } from 'firebase/firestore';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {HomeStackParamList} from '../utils/types';
@@ -154,6 +155,10 @@ const RentalDescription: React.FC<RentalDescriptionProps> = ({
   }, []);
 
   const handleClaimHome = async () => {
+    const date = new Date();
+    var month = date.getMonth() + 1;
+    var day = date.getDate();
+    var year = date.getFullYear();
     const homeInfoRef = doc(db, 'HomeReviews', route.params.homeId);
     const homeInfoSnapshot = await getDoc(homeInfoRef);
 
@@ -165,6 +170,14 @@ const RentalDescription: React.FC<RentalDescriptionProps> = ({
       });
       setOwnerUserId(userId);
       setIsModalVisible(false);
+      await setDoc(
+        doc(db, 'UserReviews', userId, 'MyProperties', route.params.homeId),
+        {
+          homeId: route.params.homeId,
+          fullAddress: homeInfoSnapshot.data().address.fullAddress,
+          dateAdded: month + '/' + day + '/' + year,
+        },
+      );
     }
   };
 
@@ -205,9 +218,13 @@ const RentalDescription: React.FC<RentalDescriptionProps> = ({
     <GestureHandlerRootView style={styles.rootView}>
       {isLoading ? (
         <ActivityIndicator
-          style={{alignContent: 'center', justifyContent: 'center'}}
+          style={{
+            height: '100%',
+            alignContent: 'center',
+            justifyContent: 'center',
+          }}
           size="large"
-          color="#green"
+          color="#1f3839"
         />
       ) : (
         <>
