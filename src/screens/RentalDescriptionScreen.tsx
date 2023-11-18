@@ -101,6 +101,7 @@ const RentalDescription: React.FC<RentalDescriptionProps> = ({
   const [currUserReviewed, setCurrUserReviewed] = useState<boolean>(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [homeImages, setHomeImages] = useState<ImageType[]>([]);
+  const [showCreateReviewBtn, setShowCreateReviewBtn] = useState<boolean>(true);
   const user = auth.currentUser;
   const userId = user?.uid ? user.uid : '';
   const sheetRef = useRef<BottomSheet>(null);
@@ -141,6 +142,12 @@ const RentalDescription: React.FC<RentalDescriptionProps> = ({
         setDishwasher(docSnapshot.data().dishwasher);
         setParking(docSnapshot.data().parking);
         setHomeImages(docSnapshot.data().homePictures);
+      }
+      if (route.params.ownerId === userId) {
+        setShowCreateReviewBtn(false);
+        console.log('Heo');
+      } else {
+        console.log('Hello');
       }
       setIsLoading(false);
     });
@@ -858,15 +865,27 @@ const RentalDescription: React.FC<RentalDescriptionProps> = ({
                               Already Reviewed ✔
                             </Text>
                           </TouchableOpacity>
-                        ) : (
+                        ) : showCreateReviewBtn ? (
                           <TouchableOpacity
                             style={styles.button}
                             onPress={handleCreateReview}>
                             <Text style={{color: 'blue'}}>Add Review</Text>
                           </TouchableOpacity>
+                        ) : (
+                          <TouchableOpacity style={styles.button} disabled>
+                            <Text
+                              style={{
+                                position: 'absolute',
+                                right: '2%',
+                                top: -10,
+                                color: 'grey',
+                              }}>
+                              Claimed Property
+                            </Text>
+                          </TouchableOpacity>
                         )}
                       </>
-                    ) : (
+                    ) : showCreateReviewBtn ? (
                       <TouchableOpacity
                         style={styles.button}
                         onPress={handleCreateReview}>
@@ -878,6 +897,18 @@ const RentalDescription: React.FC<RentalDescriptionProps> = ({
                             color: 'blue',
                           }}>
                           Add Review
+                        </Text>
+                      </TouchableOpacity>
+                    ) : (
+                      <TouchableOpacity style={styles.button} disabled>
+                        <Text
+                          style={{
+                            position: 'absolute',
+                            right: '2%',
+                            top: -10,
+                            color: 'grey',
+                          }}>
+                          Claimed Property
                         </Text>
                       </TouchableOpacity>
                     )}
