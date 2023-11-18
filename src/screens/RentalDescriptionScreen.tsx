@@ -29,7 +29,13 @@ import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {ListItem} from '@rneui/themed';
 import BigImageViewer from '../components/BigImageViewer';
 import {Modal} from '../components/Modal';
+import {ImageType} from '../utils/types';
 
+const imageData = [
+  {
+    uri: 'https://t4.ftcdn.net/jpg/04/00/24/31/240_F_400243185_BOxON3h9avMUX10RsDkt3pJ8iQx72kS3.jpg',
+  },
+];
 const {width} = Dimensions.get('screen');
 const height = width * 0.9;
 
@@ -93,6 +99,7 @@ const RentalDescription: React.FC<RentalDescriptionProps> = ({
   const [expandedOwnerInfo, setExpandedOwnerInfo] = useState<boolean>(false);
   const [currUserReviewed, setCurrUserReviewed] = useState<boolean>(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [homeImages, setHomeImages] = useState<ImageType[]>([]);
   const user = auth.currentUser;
   const userId = user?.uid ? user.uid : '';
   const sheetRef = useRef<BottomSheet>(null);
@@ -132,6 +139,7 @@ const RentalDescription: React.FC<RentalDescriptionProps> = ({
         setAirConditioning(docSnapshot.data().airConditioning);
         setDishwasher(docSnapshot.data().dishwasher);
         setParking(docSnapshot.data().parking);
+        setHomeImages(docSnapshot.data().homePictures);
       }
       setIsLoading(false);
     });
@@ -259,7 +267,11 @@ const RentalDescription: React.FC<RentalDescriptionProps> = ({
               </Modal.Container>
             </Modal>
             <View>
-              <BigImageViewer />
+              {homeImages ? (
+                <BigImageViewer homeImages={homeImages} />
+              ) : (
+                <BigImageViewer homeImages={imageData} />
+              )}
               {userId === ownerUserId ? (
                 <View style={styles.editButton}>
                   <TouchableOpacity

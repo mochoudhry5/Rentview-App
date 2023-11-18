@@ -16,6 +16,8 @@ import {HomeStackParamList} from '../utils/types';
 import {db} from '../config/firebase';
 import {User} from 'firebase/auth';
 import Icon from 'react-native-vector-icons/Ionicons';
+import {ImageType} from '../utils/types';
+import {getDownloadURL, getStorage, ref, uploadBytes} from 'firebase/storage';
 
 type PostPropertyScreen = NativeStackScreenProps<
   HomeStackParamList,
@@ -44,6 +46,7 @@ const RentalPostScreen: React.FC<PostPropertyScreen> = ({
 }) => {
   const homeDetails = route.params.homeDetails;
   const [user, setUser] = useState<User>();
+  const [images, setImages] = useState<ImageType[]>([]);
   const [totalBedrooms, setTotalBedrooms] = useState<string>(
     homeDetails.totalBedrooms,
   );
@@ -84,7 +87,7 @@ const RentalPostScreen: React.FC<PostPropertyScreen> = ({
   );
   const [isYard, setIsYard] = useState<boolean>(homeDetails.yard);
   const [isPool, setIsPool] = useState<boolean>(homeDetails.pool);
-
+  let pictureUris: ImageType[] = [];
   const userId = user ? user.uid : '';
 
   const handlePostSubmit = async () => {
@@ -92,6 +95,8 @@ const RentalPostScreen: React.FC<PostPropertyScreen> = ({
     const homeInfoSnapshot = await getDoc(homeInfoRef);
 
     if (homeInfoSnapshot.exists()) {
+      await uploadImages();
+
       await updateDoc(homeInfoRef, {
         totalSquareFeet: totalSquareFeet,
         totalBedrooms: totalBedrooms,
@@ -109,18 +114,41 @@ const RentalPostScreen: React.FC<PostPropertyScreen> = ({
         yard: isYard,
         pool: isPool,
         internet: isInternet,
+        homePictures: pictureUris,
       });
     }
+
     navigation.navigate('RentalDescription', {
       homeId: route.params.homeId,
       ownerId: userId,
     });
   };
 
+  async function uploadImages() {
+    const homeImagePath = `homeImages/${route.params.homeId}`;
+    const storage = getStorage();
+    pictureUris = [];
+
+    for (const image of images) {
+      if (image.uri) {
+        const filename = image.uri.substring(image.uri.lastIndexOf('/') + 1);
+        const uploadUri = image.uri.replace('file://', '');
+        let storageRef = ref(storage, `${homeImagePath}/${filename}`);
+        let response = await fetch(uploadUri);
+        let blob = await response.blob();
+
+        const snapshotRef = await uploadBytes(storageRef, blob);
+        const url = await getDownloadURL(snapshotRef.ref);
+        const urlFormat: ImageType = {uri: url};
+        pictureUris.push(urlFormat);
+      }
+    }
+  }
+
   return (
     <View style={{flex: 1, paddingTop: '2%', backgroundColor: 'white'}}>
       <ScrollView>
-        <TinyImageViewer />
+        <TinyImageViewer setImages={setImages} />
         <Text
           style={{
             fontSize: 18,

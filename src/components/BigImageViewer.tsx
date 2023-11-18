@@ -1,4 +1,4 @@
-import {SafeAreaView, StyleSheet, Dimensions, View} from 'react-native';
+import {StyleSheet, Dimensions, View} from 'react-native';
 import React, {useState} from 'react';
 import ImageList from './ImageList';
 import ImageViewing from 'react-native-image-viewing/dist/ImageViewing';
@@ -6,29 +6,15 @@ import ImageFooter from './ImageFooter';
 import {ImageType} from '../utils/types';
 
 const {width} = Dimensions.get('screen');
-const height = width * .9;
+const height = width * 0.9;
 
-const imageData = [
-  {
-    filename: '',
-    uri: 'https://source.unsplash.com/1024x768/?house',
-    data: '',
-  },
-  {
-    filename: '',
-    uri: 'https://source.unsplash.com/1024x768/?car',
-    data: '',
-  },
-  {
-    filename: '',
-    uri: 'https://source.unsplash.com/1024x768/?backyard',
-    data: '',
-  },
-];
+type Props = {
+  homeImages: ImageType[];
+};
 
-const RentalDescripImageViewer = () => {
+const RentalDescripImageViewer = ({homeImages}: Props) => {
   const [currentImageIndex, setImageIndex] = useState(1);
-  const [images, setImages] = useState<ImageType[]>(imageData);
+  const [images, setImages] = useState<ImageType[]>(homeImages);
   const [isVisible, setIsVisible] = useState(false);
 
   const onSelect = (images: ImageType[], index: number) => {

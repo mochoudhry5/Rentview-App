@@ -28,7 +28,5 @@ export type OtherStackParamList = {
 };
 
 export type ImageType = {
-  filename: string | undefined;
-  uri: string | undefined;
-  data: string | null | undefined;
+  uri: string;
 };

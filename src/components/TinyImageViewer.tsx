@@ -1,14 +1,25 @@
-import {Image, StyleSheet, SafeAreaView, TouchableOpacity} from 'react-native';
-import React, {useState} from 'react';
+import {
+  Image,
+  StyleSheet,
+  SafeAreaView,
+  TouchableOpacity,
+  Button,
+} from 'react-native';
+import React, {Dispatch, SetStateAction, useState} from 'react';
 import ImagePicker from 'react-native-image-crop-picker';
 import ImageList from './ImageList';
 import ImageViewing from 'react-native-image-viewing/dist/ImageViewing';
 import ImageFooter from './ImageFooter';
 import {ImageType} from '../utils/types';
+import {getStorage, ref, uploadBytes, uploadString} from 'firebase/storage';
 
-const ImageCarousel = () => {
+type Props = {
+  setImages: Dispatch<SetStateAction<ImageType[]>>;
+};
+
+const ImageCarousel = ({setImages}: Props) => {
   const [currentImageIndex, setImageIndex] = useState(0);
-  const [images, setImages] = useState<ImageType[]>([]);
+  const [imagesToDisplay, setImagesToDisplay] = useState<ImageType[]>([]);
   const [isVisible, setIsVisible] = useState(false);
 
   const openCameraRoll = () => {
@@ -19,17 +30,16 @@ const ImageCarousel = () => {
       cropping: true,
       multiple: true,
       maxFiles: 10,
-      minFiles: 5,
+      minFiles: 1,
       includeBase64: true,
     })
       .then(response => {
         response.map(image => {
           const newImage: ImageType = {
-            filename: image.filename,
-            uri: image.sourceURL,
-            data: image.data,
+            uri: image.sourceURL ? image.sourceURL : ' ',
           };
           setImages(prevImages => [...prevImages, newImage]);
+          setImagesToDisplay(prevImages => [...prevImages, newImage]);
         });
       })
       .catch(error => {
@@ -45,25 +55,28 @@ const ImageCarousel = () => {
 
   const onRequestClose = () => setIsVisible(false);
 
-  return images.length !== 0 ? (
+  return imagesToDisplay.length !== 0 ? (
     <SafeAreaView style={styles.root}>
       <ImageList
-        images={images.map(image => (image.uri ? image.uri : 'NULL'))}
-        onPress={index => onSelect(images, index)}
+        images={imagesToDisplay.map(image => (image.uri ? image.uri : 'NULL'))}
+        onPress={index => onSelect(imagesToDisplay, index)}
         width={220}
         height={220}
         margin={2}
         borderRadius={7}
       />
       <ImageViewing
-        images={images}
+        images={imagesToDisplay}
         imageIndex={currentImageIndex}
         presentationStyle="overFullScreen"
         backgroundColor="white"
         visible={isVisible}
         onRequestClose={onRequestClose}
         FooterComponent={({imageIndex}) => (
-          <ImageFooter imageIndex={imageIndex} imagesCount={images.length} />
+          <ImageFooter
+            imageIndex={imageIndex}
+            imagesCount={imagesToDisplay.length}
+          />
         )}
       />
     </SafeAreaView>
