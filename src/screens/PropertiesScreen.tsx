@@ -1,14 +1,10 @@
 import {
   View,
   Text,
-  Button,
   TouchableOpacity,
   StyleSheet,
   ActivityIndicator,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
-import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {AccountStackParamList} from '../utils/types';
 import {
   DocumentData,
   collection,
@@ -17,6 +13,9 @@ import {
   onSnapshot,
   query,
 } from 'firebase/firestore';
+import React, {useEffect, useState} from 'react';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {AccountStackParamList} from '../utils/types';
 import {auth, db} from '../config/firebase';
 import {ScrollView} from 'react-native-gesture-handler';
 

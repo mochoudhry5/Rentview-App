@@ -64,6 +64,14 @@ const AccountStack = () => {
           headerBackTitleVisible: false,
         }}
       />
+      <Stack.Screen
+        name="RentalPostScreen"
+        options={{
+          title: 'Edit Your Rental',
+          headerBackTitleVisible: false,
+        }}
+        component={RentalPostScreen}
+      />
     </Stack.Navigator>
   );
 };

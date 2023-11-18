@@ -136,11 +136,14 @@ const RentalPostScreen: React.FC<PostPropertyScreen> = ({
         let storageRef = ref(storage, `${homeImagePath}/${filename}`);
         let response = await fetch(uploadUri);
         let blob = await response.blob();
+        console.log(blob);
 
         const snapshotRef = await uploadBytes(storageRef, blob);
-        const url = await getDownloadURL(snapshotRef.ref);
-        const urlFormat: ImageType = {uri: url};
-        pictureUris.push(urlFormat);
+        if (snapshotRef) {
+          const url = await getDownloadURL(snapshotRef.ref);
+          const urlFormat: ImageType = {uri: url};
+          pictureUris.push(urlFormat);
+        }
       }
     }
   }

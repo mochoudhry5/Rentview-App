@@ -13,7 +13,7 @@ export type AccountStackParamList = {
   ProfileScreen: {userId: string};
   RentalDescription: {homeId: string; ownerId: string};
   PropertiesScreen: undefined;
-  RentalPostScreen: undefined;
+  RentalPostScreen: {homeId: string; homeDetails: DocumentData};
 };
 
 export type RootStackParamList = {
