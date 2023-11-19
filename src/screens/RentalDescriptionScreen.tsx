@@ -145,9 +145,6 @@ const RentalDescription: React.FC<RentalDescriptionProps> = ({
       }
       if (route.params.ownerId === userId) {
         setShowCreateReviewBtn(false);
-        console.log('Heo');
-      } else {
-        console.log('Hello');
       }
       setIsLoading(false);
     });

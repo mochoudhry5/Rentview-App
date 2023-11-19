@@ -17,7 +17,13 @@ import {db} from '../config/firebase';
 import {User} from 'firebase/auth';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {ImageType} from '../utils/types';
-import {getDownloadURL, getStorage, ref, uploadBytes} from 'firebase/storage';
+import {
+  getDownloadURL,
+  getStorage,
+  ref,
+  uploadBytes,
+  uploadBytesResumable,
+} from 'firebase/storage';
 
 type PostPropertyScreen = NativeStackScreenProps<
   HomeStackParamList,
@@ -136,14 +142,11 @@ const RentalPostScreen: React.FC<PostPropertyScreen> = ({
         let storageRef = ref(storage, `${homeImagePath}/${filename}`);
         let response = await fetch(uploadUri);
         let blob = await response.blob();
-        console.log(blob);
 
-        const snapshotRef = await uploadBytes(storageRef, blob);
-        if (snapshotRef) {
-          const url = await getDownloadURL(snapshotRef.ref);
-          const urlFormat: ImageType = {uri: url};
-          pictureUris.push(urlFormat);
-        }
+        const snapshotRef = await uploadBytesResumable(storageRef, blob);
+        const url = await getDownloadURL(snapshotRef.ref);
+        const urlFormat: ImageType = {uri: url};
+        pictureUris.push(urlFormat);
       }
     }
   }
