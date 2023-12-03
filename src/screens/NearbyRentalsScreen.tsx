@@ -173,10 +173,12 @@ const NearbyRentalView: React.FC<SearchRentalsProps> = ({
   };
 
   async function handleOnPressAddress(data: string, postalCode: string) {
+    let idToAddToHistory = '';
+    let addOrNot = true;
     const array = data.split(',');
-    const streetAddress = array[0];
-    const city = array[1];
-    const state = array[2];
+    const streetAddress = array[0].trimStart();
+    const city = array[1].trimStart();
+    const state = array[2].trimStart();
     const specificHomeQuery = query(
       collection(db, 'HomeReviews'),
       where('address.street', '==', streetAddress),
@@ -244,6 +246,7 @@ const NearbyRentalView: React.FC<SearchRentalsProps> = ({
         yard: false,
         homePictures: null,
       });
+      idToAddToHistory = newHomeAdded.id;
       navigation.removeListener;
       navigation.navigate('RentalDescription', {
         homeId: newHomeAdded.id,
@@ -256,11 +259,40 @@ const NearbyRentalView: React.FC<SearchRentalsProps> = ({
         homeId = doc.id;
         ownerId = doc.data().owner.userId;
       });
+
+      idToAddToHistory = homeId;
+
       navigation.removeListener;
       navigation.navigate('RentalDescription', {
         homeId: homeId,
         ownerId: ownerId,
       });
+    }
+    const userReviewRef = doc(db, 'UserReviews', userId);
+    const userReviewSnapshot = await getDoc(userReviewRef);
+
+    if (userReviewSnapshot.exists()) {
+      const recentSearchs: string[] = userReviewSnapshot.data().recentSearchs;
+
+      if (recentSearchs) {
+        recentSearchs.map((search: string) => {
+          if (search === idToAddToHistory) {
+            addOrNot = false;
+          }
+        });
+      }
+
+      if (addOrNot) {
+        if (recentSearchs) {
+          await updateDoc(userReviewRef, {
+            recentSearchs: [...recentSearchs, idToAddToHistory],
+          });
+        } else {
+          await updateDoc(userReviewRef, {
+            recentSearchs: [idToAddToHistory],
+          });
+        }
+      }
     }
   }
 
@@ -284,6 +316,7 @@ const NearbyRentalView: React.FC<SearchRentalsProps> = ({
             listViewDisplayed={false}
             fetchDetails={true}
             onPress={(data, details) => {
+              console.log();
               let postalCode = '';
               if (data !== null && details !== null) {
                 for (let i = 0; i < details.address_components.length; i++) {

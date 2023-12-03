@@ -62,6 +62,7 @@ let detailObj = {
   dishwasher: false,
   privateBathroom: false,
   yard: false,
+  homePictures: '',
 };
 
 const RentalDescription: React.FC<RentalDescriptionProps> = ({
@@ -100,7 +101,7 @@ const RentalDescription: React.FC<RentalDescriptionProps> = ({
   const [expandedOwnerInfo, setExpandedOwnerInfo] = useState<boolean>(false);
   const [currUserReviewed, setCurrUserReviewed] = useState<boolean>(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [homeImages, setHomeImages] = useState<ImageType[]>([]);
+  const [homeImages, setHomeImages] = useState<ImageType[]>(imageData);
   const [showCreateReviewBtn, setShowCreateReviewBtn] = useState<boolean>(true);
   const user = auth.currentUser;
   const userId = user?.uid ? user.uid : '';
@@ -141,7 +142,8 @@ const RentalDescription: React.FC<RentalDescriptionProps> = ({
         setAirConditioning(docSnapshot.data().airConditioning);
         setDishwasher(docSnapshot.data().dishwasher);
         setParking(docSnapshot.data().parking);
-        setHomeImages(docSnapshot.data().homePictures);
+        if (docSnapshot.data().homePictures)
+          setHomeImages(docSnapshot.data().homePictures);
       }
       if (route.params.ownerId === userId) {
         setShowCreateReviewBtn(false);
@@ -181,6 +183,7 @@ const RentalDescription: React.FC<RentalDescriptionProps> = ({
         },
       });
       setOwnerUserId(userId);
+      setShowCreateReviewBtn(false);
       setIsModalVisible(false);
       await setDoc(
         doc(db, 'UserReviews', userId, 'MyProperties', route.params.homeId),
@@ -188,6 +191,7 @@ const RentalDescription: React.FC<RentalDescriptionProps> = ({
           homeId: route.params.homeId,
           fullAddress: homeInfoSnapshot.data().address.fullAddress,
           dateAdded: month + '/' + day + '/' + year,
+          homePictures: null,
         },
       );
     }
@@ -198,22 +202,23 @@ const RentalDescription: React.FC<RentalDescriptionProps> = ({
     const homeInfoSnapshot = await getDoc(homeInfoRef);
     if (homeInfoSnapshot.exists()) {
       const refData = homeInfoSnapshot.data();
-      (detailObj.totalBathrooms = refData.totalBathrooms),
-        (detailObj.totalBedrooms = refData.totalBedrooms),
-        (detailObj.totalSquareFeet = refData.totalSquareFeet),
-        (detailObj.statusOfRental = refData.statusOfRental),
-        (detailObj.propertyDescription = refData.propertyDescription),
-        (detailObj.monthlyRent = refData.monthlyRent),
-        (detailObj.rentalArea = refData.rentalArea),
-        (detailObj.furnished = refData.furnished),
-        (detailObj.washerDryer = refData.washerDryer),
-        (detailObj.dishwasher = refData.dishwasher),
-        (detailObj.privateBathroom = refData.privateBathroom),
-        (detailObj.yard = refData.yard),
-        (detailObj.pool = refData.pool),
-        (detailObj.internet = refData.internet),
-        (detailObj.airConditioning = refData.airConditioning),
-        (detailObj.parking = refData.parking);
+      detailObj.totalBathrooms = refData.totalBathrooms;
+      detailObj.totalBedrooms = refData.totalBedrooms;
+      detailObj.totalSquareFeet = refData.totalSquareFeet;
+      detailObj.statusOfRental = refData.statusOfRental;
+      detailObj.propertyDescription = refData.propertyDescription;
+      detailObj.monthlyRent = refData.monthlyRent;
+      detailObj.rentalArea = refData.rentalArea;
+      detailObj.furnished = refData.furnished;
+      detailObj.washerDryer = refData.washerDryer;
+      detailObj.dishwasher = refData.dishwasher;
+      detailObj.privateBathroom = refData.privateBathroom;
+      detailObj.yard = refData.yard;
+      detailObj.pool = refData.pool;
+      detailObj.internet = refData.internet;
+      detailObj.airConditioning = refData.airConditioning;
+      detailObj.parking = refData.parking;
+      detailObj.homePictures = refData.homePictures;
     }
     navigation.navigate('RentalPostScreen', {
       homeId: route.params.homeId,
@@ -288,7 +293,7 @@ const RentalDescription: React.FC<RentalDescriptionProps> = ({
               </Modal.Container>
             </Modal>
             <View>
-              {homeImages ? (
+              {homeImages.length > 0 ? (
                 <BigImageViewer homeImages={homeImages} />
               ) : (
                 <BigImageViewer homeImages={imageData} />
@@ -1199,14 +1204,6 @@ const styles = StyleSheet.create({
     left: '67%',
     flexDirection: 'row',
     width: 250,
-  },
-  dot: {
-    color: 'white',
-    fontSize: 13,
-  },
-  activeDot: {
-    color: 'black',
-    fontSize: 13,
   },
   image: {
     width: width,

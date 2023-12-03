@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
@@ -10,20 +10,12 @@ import {
   Switch,
   SafeAreaView,
 } from 'react-native';
-import {
-  addDoc,
-  collection,
-  doc,
-  getDoc,
-  setDoc,
-  updateDoc,
-} from 'firebase/firestore';
+import {doc, getDoc, setDoc, updateDoc} from 'firebase/firestore';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {HomeStackParamList} from '../utils/types';
 import {auth, db} from '../config/firebase';
 import {AirbnbRating} from 'react-native-elements';
 import Icon from 'react-native-vector-icons/Ionicons';
-import {onAuthStateChanged, User} from 'firebase/auth';
 
 type CreateReviewProps = NativeStackScreenProps<
   HomeStackParamList,
@@ -36,33 +28,25 @@ const CreateReviewScreen: React.FC<CreateReviewProps> = ({
 }) => {
   const [userHouseQuality, setUserHouseQuality] = useState<number>(5);
   const [userRecommend, setUserRecommend] = useState<boolean>(false);
-  const {fontScale} = useWindowDimensions();
   const [userOverallRating, setUserOverallRating] = useState<number>(5);
   const [userLandlordRating, setUserLandlordRating] = useState<number>(5);
   const [text, onChangeText] = useState<string>('');
   const [thumbsUp, setThumbsUp] = useState<string>('thumbs-up-outline');
   const [thumbsDown, setThumbsDown] = useState<string>('thumbs-down-outline');
   const [ownerId, setOwnerId] = useState<string>('');
-  const [user, setUser] = useState<User>();
   const [isAnonymous, setIsAnonymous] = useState<boolean>(false);
   const toggleSwitch = () => setIsAnonymous(previousState => !previousState);
-  const userId = user ? user.uid : '';
-  const homeId = route.params.homeId;
+  const {fontScale} = useWindowDimensions();
   const styles = makeStyles(fontScale);
-
-  useEffect(() => {
-    onAuthStateChanged(auth, user => {
-      if (user) {
-        setUser(user);
-      }
-    });
-  }, []);
+  const user = auth.currentUser ? auth.currentUser : '';
+  const userId = auth.currentUser?.uid ? auth.currentUser.uid : '';
+  const homeId = route.params.homeId;
 
   const handleReviewSubmit = async () => {
     const homeInfoRef = doc(db, 'HomeReviews', homeId);
     const homeInfoSnapshot = await getDoc(homeInfoRef);
 
-    const userInfoRef = doc(db, 'UserReviews', user ? user.uid : '');
+    const userInfoRef = doc(db, 'UserReviews', userId ? userId : '');
     const userInfoSnapshot = await getDoc(userInfoRef);
 
     if (homeInfoSnapshot.exists()) {

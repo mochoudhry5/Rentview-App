@@ -8,17 +8,14 @@ import {
   useWindowDimensions,
   SafeAreaView,
 } from 'react-native';
-import {DocumentData, doc, getDoc, updateDoc} from 'firebase/firestore';
+import {doc, getDoc, updateDoc} from 'firebase/firestore';
 import {AirbnbRating} from 'react-native-elements';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {db} from '../config/firebase';
 import {auth} from '../config/firebase';
 import BottomSheet, {BottomSheetScrollView} from '@gorhom/bottom-sheet';
-
-type EditReviewProps = {
-  currentPropertyReview: DocumentData | undefined;
-  setOnEdit: (edit: boolean) => void;
-};
+import {EditReviewProps} from '../utils/types';
+import {Modal} from '../components/Modal';
 
 const EditReviewScreen: React.FC<EditReviewProps> = ({
   currentPropertyReview,
@@ -36,6 +33,7 @@ const EditReviewScreen: React.FC<EditReviewProps> = ({
   const [newComment, setNewComment] = useState<string>('');
   const [thumbsUp, setThumbsUp] = useState<string>('thumbs-up-outline');
   const [thumbsDown, setThumbsDown] = useState<string>('thumbs-down-outline');
+  const [isVisible, setIsVisible] = useState<boolean>(false);
   const {fontScale} = useWindowDimensions();
   const styles = makeStyles(fontScale);
   const user = auth.currentUser;
@@ -292,6 +290,8 @@ const EditReviewScreen: React.FC<EditReviewProps> = ({
     setOnEdit(false);
   };
 
+  const handleModalClose = () => {};
+
   return (
     <>
       <BottomSheet
@@ -479,6 +479,43 @@ const EditReviewScreen: React.FC<EditReviewProps> = ({
           </TouchableOpacity>
         </SafeAreaView>
       </BottomSheet>
+      <View>
+        <Modal
+          isVisible={isVisible}
+          animationIn={'lightSpeedIn'}
+          onBackdropPress={handleModalClose}>
+          <Modal.Container>
+            <Modal.Header title="Review Updated" />
+            <Modal.Body>
+              <Text
+                style={{
+                  marginLeft: '5%',
+                  marginTop: '5%',
+                  color: 'black',
+                  fontSize: 20,
+                  textAlign: 'center',
+                }}>
+                Your review was successfully updated! Changes should be seen
+                immediately.
+              </Text>
+            </Modal.Body>
+            <Modal.Footer>
+              <TouchableOpacity
+                style={styles.closeModal}
+                onPress={handleModalClose}>
+                <Text
+                  style={{
+                    fontSize: 16,
+                    fontWeight: 'bold',
+                    color: 'white',
+                  }}>
+                  Okay
+                </Text>
+              </TouchableOpacity>
+            </Modal.Footer>
+          </Modal.Container>
+        </Modal>
+      </View>
     </>
   );
 };
@@ -530,5 +567,16 @@ const makeStyles = (fontScale: any) =>
       shadowOpacity: 0.58,
       shadowRadius: 16.0,
       elevation: 24,
+    },
+    closeModal: {
+      alignItems: 'center',
+      backgroundColor: '#1f3839',
+      borderWidth: 1,
+      width: '88%',
+      height: 40,
+      alignSelf: 'center',
+      justifyContent: 'center',
+      marginTop: '5%',
+      marginBottom: '5%',
     },
   });

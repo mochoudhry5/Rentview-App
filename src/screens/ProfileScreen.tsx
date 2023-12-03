@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from 'react';
 import {
-  Image,
   SafeAreaView,
   StyleSheet,
   Text,
@@ -8,17 +7,18 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {AccountStackParamList} from '../utils/types';
-import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {ScrollView} from 'react-native-gesture-handler';
 import {
   collection,
   doc,
   getDoc,
   getDocs,
+  onSnapshot,
   query,
   updateDoc,
 } from 'firebase/firestore';
+import {AccountStackParamList} from '../utils/types';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {ScrollView} from 'react-native-gesture-handler';
 import {db} from '../config/firebase';
 import {auth} from '../config/firebase';
 
@@ -34,23 +34,21 @@ const ProfileScreen: React.FC<ProfileProps> = ({route, navigation}) => {
   const user = auth.currentUser;
   const email = user?.email ? user.email : 'Email not found...';
   const userId = user?.uid ? user.uid : '';
+  const userInfoRef = doc(db, 'UserReviews', userId);
 
   useEffect(() => {
-    const subscribe = async () => {
-      const userInfoRef = doc(db, 'UserReviews', userId);
-      let userInfoSnapshot = await getDoc(userInfoRef);
-
+    const subscribe = onSnapshot(userInfoRef, userInfoSnapshot => {
       if (userInfoSnapshot.exists()) {
         onChangePhoneNumber(userInfoSnapshot.data().phoneNumber);
         onChangeUsername(userInfoSnapshot.data().username);
         onChangeFullName(userInfoSnapshot.data().fullName);
       }
-    };
-    subscribe();
+    });
+
+    return () => subscribe();
   }, []);
 
   const updateProfileInfo = async () => {
-    const userInfoRef = doc(db, 'UserReviews', userId);
     const userInfoSnapshot = await getDoc(userInfoRef);
 
     if (userInfoSnapshot.exists()) {

@@ -27,8 +27,7 @@ type MyReviewProps = NativeStackScreenProps<
 
 const MyReviews: React.FC<MyReviewProps> = ({navigation}) => {
   const [onEdit, setOnEdit] = useState<boolean>(false);
-  const [currentPropertyReview, setCurrentPropertyReview] =
-    useState<DocumentData>();
+  const [currPropertyReview, setCurrPropertyReview] = useState<DocumentData>();
   const [allReviews, setAllReviews] = useState<DocumentData[]>([]);
   const userId = auth.currentUser ? auth.currentUser.uid : '';
   const userReviewsRef = query(
@@ -47,7 +46,7 @@ const MyReviews: React.FC<MyReviewProps> = ({navigation}) => {
   }, []);
 
   const handleEditReview = (review: DocumentData) => {
-    setCurrentPropertyReview(review);
+    setCurrPropertyReview(review);
     setOnEdit(true);
   };
 
@@ -55,6 +54,7 @@ const MyReviews: React.FC<MyReviewProps> = ({navigation}) => {
     const homeInfoRef = doc(db, 'HomeReviews', homeId);
     const homeInfoSnapshot = await getDoc(homeInfoRef);
     let ownerId = '';
+
     if (homeInfoSnapshot.exists()) {
       ownerId = homeInfoSnapshot.data().owner.userId;
     }
@@ -137,7 +137,7 @@ const MyReviews: React.FC<MyReviewProps> = ({navigation}) => {
       </ScrollView>
       {onEdit ? (
         <EditReviewScreen
-          currentPropertyReview={currentPropertyReview}
+          currentPropertyReview={currPropertyReview}
           setOnEdit={setOnEdit}
         />
       ) : null}
@@ -170,36 +170,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     borderRadius: 20,
   },
-  inlineContainer: {
-    alignItems: 'center',
-    borderRadius: 20,
-  },
-  bottomSheetShadow: {
-    backgroundColor: 'white',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 12,
-    },
-    shadowOpacity: 0.58,
-    shadowRadius: 16.0,
-    elevation: 24,
-  },
   noReviewsView: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  submitButton: {
-    alignItems: 'center',
-    backgroundColor: '#1f3839',
-    borderWidth: 1,
-    width: '92%',
-    height: '35%',
-    alignSelf: 'center',
-    justifyContent: 'center',
-    borderRadius: 20,
-    marginBottom: '10%',
   },
 });
 export default MyReviews;

@@ -1,5 +1,5 @@
 import {StyleSheet, Dimensions, View} from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import ImageList from './ImageList';
 import ImageViewing from 'react-native-image-viewing/dist/ImageViewing';
 import ImageFooter from './ImageFooter';
@@ -16,6 +16,10 @@ const RentalDescripImageViewer = ({homeImages}: Props) => {
   const [currentImageIndex, setImageIndex] = useState(1);
   const [images, setImages] = useState<ImageType[]>(homeImages);
   const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    setImages(homeImages);
+  }, [homeImages]);
 
   const onSelect = (images: ImageType[], index: number) => {
     setImageIndex(index);

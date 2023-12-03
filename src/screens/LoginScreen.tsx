@@ -54,11 +54,11 @@ const Login: React.FC<LoginProps> = ({navigation}) => {
 
     if (!userInfoSnapshot.exists()) {
       await setDoc(doc(db, 'UserReviews', userId), {
-        anonymous: null,
         username: null,
         fullName: null,
         email: auth.currentUser?.email,
         phoneNumber: null,
+        recentSearchs: null,
       });
     }
   };

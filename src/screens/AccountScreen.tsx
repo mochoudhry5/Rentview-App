@@ -7,7 +7,7 @@ import {
   ScrollView,
   Alert,
 } from 'react-native';
-import {getDoc, doc, DocumentData} from 'firebase/firestore';
+import {getDoc, doc} from 'firebase/firestore';
 import {auth} from '../config/firebase';
 import {signOut} from 'firebase/auth';
 import {db} from '../config/firebase';
@@ -72,8 +72,13 @@ const AccountScreen: React.FC<AccountProps> = ({navigation}) => {
     },
     {
       title: 'My Properties',
-      subTitle: 'View my properties',
+      subTitle: 'Manage my properties',
       onPress: handleMyProperties,
+    },
+    {
+      title: 'Contact Us',
+      subTitle: 'Contact us for assistance',
+      onPress: handleLogoutAttempt,
     },
     {
       title: 'Logout',

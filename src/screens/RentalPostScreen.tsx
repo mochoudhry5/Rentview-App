@@ -7,23 +7,21 @@ import {
   StyleSheet,
   SafeAreaView,
 } from 'react-native';
+import {
+  getDownloadURL,
+  getStorage,
+  ref,
+  uploadBytesResumable,
+} from 'firebase/storage';
 import {doc, getDoc, updateDoc} from 'firebase/firestore';
 import React, {useState} from 'react';
 import TinyImageViewer from '../components/TinyImageViewer';
 import {Dropdown} from 'react-native-element-dropdown';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {HomeStackParamList} from '../utils/types';
-import {db} from '../config/firebase';
-import {User} from 'firebase/auth';
+import {db, auth} from '../config/firebase';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {ImageType} from '../utils/types';
-import {
-  getDownloadURL,
-  getStorage,
-  ref,
-  uploadBytes,
-  uploadBytesResumable,
-} from 'firebase/storage';
 
 type PostPropertyScreen = NativeStackScreenProps<
   HomeStackParamList,
@@ -41,17 +39,11 @@ const rentalAreaSelections = [
   {label: 'Entire House', value: 'Entire House'},
 ];
 
-const yesOrNo = [
-  {label: 'Yes', value: 'Yes'},
-  {label: 'No', value: 'No'},
-];
-
 const RentalPostScreen: React.FC<PostPropertyScreen> = ({
   route,
   navigation,
 }) => {
   const homeDetails = route.params.homeDetails;
-  const [user, setUser] = useState<User>();
   const [images, setImages] = useState<ImageType[]>([]);
   const [totalBedrooms, setTotalBedrooms] = useState<string>(
     homeDetails.totalBedrooms,
@@ -93,12 +85,20 @@ const RentalPostScreen: React.FC<PostPropertyScreen> = ({
   );
   const [isYard, setIsYard] = useState<boolean>(homeDetails.yard);
   const [isPool, setIsPool] = useState<boolean>(homeDetails.pool);
-  let pictureUris: ImageType[] = [];
-  const userId = user ? user.uid : '';
+  const pictureUris: ImageType[] = [];
+  const user = auth.currentUser;
+  const userId = user?.uid ? user.uid : '';
 
   const handlePostSubmit = async () => {
     const homeInfoRef = doc(db, 'HomeReviews', route.params.homeId);
     const homeInfoSnapshot = await getDoc(homeInfoRef);
+    const userInfoRef = doc(
+      db,
+      'UserReviews',
+      userId,
+      'MyProperties',
+      route.params.homeId,
+    );
 
     if (homeInfoSnapshot.exists()) {
       await uploadImages();
@@ -122,6 +122,10 @@ const RentalPostScreen: React.FC<PostPropertyScreen> = ({
         internet: isInternet,
         homePictures: pictureUris,
       });
+
+      await updateDoc(userInfoRef, {
+        homePictures: pictureUris,
+      });
     }
 
     navigation.navigate('RentalDescription', {
@@ -133,7 +137,6 @@ const RentalPostScreen: React.FC<PostPropertyScreen> = ({
   async function uploadImages() {
     const homeImagePath = `homeImages/${route.params.homeId}`;
     const storage = getStorage();
-    pictureUris = [];
 
     for (const image of images) {
       if (image.uri) {
@@ -144,9 +147,9 @@ const RentalPostScreen: React.FC<PostPropertyScreen> = ({
         let blob = await response.blob();
 
         const snapshotRef = await uploadBytesResumable(storageRef, blob);
-        const url = await getDownloadURL(snapshotRef.ref);
-        const urlFormat: ImageType = {uri: url};
-        pictureUris.push(urlFormat);
+        const uri = await getDownloadURL(snapshotRef.ref);
+        const uriFormat: ImageType = {uri: uri};
+        pictureUris.push(uriFormat);
       }
     }
   }
@@ -154,7 +157,7 @@ const RentalPostScreen: React.FC<PostPropertyScreen> = ({
   return (
     <View style={{flex: 1, paddingTop: '2%', backgroundColor: 'white'}}>
       <ScrollView>
-        <TinyImageViewer setImages={setImages} />
+        <TinyImageViewer images={images} setImages={setImages} />
         <Text
           style={{
             fontSize: 18,
@@ -284,7 +287,7 @@ const RentalPostScreen: React.FC<PostPropertyScreen> = ({
               flexWrap: 'wrap',
             }}>
             <TouchableOpacity
-              style={isFurnished ? styles.optionsActvie : styles.options}
+              style={isFurnished ? styles.optionsActive : styles.options}
               onPress={() => setIsFurnished(!isFurnished)}>
               <View style={{flexDirection: 'row', alignItems: 'center'}}>
                 <Text
@@ -308,7 +311,7 @@ const RentalPostScreen: React.FC<PostPropertyScreen> = ({
               </View>
             </TouchableOpacity>
             <TouchableOpacity
-              style={isWasherDryer ? styles.optionsActvie : styles.options}
+              style={isWasherDryer ? styles.optionsActive : styles.options}
               onPress={() => setIsWasherDryer(!isWasherDryer)}>
               <View style={{flexDirection: 'row', alignItems: 'center'}}>
                 <Text
@@ -332,7 +335,7 @@ const RentalPostScreen: React.FC<PostPropertyScreen> = ({
               </View>
             </TouchableOpacity>
             <TouchableOpacity
-              style={isFreeParking ? styles.optionsActvie : styles.options}
+              style={isFreeParking ? styles.optionsActive : styles.options}
               onPress={() => setIsFreeParking(!isFreeParking)}>
               <View style={{flexDirection: 'row', alignItems: 'center'}}>
                 <Text
@@ -356,7 +359,7 @@ const RentalPostScreen: React.FC<PostPropertyScreen> = ({
               </View>
             </TouchableOpacity>
             <TouchableOpacity
-              style={isPool ? styles.optionsActvie : styles.options}
+              style={isPool ? styles.optionsActive : styles.options}
               onPress={() => setIsPool(!isPool)}>
               <View style={{flexDirection: 'row', alignItems: 'center'}}>
                 <Text
@@ -380,7 +383,7 @@ const RentalPostScreen: React.FC<PostPropertyScreen> = ({
               </View>
             </TouchableOpacity>
             <TouchableOpacity
-              style={isPrivateBathroom ? styles.optionsActvie : styles.options}
+              style={isPrivateBathroom ? styles.optionsActive : styles.options}
               onPress={() => setIsPrivateBathroom(!isPrivateBathroom)}>
               <View style={{flexDirection: 'row', alignItems: 'center'}}>
                 <Text
@@ -404,7 +407,7 @@ const RentalPostScreen: React.FC<PostPropertyScreen> = ({
               </View>
             </TouchableOpacity>
             <TouchableOpacity
-              style={isInternet ? styles.optionsActvie : styles.options}
+              style={isInternet ? styles.optionsActive : styles.options}
               onPress={() => setIsInternet(!isInternet)}>
               <View style={{flexDirection: 'row', alignItems: 'center'}}>
                 <Text
@@ -428,7 +431,7 @@ const RentalPostScreen: React.FC<PostPropertyScreen> = ({
               </View>
             </TouchableOpacity>
             <TouchableOpacity
-              style={isDishwasher ? styles.optionsActvie : styles.options}
+              style={isDishwasher ? styles.optionsActive : styles.options}
               onPress={() => setIsDishwasher(!isDishwasher)}>
               <View style={{flexDirection: 'row', alignItems: 'center'}}>
                 <Text
@@ -452,7 +455,7 @@ const RentalPostScreen: React.FC<PostPropertyScreen> = ({
               </View>
             </TouchableOpacity>
             <TouchableOpacity
-              style={isAirConditioning ? styles.optionsActvie : styles.options}
+              style={isAirConditioning ? styles.optionsActive : styles.options}
               onPress={() => setIsAirConditioning(!isAirConditioning)}>
               <View style={{flexDirection: 'row', alignItems: 'center'}}>
                 <Text
@@ -476,7 +479,7 @@ const RentalPostScreen: React.FC<PostPropertyScreen> = ({
               </View>
             </TouchableOpacity>
             <TouchableOpacity
-              style={isYard ? styles.optionsActvie : styles.options}
+              style={isYard ? styles.optionsActive : styles.options}
               onPress={() => setIsYard(!isYard)}>
               <View style={{flexDirection: 'row', alignItems: 'center'}}>
                 <Text
@@ -546,20 +549,10 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     marginTop: '2%',
   },
-  optionsActvie: {
+  optionsActive: {
     backgroundColor: '#1f3839',
     borderRadius: 30,
     marginTop: '2%',
-  },
-  cancelButton: {
-    alignItems: 'center',
-    backgroundColor: 'white',
-    borderWidth: 1,
-    width: '30%',
-    height: 30,
-    alignSelf: 'center',
-    justifyContent: 'center',
-    borderRadius: 20,
   },
   propertyDescription: {
     height: 180,
@@ -598,13 +591,6 @@ const styles = StyleSheet.create({
   iconStyle: {
     width: 20,
     height: 20,
-  },
-  inputSearchStyle: {
-    height: 40,
-    fontSize: 16,
-  },
-  checkboxText: {
-    fontSize: 18,
   },
 });
 
