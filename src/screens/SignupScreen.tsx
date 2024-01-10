@@ -26,6 +26,7 @@ const Signup: React.FC<SignupProps> = ({navigation}) => {
   };
 
   const goToLogin = () => {
+    navigation.removeListener;
     navigation.navigate('Login');
   };
 

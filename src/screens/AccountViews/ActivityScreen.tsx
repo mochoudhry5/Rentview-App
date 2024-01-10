@@ -14,11 +14,11 @@ import {
   query,
 } from 'firebase/firestore';
 import React, {useEffect, useState} from 'react';
-import {AccountStackParamList} from '../utils/types';
+import {AccountStackParamList} from '../../utils/types';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import EditReviewScreen from './EditReviewScreen';
-import {db} from '../config/firebase';
-import {auth} from '../config/firebase';
+import EditReviewScreen from '../SearchViews/EditReviewScreen';
+import {db} from '../../config/firebase';
+import {auth} from '../../config/firebase';
 
 type MyReviewProps = NativeStackScreenProps<
   AccountStackParamList,
@@ -35,14 +35,14 @@ const MyReviews: React.FC<MyReviewProps> = ({navigation}) => {
   );
 
   useEffect(() => {
-    const unsubscribe = onSnapshot(userReviewsRef, querySnapshot => {
+    const subscribe = onSnapshot(userReviewsRef, querySnapshot => {
       setAllReviews([]);
       querySnapshot.forEach(doc => {
         setAllReviews(prevArr => [...prevArr, doc.data()]);
       });
     });
 
-    return () => unsubscribe();
+    return () => subscribe();
   }, []);
 
   const handleEditReview = (review: DocumentData) => {

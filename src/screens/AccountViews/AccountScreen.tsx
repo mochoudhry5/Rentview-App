@@ -8,11 +8,12 @@ import {
   Alert,
 } from 'react-native';
 import {getDoc, doc} from 'firebase/firestore';
-import {auth} from '../config/firebase';
+import {auth} from '../../config/firebase';
 import {signOut} from 'firebase/auth';
-import {db} from '../config/firebase';
-import {AccountStackParamList} from '../utils/types';
+import {db} from '../../config/firebase';
+import {AccountStackParamList} from '../../utils/types';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {useChatContext} from '../../context/ChatContext';
 
 type AccountProps = NativeStackScreenProps<
   AccountStackParamList,
@@ -21,6 +22,7 @@ type AccountProps = NativeStackScreenProps<
 
 const AccountScreen: React.FC<AccountProps> = ({navigation}) => {
   const userId = auth.currentUser ? auth.currentUser.uid : '';
+  const {chatClient} = useChatContext();
 
   const handleLogoutAttempt = () => {
     Alert.alert('Log out?', 'Unsaved changes will be lost', [
@@ -30,6 +32,8 @@ const AccountScreen: React.FC<AccountProps> = ({navigation}) => {
   };
 
   const handleLogout = () => {
+    chatClient?.disconnectUser();
+
     signOut(auth)
       .then(() => {
         console.log('User logged out successfully:');

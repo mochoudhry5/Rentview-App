@@ -16,11 +16,11 @@ import {
   query,
   updateDoc,
 } from 'firebase/firestore';
-import {AccountStackParamList} from '../utils/types';
+import {AccountStackParamList} from '../../utils/types';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {ScrollView} from 'react-native-gesture-handler';
-import {db} from '../config/firebase';
-import {auth} from '../config/firebase';
+import {db} from '../../config/firebase';
+import {auth} from '../../config/firebase';
 
 type ProfileProps = NativeStackScreenProps<
   AccountStackParamList,

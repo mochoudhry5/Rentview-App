@@ -1,5 +1,52 @@
 import {DocumentData} from 'firebase/firestore';
 
+///////////////////////////////////
+///// Parameters for screens //////
+///////////////////////////////////
+
+export type AccountStackParamList = {
+  ActivityScreen: undefined;
+  AccountScreen: undefined;
+  ProfileScreen: {userId: string};
+  RentalDescription: {homeId: string; ownerId: string};
+  PropertiesScreen: undefined;
+  PostRentalScreen: {homeId: string; homeDetails: DocumentData};
+};
+
+export type SearchStackParamList = {
+  SearchRentals: undefined;
+  RentalResults: {rentals: RentalType[]};
+  RentalDescription: {homeId: string; ownerId: string};
+  CreateReview: {homeId: string};
+  PostRentalScreen: {homeId: string; homeDetails: DocumentData};
+  ChatRoom: undefined;
+};
+
+export type ChatStackParamList = {
+  ChatsScreen: undefined;
+  ChatRoom: undefined;
+};
+
+export type RootStackParamList = {
+  Search: SearchStackParamList;
+  Account: AccountStackParamList;
+  Chat: ChatStackParamList;
+};
+
+export type OtherStackParamList = {
+  LoggedIn: RootStackParamList;
+  Login: undefined;
+  Signup: undefined;
+};
+
+////////////////////////////////
+/// Types used for variables ///
+////////////////////////////////
+
+export type ImageType = {
+  uri: string;
+};
+
 export type RentalType = {
   data: DocumentData;
   homeId: string;
@@ -15,43 +62,4 @@ export type RecentSearchType = {
 export type EditReviewProps = {
   currentPropertyReview: DocumentData | undefined;
   setOnEdit: (edit: boolean) => void;
-};
-
-export type HomeStackParamList = {
-  SearchRentals: undefined;
-  RentalDescription: {homeId: string; ownerId: string};
-  CreateReview: {homeId: string};
-  RentalPostScreen: {homeId: string; homeDetails: DocumentData};
-};
-
-export type AccountStackParamList = {
-  ActivityScreen: undefined;
-  AccountScreen: undefined;
-  ProfileScreen: {userId: string};
-  RentalDescription: {homeId: string; ownerId: string};
-  PropertiesScreen: undefined;
-  RentalPostScreen: {homeId: string; homeDetails: DocumentData};
-};
-
-export type SearchStackParamList = {
-  SearchMain: undefined;
-  SearchRentals: {rentals: RentalType[]};
-  RentalDescription: {homeId: string; ownerId: string};
-  CreateReview: {homeId: string};
-  RentalPostScreen: {homeId: string; homeDetails: DocumentData};
-};
-
-export type RootStackParamList = {
-  Home: HomeStackParamList;
-  Account: AccountStackParamList;
-};
-
-export type OtherStackParamList = {
-  LoggedIn: RootStackParamList;
-  Login: undefined;
-  Signup: undefined;
-};
-
-export type ImageType = {
-  uri: string;
 };

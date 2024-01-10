@@ -11,11 +11,10 @@ import {
 import {doc, getDoc, updateDoc} from 'firebase/firestore';
 import {AirbnbRating} from 'react-native-elements';
 import Icon from 'react-native-vector-icons/Ionicons';
-import {db} from '../config/firebase';
-import {auth} from '../config/firebase';
+import {db, auth} from '../../config/firebase';
 import BottomSheet, {BottomSheetScrollView} from '@gorhom/bottom-sheet';
-import {EditReviewProps} from '../utils/types';
-import {Modal} from '../components/Modal';
+import {EditReviewProps} from '../../utils/types';
+import {Modal} from '../../components/Modal';
 
 const EditReviewScreen: React.FC<EditReviewProps> = ({
   currentPropertyReview,

@@ -1,12 +1,12 @@
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import {AccountStackParamList} from '../utils/types';
-import ProfileScreen from '../screens/ProfileScreen';
-import AccountScreen from '../screens/AccountScreen';
-import ActivityScreen from '../screens/ActivityScreen';
-import RentalDescriptionScreen from '../screens/RentalDescriptionScreen';
-import PropertiesScreen from '../screens/PropertiesScreen';
-import RentalPostScreen from '../screens/RentalPostScreen';
+import ProfileScreen from '../screens/AccountViews/ProfileScreen';
+import AccountScreen from '../screens/AccountViews/AccountScreen';
+import ActivityScreen from '../screens/AccountViews/ActivityScreen';
+import RentalDescriptionScreen from '../screens/SearchViews/RentalDescriptionScreen';
+import PropertiesScreen from '../screens/AccountViews/PropertiesScreen';
+import PostRentalScreen from '../screens/SearchViews/PostRentalScreen';
 
 const Stack = createStackNavigator<AccountStackParamList>();
 
@@ -16,7 +16,7 @@ const AccountStack = () => {
       initialRouteName="AccountScreen"
       screenOptions={{
         headerStyle: {
-          backgroundColor: '#1f3839',
+          backgroundColor: '#347544',
         },
         headerTintColor: '#fff',
         headerTitleStyle: {
@@ -65,12 +65,12 @@ const AccountStack = () => {
         }}
       />
       <Stack.Screen
-        name="RentalPostScreen"
+        name="PostRentalScreen"
         options={{
           title: 'Edit Your Rental',
           headerBackTitleVisible: false,
         }}
-        component={RentalPostScreen}
+        component={PostRentalScreen}
       />
     </Stack.Navigator>
   );

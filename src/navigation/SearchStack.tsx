@@ -1,21 +1,21 @@
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import {SearchStackParamList} from '../utils/types';
-import RentalDescriptionScreen from '../screens/RentalDescriptionScreen';
-import CreateReviewScreen from '../screens/CreateReviewScreen';
-import NearbyRentalView from '../screens/NearbyRentalsScreen';
-import RentalPostScreen from '../screens/RentalPostScreen';
-import SearchRentals from '../screens/SearchRentals';
-import SearchMainPage from '../screens/SearchMainScreen';
+import RentalDescriptionScreen from '../screens/SearchViews/RentalDescriptionScreen';
+import CreateReviewScreen from '../screens/SearchViews/CreateReviewScreen';
+import PostRentalScreen from '../screens/SearchViews/PostRentalScreen';
+import RentalResults from '../screens/SearchViews/RentalResults';
+import SearchRentals from '../screens/SearchViews/SearchRentals';
+import ChatRoom from '../screens/ChatViews/ChatRoom';
 const Stack = createStackNavigator<SearchStackParamList>();
 
 const SearchStack = () => {
   return (
     <Stack.Navigator
-      initialRouteName="SearchMain"
+      initialRouteName="SearchRentals"
       screenOptions={{
         headerStyle: {
-          backgroundColor: '#1f3839',
+          backgroundColor: '#347544',
         },
         headerTintColor: '#fff',
         headerTitleStyle: {
@@ -23,13 +23,13 @@ const SearchStack = () => {
         },
       }}>
       <Stack.Screen
-        name="SearchMain"
-        component={SearchMainPage}
+        name="SearchRentals"
+        component={SearchRentals}
         options={{headerShown: false}}
       />
       <Stack.Screen
-        name="SearchRentals"
-        component={SearchRentals}
+        name="RentalResults"
+        component={RentalResults}
         options={{
           title: 'Search Results',
           headerBackTitle: '',
@@ -45,6 +45,13 @@ const SearchStack = () => {
         }}
       />
       <Stack.Screen
+        name="ChatRoom"
+        component={ChatRoom}
+        options={{
+          title: 'Chat Room',
+        }}
+      />
+      <Stack.Screen
         name="CreateReview"
         options={{
           title: 'Post Review',
@@ -53,12 +60,12 @@ const SearchStack = () => {
         component={CreateReviewScreen}
       />
       <Stack.Screen
-        name="RentalPostScreen"
+        name="PostRentalScreen"
         options={{
           title: 'Edit Your Rental',
           headerBackTitleVisible: false,
         }}
-        component={RentalPostScreen}
+        component={PostRentalScreen}
       />
     </Stack.Navigator>
   );

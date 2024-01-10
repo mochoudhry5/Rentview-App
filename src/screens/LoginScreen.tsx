@@ -23,7 +23,7 @@ configureGoogle();
 
 type LoginProps = NativeStackScreenProps<OtherStackParamList, 'Login'>;
 
-const Login: React.FC<LoginProps> = ({navigation}) => {
+const Login: React.FC<LoginProps> = () => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
 

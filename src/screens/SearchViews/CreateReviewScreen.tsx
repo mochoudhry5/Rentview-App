@@ -12,13 +12,13 @@ import {
 } from 'react-native';
 import {doc, getDoc, setDoc, updateDoc} from 'firebase/firestore';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {HomeStackParamList} from '../utils/types';
-import {auth, db} from '../config/firebase';
+import {SearchStackParamList} from '../../utils/types';
+import {auth, db} from '../../config/firebase';
 import {AirbnbRating} from 'react-native-elements';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 type CreateReviewProps = NativeStackScreenProps<
-  HomeStackParamList,
+  SearchStackParamList,
   'CreateReview'
 >;
 

@@ -9,10 +9,10 @@ import {
 } from 'firebase/firestore';
 import React, {useEffect, useState} from 'react';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {AccountStackParamList} from '../utils/types';
-import {auth, db} from '../config/firebase';
+import {AccountStackParamList} from '../../utils/types';
+import {auth, db} from '../../config/firebase';
 import {ScrollView} from 'react-native-gesture-handler';
-import AdvancedRentalCard from '../components/AdvancedRentalCard';
+import AdvancedRentalCard from '../../components/AdvancedRentalCard';
 
 type PropertiesProps = NativeStackScreenProps<
   AccountStackParamList,
@@ -20,7 +20,6 @@ type PropertiesProps = NativeStackScreenProps<
 >;
 
 const PropertiesScreen: React.FC<PropertiesProps> = ({navigation}) => {
-  const userId = auth.currentUser ? auth.currentUser.uid : '';
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const user = auth.currentUser;
   const [allProperties, setAllProperties] = useState<DocumentData[]>([]);
@@ -29,7 +28,7 @@ const PropertiesScreen: React.FC<PropertiesProps> = ({navigation}) => {
   );
 
   useEffect(() => {
-    const subscriber = onSnapshot(userPropertiesRef, docSnapshot => {
+    const subscribe = onSnapshot(userPropertiesRef, docSnapshot => {
       if (docSnapshot.size >= 1) {
         setAllProperties([]);
         docSnapshot.forEach(doc => {
@@ -38,7 +37,8 @@ const PropertiesScreen: React.FC<PropertiesProps> = ({navigation}) => {
       }
       setIsLoading(false);
     });
-    return () => subscriber();
+
+    return () => subscribe();
   }, []);
 
   const handleViewProperty = async (homeId: string) => {

@@ -23,23 +23,23 @@ import {
   and,
 } from 'firebase/firestore';
 import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
-import {SearchStackParamList} from '../utils/types';
+import {SearchStackParamList} from '../../utils/types';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {auth, db} from '../config/firebase';
-import {Modal} from '../components/Modal';
+import {auth, db} from '../../config/firebase';
+import {Modal} from '../../components/Modal';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {RentalType} from '../utils/types';
-import RentalCard from '../components/RentalCard';
+import {RentalType} from '../../utils/types';
+import RentalCard from '../../components/RentalCard';
 import {Card} from '@rneui/base';
-import {RecentSearchType} from '../utils/types';
+import {RecentSearchType} from '../../utils/types';
 
 type SearchRentalsProps = NativeStackScreenProps<
   SearchStackParamList,
-  'SearchMain'
+  'SearchRentals'
 >;
 
-const SearchMainScreen: React.FC<SearchRentalsProps> = ({navigation}) => {
+const SearchRentals: React.FC<SearchRentalsProps> = ({navigation}) => {
   const userId = auth.currentUser ? auth.currentUser.uid : '';
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -53,7 +53,7 @@ const SearchMainScreen: React.FC<SearchRentalsProps> = ({navigation}) => {
   const searches: string[] = [];
 
   useEffect(() => {
-    const subscriber = onSnapshot(userInfoRef, docSnapshot => {
+    const subscribe = onSnapshot(userInfoRef, docSnapshot => {
       if (docSnapshot.exists()) {
         if (docSnapshot.data().fullName != null) {
           setIsModalVisible(false);
@@ -92,7 +92,7 @@ const SearchMainScreen: React.FC<SearchRentalsProps> = ({navigation}) => {
       }
       setIsLoading(false);
     });
-    return () => subscriber();
+    return () => subscribe();
   }, []);
 
   const setBasicInfo = async () => {
@@ -110,8 +110,6 @@ const SearchMainScreen: React.FC<SearchRentalsProps> = ({navigation}) => {
   };
 
   async function handleOnPressAddress(data: string, postalCode: string) {
-    let idToAddToHistory = '';
-    let addOrNot = true;
     let allRentals: RentalType[] = [];
     let propertyMainInfo = '';
     let city = '';
@@ -237,7 +235,6 @@ const SearchMainScreen: React.FC<SearchRentalsProps> = ({navigation}) => {
           yard: false,
           homePictures: null,
         });
-        idToAddToHistory = newHomeAdded.id;
 
         if (specificHomeQuery) {
           const homeSnapshot: QuerySnapshot<DocumentData, DocumentData> =
@@ -252,7 +249,7 @@ const SearchMainScreen: React.FC<SearchRentalsProps> = ({navigation}) => {
             });
           }
           navigation.removeListener;
-          navigation.navigate('SearchRentals', {
+          navigation.navigate('RentalResults', {
             rentals: allRentals,
           });
         }
@@ -261,35 +258,9 @@ const SearchMainScreen: React.FC<SearchRentalsProps> = ({navigation}) => {
       }
     } else {
       navigation.removeListener;
-      navigation.navigate('SearchRentals', {
+      navigation.navigate('RentalResults', {
         rentals: allRentals,
       });
-    }
-
-    if (isHomeAddress && idToAddToHistory !== '') {
-      const userReviewRef = doc(db, 'UserReviews', userId);
-      const userReviewSnapshot = await getDoc(userReviewRef);
-      if (userReviewSnapshot.exists()) {
-        const recentSearchs: string[] = userReviewSnapshot.data().recentSearchs;
-        if (recentSearchs) {
-          recentSearchs.map((search: string) => {
-            if (search === idToAddToHistory) {
-              addOrNot = false;
-            }
-          });
-        }
-        if (addOrNot) {
-          if (recentSearchs) {
-            await updateDoc(userReviewRef, {
-              recentSearchs: [...recentSearchs, idToAddToHistory],
-            });
-          } else {
-            await updateDoc(userReviewRef, {
-              recentSearchs: [idToAddToHistory],
-            });
-          }
-        }
-      }
     }
   }
 
@@ -359,52 +330,6 @@ const SearchMainScreen: React.FC<SearchRentalsProps> = ({navigation}) => {
               color="#1f3839"
             />
           ) : !isLoading && recentSearches.length > 0 ? (
-            <ScrollView
-              showsHorizontalScrollIndicator={false}
-              contentContainerStyle={{flexGrow: 1}}
-              horizontal>
-              {recentSearches.map(search => (
-                <RentalCard
-                  key={search.homeId}
-                  search={search}
-                  handleRecentClick={handleClickOnRecent}
-                />
-              ))}
-            </ScrollView>
-          ) : !isLoading && recentSearches.length === 0 ? (
-            <View
-              style={{
-                alignItems: 'center',
-                marginTop: 10,
-              }}>
-              <Card
-                containerStyle={{
-                  borderRadius: 20,
-                  width: 370,
-                  backgroundColor: '#1f3839',
-                }}>
-                <Text
-                  style={{
-                    fontWeight: 'bold',
-                    fontSize: 14,
-                    textAlign: 'center',
-                    color: 'white',
-                  }}>
-                  No History...Begin your journey with RentView!
-                </Text>
-              </Card>
-            </View>
-          ) : null}
-        </View>
-        <View style={{marginTop: '5%'}}>
-          <Text style={styles.recentSearches}>Trending Nearby Properties</Text>
-          {isLoading ? (
-            <ActivityIndicator
-              style={{marginTop: '20%'}}
-              size="large"
-              color="#1f3839"
-            />
-          ) : recentSearches.length > 0 ? (
             <ScrollView
               showsHorizontalScrollIndicator={false}
               contentContainerStyle={{flexGrow: 1}}
@@ -594,4 +519,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SearchMainScreen;
+export default SearchRentals;

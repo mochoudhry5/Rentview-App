@@ -19,18 +19,19 @@ import {
   setDoc,
 } from 'firebase/firestore';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {HomeStackParamList} from '../utils/types';
-import {db} from '../config/firebase';
+import {db} from '../../config/firebase';
 import {GestureHandlerRootView, ScrollView} from 'react-native-gesture-handler';
 import BottomSheet, {BottomSheetScrollView} from '@gorhom/bottom-sheet';
 import {AirbnbRating} from 'react-native-elements';
-import {auth} from '../config/firebase';
+import {auth} from '../../config/firebase';
 import Icon from 'react-native-vector-icons/Ionicons';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {ListItem} from '@rneui/themed';
-import BigImageViewer from '../components/BigImageViewer';
-import {Modal} from '../components/Modal';
-import {ImageType} from '../utils/types';
+import BigImageViewer from '../../components/BigImageViewer';
+import {Modal} from '../../components/Modal';
+import {ImageType, SearchStackParamList} from '../../utils/types';
+import {StreamChat} from 'stream-chat';
+import {useChatContext} from '../../context/ChatContext';
 
 const imageData = [
   {
@@ -41,7 +42,7 @@ const {width} = Dimensions.get('screen');
 const height = width * 0.9;
 
 type RentalDescriptionProps = NativeStackScreenProps<
-  HomeStackParamList,
+  SearchStackParamList,
   'RentalDescription'
 >;
 
@@ -111,9 +112,10 @@ const RentalDescription: React.FC<RentalDescriptionProps> = ({
   const homeReviewsQuery = query(
     collection(db, 'HomeReviews', route.params.homeId, 'IndividualRatings'),
   );
+  const {setCurrentChannel} = useChatContext();
 
   useEffect(() => {
-    const subscriber = onSnapshot(homeInfoRef, docSnapshot => {
+    const subscribe = onSnapshot(homeInfoRef, docSnapshot => {
       if (docSnapshot.exists()) {
         setTotalReviews(docSnapshot.data().totalReviews);
         setStreet(docSnapshot.data().address.street);
@@ -150,11 +152,11 @@ const RentalDescription: React.FC<RentalDescriptionProps> = ({
       }
       setIsLoading(false);
     });
-    return () => subscriber();
+    return () => subscribe();
   }, []);
 
   useEffect(() => {
-    const getData = onSnapshot(homeReviewsQuery, docSnapshot => {
+    const subscribe = onSnapshot(homeReviewsQuery, docSnapshot => {
       if (docSnapshot.size >= 1) {
         setAllReviews([]);
         docSnapshot.forEach(doc => {
@@ -165,7 +167,7 @@ const RentalDescription: React.FC<RentalDescriptionProps> = ({
         });
       }
     });
-    return () => getData();
+    return () => subscribe();
   }, []);
 
   const handleClaimHome = async () => {
@@ -220,7 +222,8 @@ const RentalDescription: React.FC<RentalDescriptionProps> = ({
       detailObj.parking = refData.parking;
       detailObj.homePictures = refData.homePictures;
     }
-    navigation.navigate('RentalPostScreen', {
+    navigation.removeListener;
+    navigation.navigate('PostRentalScreen', {
       homeId: route.params.homeId,
       homeDetails: detailObj,
     });
@@ -229,6 +232,25 @@ const RentalDescription: React.FC<RentalDescriptionProps> = ({
   const handleCreateReview = () => {
     navigation.removeListener;
     navigation.navigate('CreateReview', {homeId: route.params.homeId});
+  };
+
+  const handleMessageOwner = async () => {
+    if (ownerUserId !== '') {
+      const client = StreamChat.getInstance('pn73rx5c7g26');
+
+      const channel = client.channel('messaging', {
+        members: [userId, ownerUserId],
+        name: street,
+        image: homeImages[0].uri,
+      });
+
+      await channel.create();
+
+      setCurrentChannel(channel);
+
+      navigation.removeListener;
+      navigation.navigate('ChatRoom');
+    }
   };
 
   return (
@@ -510,79 +532,75 @@ const RentalDescription: React.FC<RentalDescriptionProps> = ({
                     Rental Status:
                   </Text>
                   <View style={styles.status}>
-                    <TouchableOpacity
-                      style={styles.roundButton2}
-                      onPress={handleEdit}>
-                      {statusOfRental === 'Available' ? (
-                        <View
+                    {statusOfRental === 'Available' ? (
+                      <View
+                        style={{
+                          flexDirection: 'row',
+                          justifyContent: 'center',
+                          paddingLeft: '2%',
+                        }}>
+                        <View style={styles.AvailableStatus} />
+                        <Text
                           style={{
-                            flexDirection: 'row',
-                            justifyContent: 'center',
-                            paddingLeft: '2%',
+                            fontSize: 14,
+                            textAlign: 'center',
+                            padding: '1%',
                           }}>
-                          <View style={styles.AvailableStatus} />
-                          <Text
-                            style={{
-                              fontSize: 14,
-                              textAlign: 'center',
-                              padding: '1%',
-                            }}>
-                            {statusOfRental}
-                          </Text>
-                        </View>
-                      ) : statusOfRental === 'Not Renting' ? (
-                        <View
+                          {statusOfRental}
+                        </Text>
+                      </View>
+                    ) : statusOfRental === 'Not Renting' ? (
+                      <View
+                        style={{
+                          flexDirection: 'row',
+                          justifyContent: 'center',
+                          paddingLeft: '2%',
+                        }}>
+                        <View style={styles.notRentingStatus} />
+                        <Text
                           style={{
-                            flexDirection: 'row',
-                            justifyContent: 'center',
-                            paddingLeft: '2%',
+                            fontSize: 14,
+                            textAlign: 'center',
+                            padding: '1%',
                           }}>
-                          <View style={styles.notRentingStatus} />
-                          <Text
-                            style={{
-                              fontSize: 14,
-                              textAlign: 'center',
-                              padding: '1%',
-                            }}>
-                            {statusOfRental}
-                          </Text>
-                        </View>
-                      ) : statusOfRental === 'Occupied' ? (
-                        <View
+                          {statusOfRental}
+                        </Text>
+                      </View>
+                    ) : statusOfRental === 'Occupied' ? (
+                      <View
+                        style={{
+                          flexDirection: 'row',
+                          justifyContent: 'center',
+                          paddingLeft: '2%',
+                        }}>
+                        <View style={styles.occupiedStatus} />
+                        <Text
                           style={{
-                            flexDirection: 'row',
-                            justifyContent: 'center',
-                            paddingLeft: '2%',
+                            fontSize: 14,
+                            textAlign: 'center',
+                            padding: '1%',
                           }}>
-                          <View style={styles.occupiedStatus} />
-                          <Text
-                            style={{
-                              fontSize: 14,
-                              textAlign: 'center',
-                              padding: '1%',
-                            }}>
-                            {statusOfRental}
-                          </Text>
-                        </View>
-                      ) : (
-                        <View
+                          {statusOfRental}
+                        </Text>
+                      </View>
+                    ) : (
+                      <View
+                        style={{
+                          flexDirection: 'row',
+                          justifyContent: 'center',
+                          paddingLeft: '2%',
+                        }}>
+                        <View style={styles.unknownStatus} />
+                        <Text
                           style={{
-                            flexDirection: 'row',
-                            justifyContent: 'center',
-                            paddingLeft: '2%',
+                            fontSize: 14,
+                            textAlign: 'center',
+                            padding: '1%',
                           }}>
-                          <View style={styles.unknownStatus} />
-                          <Text
-                            style={{
-                              fontSize: 14,
-                              textAlign: 'center',
-                              padding: '1%',
-                            }}>
-                            Unknown
-                          </Text>
-                        </View>
-                      )}
-                    </TouchableOpacity>
+                          Unknown
+                        </Text>
+                      </View>
+                    )}
                   </View>
                 </View>
                 <ListItem.Accordion
@@ -736,46 +754,44 @@ const RentalDescription: React.FC<RentalDescriptionProps> = ({
                     </ListItem.Content>
                   </ListItem>
                 </ListItem.Accordion>
-                <ListItem.Accordion
-                  content={
-                    <ListItem.Content>
-                      <ListItem.Title
-                        style={{
-                          fontSize: 17,
-                          color: 'black',
-                          fontWeight: 'bold',
-                        }}>
-                        Owner Details
-                      </ListItem.Title>
-                    </ListItem.Content>
-                  }
-                  isExpanded={expandedOwnerInfo}
-                  onPress={() => {
-                    setExpandedOwnerInfo(!expandedOwnerInfo);
-                  }}>
-                  <ListItem containerStyle={{paddingTop: 0, paddingBottom: 0}}>
-                    <ListItem.Content>
-                      <View style={{flexDirection: 'row'}}>
-                        <Text style={{fontSize: 15, fontWeight: 'bold'}}>
-                          Name:
-                        </Text>
-                        <Text style={{fontSize: 15, paddingLeft: '1%'}}>
-                          {ownerFullName}
-                        </Text>
-                      </View>
-                      <TouchableOpacity style={styles.submitButton}>
-                        <Text
+                {showCreateReviewBtn ? (
+                  <ListItem.Accordion
+                    content={
+                      <ListItem.Content>
+                        <ListItem.Title
                           style={{
-                            fontSize: 14,
+                            fontSize: 17,
+                            color: 'black',
                             fontWeight: 'bold',
-                            color: 'white',
                           }}>
-                          Message
-                        </Text>
-                      </TouchableOpacity>
-                    </ListItem.Content>
-                  </ListItem>
-                </ListItem.Accordion>
+                          Contact Owner?
+                        </ListItem.Title>
+                      </ListItem.Content>
+                    }
+                    isExpanded={expandedOwnerInfo}
+                    onPress={() => {
+                      setExpandedOwnerInfo(!expandedOwnerInfo);
+                    }}>
+                    <ListItem
+                      containerStyle={{paddingTop: 0, paddingBottom: 0}}>
+                      <ListItem.Content>
+                        <TouchableOpacity
+                          disabled={!showCreateReviewBtn}
+                          style={styles.submitButton}
+                          onPress={handleMessageOwner}>
+                          <Text
+                            style={{
+                              fontSize: 14,
+                              fontWeight: 'bold',
+                              color: 'white',
+                            }}>
+                            Message Owner
+                          </Text>
+                        </TouchableOpacity>
+                      </ListItem.Content>
+                    </ListItem>
+                  </ListItem.Accordion>
+                ) : null}
               </View>
             ) : (
               <View>

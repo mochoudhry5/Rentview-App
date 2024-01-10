@@ -15,17 +15,16 @@ import {
 } from 'firebase/storage';
 import {doc, getDoc, updateDoc} from 'firebase/firestore';
 import React, {useState} from 'react';
-import TinyImageViewer from '../components/TinyImageViewer';
+import TinyImageViewer from '../../components/TinyImageViewer';
 import {Dropdown} from 'react-native-element-dropdown';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {HomeStackParamList} from '../utils/types';
-import {db, auth} from '../config/firebase';
+import {db, auth} from '../../config/firebase';
 import Icon from 'react-native-vector-icons/Ionicons';
-import {ImageType} from '../utils/types';
+import {ImageType, SearchStackParamList} from '../../utils/types';
 
 type PostPropertyScreen = NativeStackScreenProps<
-  HomeStackParamList,
-  'RentalPostScreen'
+  SearchStackParamList,
+  'PostRentalScreen'
 >;
 
 const rentalStatus = [
@@ -39,7 +38,7 @@ const rentalAreaSelections = [
   {label: 'Entire House', value: 'Entire House'},
 ];
 
-const RentalPostScreen: React.FC<PostPropertyScreen> = ({
+const PostRentalScreen: React.FC<PostPropertyScreen> = ({
   route,
   navigation,
 }) => {
@@ -128,6 +127,7 @@ const RentalPostScreen: React.FC<PostPropertyScreen> = ({
       });
     }
 
+    navigation.removeListener;
     navigation.navigate('RentalDescription', {
       homeId: route.params.homeId,
       ownerId: userId,
@@ -594,4 +594,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default RentalPostScreen;
+export default PostRentalScreen;
