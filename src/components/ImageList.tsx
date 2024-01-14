@@ -27,16 +27,30 @@ const ImageList = ({
           key={`${imageUrl}_${index}`}
           activeOpacity={0.8}
           onPress={() => onPress(index)}>
-          <Image
-            source={{uri: imageUrl}}
-            style={{
-              margin: margin,
-              marginBottom: 7,
-              width: width,
-              height: height,
-              borderRadius: borderRadius,
-            }}
-          />
+          {imageUrl !==
+          'https://t4.ftcdn.net/jpg/04/00/24/31/240_F_400243185_BOxON3h9avMUX10RsDkt3pJ8iQx72kS3.jpg' ? (
+            <Image
+              source={{uri: imageUrl}}
+              style={{
+                margin: margin,
+                marginBottom: 7,
+                width: width,
+                height: height,
+                borderRadius: borderRadius,
+              }}
+            />
+          ) : (
+            <Image
+              source={require('../images/noImage.png')}
+              style={{
+                margin: margin,
+                marginBottom: 7,
+                width: width,
+                height: height,
+                borderRadius: borderRadius,
+              }}
+            />
+          )}
         </TouchableOpacity>
       ))}
     </ScrollView>

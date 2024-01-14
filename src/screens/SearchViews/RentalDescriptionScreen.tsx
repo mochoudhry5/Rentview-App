@@ -7,6 +7,7 @@ import {
   Image,
   Dimensions,
   ActivityIndicator,
+  TextInput,
 } from 'react-native';
 import {
   doc,
@@ -38,6 +39,7 @@ const imageData = [
     uri: 'https://t4.ftcdn.net/jpg/04/00/24/31/240_F_400243185_BOxON3h9avMUX10RsDkt3pJ8iQx72kS3.jpg',
   },
 ];
+
 const {width} = Dimensions.get('screen');
 const height = width * 0.9;
 
@@ -104,6 +106,9 @@ const RentalDescription: React.FC<RentalDescriptionProps> = ({
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [homeImages, setHomeImages] = useState<ImageType[]>(imageData);
   const [showCreateReviewBtn, setShowCreateReviewBtn] = useState<boolean>(true);
+  const [messageText, setMessageText] = useState<string>(
+    'Hi, I am interested!',
+  );
   const user = auth.currentUser;
   const userId = user?.uid ? user.uid : '';
   const sheetRef = useRef<BottomSheet>(null);
@@ -245,6 +250,12 @@ const RentalDescription: React.FC<RentalDescriptionProps> = ({
       });
 
       await channel.create();
+
+      console.log(messageText);
+      await channel.sendMessage({
+        text: messageText,
+        customField: '123',
+      });
 
       setCurrentChannel(channel);
 
@@ -416,7 +427,7 @@ const RentalDescription: React.FC<RentalDescriptionProps> = ({
                 </View>
                 <Text style={styles.addressLine2}>
                   <MaterialIcon name="map-marker" color={'gray'} size={15} />
-                  {street},{city},{state}, {postalCode}
+                  {street}, {city}, {state} {postalCode}
                 </Text>
                 <View
                   style={{
@@ -773,8 +784,17 @@ const RentalDescription: React.FC<RentalDescriptionProps> = ({
                       setExpandedOwnerInfo(!expandedOwnerInfo);
                     }}>
                     <ListItem
-                      containerStyle={{paddingTop: 0, paddingBottom: 0}}>
+                      containerStyle={{
+                        paddingTop: 0,
+                        paddingBottom: 0,
+                      }}>
                       <ListItem.Content>
+                        <TextInput
+                          style={styles.input}
+                          multiline={true}
+                          onChangeText={setMessageText}
+                          value={messageText}
+                        />
                         <TouchableOpacity
                           disabled={!showCreateReviewBtn}
                           style={styles.submitButton}
@@ -784,8 +804,9 @@ const RentalDescription: React.FC<RentalDescriptionProps> = ({
                               fontSize: 14,
                               fontWeight: 'bold',
                               color: 'white',
+                              textAlign: 'center',
                             }}>
-                            Message Owner
+                            Send
                           </Text>
                         </TouchableOpacity>
                       </ListItem.Content>
@@ -1131,13 +1152,10 @@ const styles = StyleSheet.create({
     color: 'blue',
   },
   submitButton: {
-    alignItems: 'center',
+    width: '25%',
     backgroundColor: '#1f3839',
-    borderWidth: 1,
-    borderRadius: 50,
-    padding: 3,
-    paddingLeft: '3%',
-    paddingRight: '3%',
+    borderRadius: 20,
+    padding: 10,
     alignSelf: 'center',
     justifyContent: 'center',
   },
@@ -1242,6 +1260,16 @@ const styles = StyleSheet.create({
     opacity: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  input: {
+    height: 35,
+    borderWidth: 0.8,
+    borderRadius: 10,
+    textAlignVertical: 'top',
+    width: '100%',
+    fontSize: 16,
+    marginBottom: '5%',
+    paddingLeft: '2%',
   },
 });
 

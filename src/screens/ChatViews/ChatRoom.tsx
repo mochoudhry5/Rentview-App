@@ -10,7 +10,7 @@ import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {ChatStackParamList} from '../../utils/types';
 import {useChatContext} from '../../context/ChatContext';
 import {Button} from 'react-native-elements';
-import {TouchableOpacity} from 'react-native';
+import {TouchableOpacity, View} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {SafeAreaView} from 'react-native-safe-area-context';
 
@@ -35,7 +35,7 @@ const ChatRoom: React.FC<ChatRoomProps> = ({navigation}) => {
   }, []);
 
   return currentChannel ? (
-    <SafeAreaView>
+    <View style={{marginBottom: '6%'}}>
       <Channel channel={currentChannel}>
         {thread ? (
           <Thread />
@@ -46,7 +46,7 @@ const ChatRoom: React.FC<ChatRoomProps> = ({navigation}) => {
           </>
         )}
       </Channel>
-    </SafeAreaView>
+    </View>
   ) : null;
 };
 

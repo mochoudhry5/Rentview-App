@@ -18,6 +18,7 @@ import {auth} from '../config/firebase';
 import {configureGoogle, signInGoogle} from '../config/googleConfig';
 import {doc, getDoc, setDoc} from 'firebase/firestore';
 import {db} from '../config/firebase';
+import {SafeAreaView} from 'react-native-safe-area-context';
 
 configureGoogle();
 
@@ -65,32 +66,33 @@ const Login: React.FC<LoginProps> = () => {
 
   return (
     <View style={styles.container}>
-      <TextInput
-        placeholder="Email"
-        value={email}
-        onChangeText={setEmail}
-        style={styles.input}
-      />
-      <TextInput
-        placeholder="Password"
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry
-        style={styles.input}
-      />
-      <TouchableOpacity
-        style={styles.signedUpButtonContainer}
-        onPress={handleLogin}>
-        <Text style={styles.signedUpButtonText}>Log In</Text>
+      <SafeAreaView>
+        <Image
+          style={{
+            borderRadius: 5,
+            resizeMode: 'center',
+          }}
+          source={require('../images/FullLogo.png')}
+        />
+      </SafeAreaView>
+      <TouchableOpacity style={styles.googleButton} onPress={signinWithGoogle}>
+        <Image
+          style={styles.googleIcon}
+          source={{
+            uri: 'https://i.ibb.co/j82DCcR/search.png',
+          }}
+        />
+        <Text style={styles.googleButtonText}>Continue with Google</Text>
       </TouchableOpacity>
-      <View
-        style={{flexDirection: 'row', alignItems: 'center', marginBottom: 10}}>
-        <View style={{flex: 1, height: 1, backgroundColor: 'black'}} />
-        <View>
-          <Text style={{width: 50, textAlign: 'center'}}>or</Text>
-        </View>
-        <View style={{flex: 1, height: 1, backgroundColor: 'black'}} />
-      </View>
+      <TouchableOpacity style={styles.googleButton} onPress={signinWithGoogle}>
+        <Image
+          style={styles.googleIcon}
+          source={{
+            uri: 'https://i.ibb.co/j82DCcR/search.png',
+          }}
+        />
+        <Text style={styles.googleButtonText}>Continue with Google </Text>
+      </TouchableOpacity>
       <TouchableOpacity style={styles.googleButton} onPress={signinWithGoogle}>
         <Image
           style={styles.googleIcon}
@@ -107,37 +109,18 @@ const Login: React.FC<LoginProps> = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
     alignItems: 'center',
-  },
-  input: {
-    width: '80%',
-    borderBottomWidth: 1,
-    marginBottom: 20,
-    padding: 10,
-  },
-  signedUpButtonContainer: {
-    elevation: 1,
-    backgroundColor: '#808080',
-    borderRadius: 5,
-    paddingVertical: 5,
-    paddingHorizontal: 12,
-    marginBottom: 10,
-  },
-  signedUpButtonText: {
-    fontSize: 14,
-    color: '#fff',
-    fontWeight: 'bold',
-    alignSelf: 'center',
+    backgroundColor: 'white',
   },
   googleButton: {
-    backgroundColor: 'white',
+    backgroundColor: 'grey',
     borderRadius: 4,
     paddingHorizontal: 34,
     paddingVertical: 10,
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
+    marginBottom: 15,
   },
   googleButtonText: {
     marginLeft: 16,

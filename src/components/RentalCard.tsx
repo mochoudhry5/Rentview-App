@@ -27,7 +27,9 @@ const RentalCard: React.FC<Props> = ({
           borderRadius: 20,
           backgroundColor: 'white',
         }}>
-        {rental.data.homePictures !== null ? (
+        {rental.data.homePictures !== null &&
+        rental.data.homePictures !==
+          'https://t4.ftcdn.net/jpg/04/00/24/31/240_F_400243185_BOxON3h9avMUX10RsDkt3pJ8iQx72kS3.jpg' ? (
           <Card.Image
             style={{borderRadius: 5, marginBottom: 10}}
             source={{uri: rental.data.homePictures[0].uri}}
@@ -35,9 +37,7 @@ const RentalCard: React.FC<Props> = ({
         ) : (
           <Card.Image
             style={{borderRadius: 5, marginBottom: 10}}
-            source={{
-              uri: 'https://t4.ftcdn.net/jpg/04/00/24/31/240_F_400243185_BOxON3h9avMUX10RsDkt3pJ8iQx72kS3.jpg',
-            }}
+            source={require('../images/No_Images_Found.png')}
           />
         )}
         <Text style={{fontWeight: 'bold', fontSize: 20, textAlign: 'center'}}>
@@ -66,10 +66,18 @@ const RentalCard: React.FC<Props> = ({
           width: 300,
           backgroundColor: 'white',
         }}>
-        <Card.Image
-          style={{borderRadius: 5}}
-          source={{uri: search.homePicture}}
-        />
+        {search.homePicture !==
+        'https://t4.ftcdn.net/jpg/04/00/24/31/240_F_400243185_BOxON3h9avMUX10RsDkt3pJ8iQx72kS3.jpg' ? (
+          <Card.Image
+            style={{borderRadius: 5}}
+            source={{uri: search.homePicture}}
+          />
+        ) : (
+          <Card.Image
+            style={{borderRadius: 5}}
+            source={require('../images/No_Images_Found.png')}
+          />
+        )}
         <Card.FeaturedTitle
           style={{
             fontWeight: 'bold',

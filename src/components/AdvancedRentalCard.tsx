@@ -20,9 +20,7 @@ const AdvancedRentalCard: React.FC<Props> = ({rental, handleView}) => {
       ) : (
         <Card.Image
           style={{borderRadius: 5, marginBottom: 10}}
-          source={{
-            uri: 'https://t4.ftcdn.net/jpg/04/00/24/31/240_F_400243185_BOxON3h9avMUX10RsDkt3pJ8iQx72kS3.jpg',
-          }}
+          source={require('../images/noImage.png')}
         />
       )}
       <Text
