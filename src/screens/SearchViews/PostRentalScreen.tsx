@@ -21,6 +21,7 @@ import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {db, auth} from '../../config/firebase';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {ImageType, SearchStackParamList} from '../../utils/types';
+import {Modal} from '../../components/Modal';
 
 type PostPropertyScreen = NativeStackScreenProps<
   SearchStackParamList,
@@ -87,6 +88,7 @@ const PostRentalScreen: React.FC<PostPropertyScreen> = ({
   const pictureUris: ImageType[] = [];
   const user = auth.currentUser;
   const userId = user?.uid ? user.uid : '';
+  const [validEntry, setValidEntry] = useState<boolean>(true);
 
   const handlePostSubmit = async () => {
     const homeInfoRef = doc(db, 'HomeReviews', route.params.homeId);
@@ -99,46 +101,57 @@ const PostRentalScreen: React.FC<PostPropertyScreen> = ({
       route.params.homeId,
     );
 
-    if (homeInfoSnapshot.exists()) {
-      await uploadImages();
+    if (
+      monthlyRent === '' ||
+      totalBathrooms === '' ||
+      totalBedrooms === '' ||
+      statusOfRental === 'Unknown' ||
+      totalSquareFeet === '' ||
+      rentalArea === ''
+    ) {
+      setValidEntry(false);
+    } else {
+      if (homeInfoSnapshot.exists()) {
+        await uploadImages();
 
-      await updateDoc(homeInfoRef, {
-        totalSquareFeet: totalSquareFeet,
-        totalBedrooms: totalBedrooms,
-        totalBathrooms: totalBathrooms,
-        statusOfRental: statusOfRental,
-        propertyDescription: propertyDescription,
-        rentalArea: rentalArea,
-        monthlyRent: monthlyRent,
-        furnished: isFurnished,
-        washerDryer: isWasherDryer,
-        parking: isFreeParking,
-        airConditioning: isAirConditioning,
-        privateBathroom: isPrivateBathroom,
-        dishwasher: isDishwasher,
-        yard: isYard,
-        pool: isPool,
-        internet: isInternet,
-        homePictures: pictureUris,
+        await updateDoc(homeInfoRef, {
+          totalSquareFeet: totalSquareFeet,
+          totalBedrooms: totalBedrooms,
+          totalBathrooms: totalBathrooms,
+          statusOfRental: statusOfRental,
+          propertyDescription: propertyDescription,
+          rentalArea: rentalArea,
+          monthlyRent: monthlyRent,
+          furnished: isFurnished,
+          washerDryer: isWasherDryer,
+          parking: isFreeParking,
+          airConditioning: isAirConditioning,
+          privateBathroom: isPrivateBathroom,
+          dishwasher: isDishwasher,
+          yard: isYard,
+          pool: isPool,
+          internet: isInternet,
+          homePictures: pictureUris,
+        });
+
+        await updateDoc(userInfoRef, {
+          homePictures: pictureUris,
+        });
+
+        await updateDoc(
+          doc(db, 'UserReviews', userId, 'MyProperties', route.params.homeId),
+          {
+            homePictures: pictureUris[0],
+          },
+        );
+      }
+
+      navigation.removeListener;
+      navigation.navigate('RentalDescription', {
+        homeId: route.params.homeId,
+        ownerId: userId,
       });
-
-      await updateDoc(userInfoRef, {
-        homePictures: pictureUris,
-      });
-
-      await updateDoc(
-        doc(db, 'UserReviews', userId, 'MyProperties', route.params.homeId),
-        {
-          homePictures: pictureUris[0],
-        },
-      );
     }
-
-    navigation.removeListener;
-    navigation.navigate('RentalDescription', {
-      homeId: route.params.homeId,
-      ownerId: userId,
-    });
   };
 
   async function uploadImages() {
@@ -160,6 +173,10 @@ const PostRentalScreen: React.FC<PostPropertyScreen> = ({
       }
     }
   }
+
+  const closeModal = () => {
+    setValidEntry(true);
+  };
 
   return (
     <View style={{flex: 1, paddingTop: '2%', backgroundColor: 'white'}}>
@@ -545,6 +562,90 @@ const PostRentalScreen: React.FC<PostPropertyScreen> = ({
           </Text>
         </TouchableOpacity>
       </SafeAreaView>
+      <View>
+        <Modal
+          isVisible={!validEntry}
+          animationIn={'bounce'}
+          onBackdropPress={closeModal}>
+          <Modal.Container>
+            <Modal.Header title="Information Missing" />
+            <Modal.Body>
+              <Text
+                style={{
+                  marginLeft: '5%',
+                  marginTop: '5%',
+                  color: 'black',
+                  fontSize: 20,
+                  textAlign: 'center',
+                }}>
+                This posting is missing the following information:
+              </Text>
+              <View
+                style={{
+                  alignSelf: 'center',
+                  marginTop: 18,
+                }}>
+                <Text
+                  style={{
+                    color: 'red',
+                    fontSize: 18,
+                  }}>
+                  {rentalArea === '' ? 'Renting Out' : ''}
+                </Text>
+                <Text
+                  style={{
+                    color: 'red',
+                    fontSize: 18,
+                  }}>
+                  {monthlyRent === '' ? 'Monthly Rent' : ''}
+                </Text>
+                <Text
+                  style={{
+                    color: 'red',
+                    fontSize: 18,
+                  }}>
+                  {statusOfRental === 'Unknown' ? 'Status Of Rental' : ''}
+                </Text>
+                <Text
+                  style={{
+                    color: 'red',
+                    fontSize: 18,
+                  }}>
+                  {totalSquareFeet === '' ? 'Square Feet' : ''}
+                </Text>
+                <Text
+                  style={{
+                    color: 'red',
+                    fontSize: 18,
+                  }}>
+                  {totalBedrooms === '' ? 'Bedrooms' : ''}
+                </Text>
+                <Text
+                  style={{
+                    color: 'red',
+                    fontSize: 18,
+                  }}>
+                  {totalBathrooms === '' ? 'Bathrooms' : ''}
+                </Text>
+              </View>
+            </Modal.Body>
+            <Modal.Footer>
+              <TouchableOpacity
+                style={styles.submitButton}
+                onPress={closeModal}>
+                <Text
+                  style={{
+                    fontSize: 16,
+                    fontWeight: 'bold',
+                    color: 'white',
+                  }}>
+                  Okay
+                </Text>
+              </TouchableOpacity>
+            </Modal.Footer>
+          </Modal.Container>
+        </Modal>
+      </View>
     </View>
   );
 };
@@ -598,6 +699,17 @@ const styles = StyleSheet.create({
   iconStyle: {
     width: 20,
     height: 20,
+  },
+  submitButton: {
+    alignItems: 'center',
+    backgroundColor: '#1f3839',
+    borderWidth: 1,
+    width: '88%',
+    height: 40,
+    alignSelf: 'center',
+    justifyContent: 'center',
+    marginTop: '5%',
+    marginBottom: '5%',
   },
 });
 
