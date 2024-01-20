@@ -151,9 +151,10 @@ const RentalDescription: React.FC<RentalDescriptionProps> = ({
         setParking(docSnapshot.data().parking);
         if (docSnapshot.data().homePictures)
           setHomeImages(docSnapshot.data().homePictures);
-      }
-      if (route.params.ownerId === userId) {
-        setShowCreateReviewBtn(false);
+
+        if (docSnapshot.data().owner.userId === userId) {
+          setShowCreateReviewBtn(false);
+        }
       }
       setIsLoading(false);
     });

@@ -13,7 +13,7 @@ import {
   ref,
   uploadBytesResumable,
 } from 'firebase/storage';
-import {doc, getDoc, updateDoc} from 'firebase/firestore';
+import {doc, getDoc, setDoc, updateDoc} from 'firebase/firestore';
 import React, {useState} from 'react';
 import TinyImageViewer from '../../components/TinyImageViewer';
 import {Dropdown} from 'react-native-element-dropdown';
@@ -125,6 +125,13 @@ const PostRentalScreen: React.FC<PostPropertyScreen> = ({
       await updateDoc(userInfoRef, {
         homePictures: pictureUris,
       });
+
+      await updateDoc(
+        doc(db, 'UserReviews', userId, 'MyProperties', route.params.homeId),
+        {
+          homePictures: pictureUris[0],
+        },
+      );
     }
 
     navigation.removeListener;

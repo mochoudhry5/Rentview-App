@@ -10,17 +10,18 @@ type Props = {
 };
 
 const AdvancedRentalCard: React.FC<Props> = ({rental, handleView}) => {
+  console.log(rental);
   return (
     <Card>
       {rental.homePictures !== null ? (
         <Card.Image
           style={{borderRadius: 5, marginBottom: 10}}
-          source={{uri: rental.homePictures[0].uri}}
+          source={{uri: rental.homePictures.uri}}
         />
       ) : (
         <Card.Image
           style={{borderRadius: 5, marginBottom: 10}}
-          source={require('../images/noImage.png')}
+          source={require('../images/No_Images_Found.png')}
         />
       )}
       <Text

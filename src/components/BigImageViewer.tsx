@@ -38,17 +38,20 @@ const RentalDescripImageViewer = ({homeImages}: Props) => {
         height={height}
         snapEnabled={true}
       />
-      <ImageViewing
-        images={images}
-        imageIndex={currentImageIndex}
-        presentationStyle="overFullScreen"
-        backgroundColor="white"
-        visible={isVisible}
-        onRequestClose={onRequestClose}
-        FooterComponent={({imageIndex}) => (
-          <ImageFooter imageIndex={imageIndex} imagesCount={images.length} />
-        )}
-      />
+      {images[0].uri !==
+      'https://t4.ftcdn.net/jpg/04/00/24/31/240_F_400243185_BOxON3h9avMUX10RsDkt3pJ8iQx72kS3.jpg' ? (
+        <ImageViewing
+          images={images}
+          imageIndex={currentImageIndex}
+          presentationStyle="overFullScreen"
+          backgroundColor="white"
+          visible={isVisible}
+          onRequestClose={onRequestClose}
+          FooterComponent={({imageIndex}) => (
+            <ImageFooter imageIndex={imageIndex} imagesCount={images.length} />
+          )}
+        />
+      ) : null}
     </View>
   );
 };

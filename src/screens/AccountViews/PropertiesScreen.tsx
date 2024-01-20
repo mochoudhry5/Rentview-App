@@ -72,6 +72,7 @@ const PropertiesScreen: React.FC<PropertiesProps> = ({navigation}) => {
           {allProperties.length > 0 ? (
             <View style={{flex: 1, backgroundColor: 'white'}}>
               <ScrollView
+                horizontal={false}
                 style={{marginBottom: 30}}
                 contentContainerStyle={{flexGrow: 1}}>
                 {allProperties.map(property => (

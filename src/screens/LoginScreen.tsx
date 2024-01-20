@@ -72,7 +72,7 @@ const Login: React.FC<LoginProps> = () => {
             borderRadius: 5,
             resizeMode: 'center',
           }}
-          source={require('../images/FullLogo.png')}
+          source={require('../images/FullLogoWithSlogan.png')}
         />
       </SafeAreaView>
       <TouchableOpacity style={styles.googleButton} onPress={signinWithGoogle}>

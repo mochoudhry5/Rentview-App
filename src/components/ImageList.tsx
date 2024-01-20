@@ -41,7 +41,7 @@ const ImageList = ({
             />
           ) : (
             <Image
-              source={require('../images/noImage.png')}
+              source={require('../images/No_Images_Found.png')}
               style={{
                 margin: margin,
                 marginBottom: 7,

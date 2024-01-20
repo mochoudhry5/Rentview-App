@@ -82,7 +82,7 @@ const SearchRentals: React.FC<SearchRentalsProps> = ({navigation}) => {
                   homeAddress: homeSnapshot.data().address.fullAddress,
                 };
 
-                setRecentSearches(prev => [...prev, obj]);
+                setRecentSearches(prev => [obj, ...prev]);
               }
             }
           });

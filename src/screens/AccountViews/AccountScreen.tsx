@@ -66,12 +66,12 @@ const AccountScreen: React.FC<AccountProps> = ({navigation}) => {
   const settingsOptions = [
     {
       title: 'My Profile',
-      subTitle: 'Manage your RentView profile',
+      subTitle: 'Manage my RentView profile',
       onPress: handleProfile,
     },
     {
       title: 'My Activity',
-      subTitle: 'Manage your reviews',
+      subTitle: 'Manage my reviews',
       onPress: handleActivity,
     },
     {

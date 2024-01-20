@@ -31,7 +31,7 @@ const RentalResults: React.FC<SearchRentalsProps> = ({route, navigation}) => {
       if (addOrNot) {
         if (recentSearchs) {
           await updateDoc(userReviewRef, {
-            recentSearchs: [...recentSearchs, rental.homeId],
+            recentSearchs: [rental.homeId, ...recentSearchs],
           });
         } else {
           await updateDoc(userReviewRef, {

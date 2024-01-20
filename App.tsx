@@ -5,7 +5,6 @@ import {
 } from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import LoginView from './src/screens/LoginScreen';
-import SignupView from './src/screens/SignupScreen';
 import {OtherStackParamList} from './src/utils/types';
 import {auth} from './src/config/firebase';
 import {onAuthStateChanged, User} from 'firebase/auth';
@@ -42,11 +41,6 @@ const App = () => {
               component={LoginView}
               options={{headerShown: false}}
             />
-            <Stack.Screen
-              name="Signup"
-              component={SignupView}
-              options={{headerShown: false}}
-            />
           </>
         )}
       </Stack.Navigator>
@@ -61,6 +55,7 @@ function LoggedInLayout() {
   return (
     <ChatContextProvider>
       <Tab.Navigator
+        initialRouteName="Search"
         screenOptions={({route}) => ({
           tabBarIcon: ({focused}) => {
             let iconName: string = '';
