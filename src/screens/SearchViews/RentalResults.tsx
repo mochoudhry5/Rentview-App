@@ -51,7 +51,7 @@ const RentalResults: React.FC<SearchRentalsProps> = ({route, navigation}) => {
   return (
     <View style={{marginBottom: 15}}>
       <ScrollView
-        style={{marginTop: 10, height: '100%'}}
+        style={{marginTop: 10, height: '100%', backgroundColor:'white'}}
         contentContainerStyle={{flexGrow: 1}}>
         {route.params.rentals.map(rental => (
           <RentalCard

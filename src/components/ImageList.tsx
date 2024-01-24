@@ -44,7 +44,6 @@ const ImageList = ({
               source={require('../images/No_Images_Found.png')}
               style={{
                 margin: margin,
-                marginBottom: 7,
                 width: width,
                 height: height,
                 borderRadius: borderRadius,

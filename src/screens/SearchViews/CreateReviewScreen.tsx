@@ -248,7 +248,7 @@ const CreateReviewScreen: React.FC<CreateReviewProps> = ({
               Post as Anonymous
             </Text>
             <Switch
-              trackColor={{false: 'grey', true: 'green'}}
+              trackColor={{false: 'grey', true: '#347544'}}
               thumbColor={'#f4f3f4'}
               ios_backgroundColor="#3e3e3e"
               onValueChange={toggleSwitch}
@@ -433,7 +433,7 @@ const CreateReviewScreen: React.FC<CreateReviewProps> = ({
         <TouchableOpacity
           style={styles.submitButton}
           onPress={handleReviewSubmit}>
-          <Text style={{fontSize: 16, fontWeight: 'bold', color: 'white'}}>
+          <Text style={{fontSize: 16, fontWeight: 'bold', color: '#347544'}}>
             Publish Review
           </Text>
         </TouchableOpacity>
@@ -457,13 +457,14 @@ const makeStyles = (fontScale: any) =>
     },
     submitButton: {
       alignItems: 'center',
-      backgroundColor: '#1f3839',
-      borderWidth: 1,
+      backgroundColor: 'white',
+      borderWidth: 1.5,
       width: '92%',
       height: '50%',
       alignSelf: 'center',
       justifyContent: 'center',
       borderRadius: 20,
+      borderColor:'#347544',
     },
     yesButton: {
       alignItems: 'center',

@@ -108,7 +108,7 @@ const MyReviews: React.FC<MyReviewProps> = ({navigation}) => {
                       handleEditReview(review);
                     }}>
                     <Text style={{fontWeight: 'bold', color: 'white'}}>
-                      View / Edit
+                      Update
                     </Text>
                   </TouchableOpacity>
                 </View>
@@ -152,23 +152,25 @@ const MyReviews: React.FC<MyReviewProps> = ({navigation}) => {
 const styles = StyleSheet.create({
   viewProperty: {
     alignItems: 'center',
-    backgroundColor: 'white',
+    backgroundColor: '#347544',
     borderWidth: 1,
     width: '30%',
     height: 25,
     aligxnSelf: 'center',
     justifyContent: 'center',
     borderRadius: 20,
+    borderColor:'#347544'
   },
   editReview: {
     alignItems: 'center',
-    backgroundColor: '#1f3839',
+    backgroundColor: '#848484',
     borderWidth: 1,
     width: '30%',
     height: 25,
     alignSelf: 'center',
     justifyContent: 'center',
     borderRadius: 20,
+    borderColor:'#848484'
   },
   noReviewsView: {
     flex: 1,

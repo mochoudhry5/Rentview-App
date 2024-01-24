@@ -32,7 +32,7 @@ const SearchStack = () => {
         component={RentalResults}
         options={{
           title: 'Search Results',
-          headerBackTitle: '',
+          headerBackTitleVisible: false,
         }}
       />
       <Stack.Screen

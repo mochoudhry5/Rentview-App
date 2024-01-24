@@ -28,7 +28,7 @@ const ChatRoom: React.FC<ChatRoomProps> = ({navigation}) => {
           onPress={() => {
             navigation.goBack();
           }}>
-          <Icon name="chevron-back-outline" color={'grey'} size={25} />
+          <Icon name="chevron-back-outline" color={'white'} size={25} />
         </TouchableOpacity>
       ),
     });

@@ -348,7 +348,7 @@ const SearchRentals: React.FC<SearchRentalsProps> = ({navigation}) => {
             <TouchableOpacity
               onPress={handleLogoutAttempt}
               style={{marginTop: 25, position: 'absolute', right: 15}}>
-              <Text style={{color: 'blue'}}>Clear</Text>
+              <Text style={{color: 'black'}}>Clear</Text>
             </TouchableOpacity>
           </View>
           {isLoading ? (
@@ -505,6 +505,7 @@ const SearchRentals: React.FC<SearchRentalsProps> = ({navigation}) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor:'white'
   },
   button: {
     backgroundColor: '#3498db',

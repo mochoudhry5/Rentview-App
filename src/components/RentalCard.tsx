@@ -43,17 +43,106 @@ const RentalCard: React.FC<Props> = ({
         <Text style={{fontWeight: 'bold', fontSize: 20, textAlign: 'center'}}>
           {rental.data.address.fullAddress}
         </Text>
-        <Text>Status of Rental: {rental.data.statusOfRental}</Text>
-        <View style={{flexDirection: 'row'}}>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            marginTop: '3%',
+          }}>
+          <Text>Status of Rental:</Text>
+          {rental.data.statusOfRental === 'Available' ? (
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'center',
+                paddingLeft: '2%',
+              }}>
+              <View style={styles.AvailableStatus} />
+              <Text
+                style={{
+                  fontSize: 14,
+                  textAlign: 'center',
+                  padding: '1%',
+                }}>
+                {rental.data.statusOfRental}
+              </Text>
+            </View>
+          ) : rental.data.statusOfRental === 'Not Renting' ? (
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'center',
+                paddingLeft: '2%',
+              }}>
+              <View style={styles.notRentingStatus} />
+              <Text
+                style={{
+                  fontSize: 14,
+                  textAlign: 'center',
+                  padding: '1%',
+                }}>
+                {rental.data.statusOfRental}
+              </Text>
+            </View>
+          ) : rental.data.statusOfRental === 'Occupied' ? (
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'center',
+                paddingLeft: '2%',
+              }}>
+              <View style={styles.occupiedStatus} />
+              <Text
+                style={{
+                  fontSize: 14,
+                  textAlign: 'center',
+                  padding: '1%',
+                }}>
+                {rental.data.statusOfRental}
+              </Text>
+            </View>
+          ) : (
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'center',
+                paddingLeft: '2%',
+              }}>
+              <View style={styles.unknownStatus} />
+              <Text
+                style={{
+                  fontSize: 14,
+                  textAlign: 'center',
+                  padding: '1%',
+                }}>
+                Unknown
+              </Text>
+            </View>
+          )}
+        </View>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            marginRight: '1%',
+          }}>
+          <Text>Rating:</Text>
           {rental.data.overallRating.avgOverallRating !== 0 ? (
             <>
-              <Text style={styles.rating}>
-                {rental.data.overallRating.avgOverallRating.toFixed(1)}
-              </Text>
-              <Icon name="star" color="black" size={20} />
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  alignItems:'center'
+                }}>
+                <Text style={styles.rating}>
+                  {rental.data.overallRating.avgOverallRating.toFixed(1)}
+                </Text>
+                <Icon name="star" color="black" size={15} />
+              </View>
             </>
           ) : (
-            <Text>No Ratings Yet</Text>
+            <Text>N/A</Text>
           )}
         </View>
       </Card>
@@ -94,8 +183,37 @@ const RentalCard: React.FC<Props> = ({
 
 const styles = StyleSheet.create({
   rating: {
-    fontSize: 20,
+    fontSize: 16,
     fontWeight: '600',
+    paddingRight:'1%'
+  },
+  occupiedStatus: {
+    width: 10,
+    height: 10,
+    borderRadius: 50,
+    backgroundColor: 'red',
+    alignSelf: 'center',
+  },
+  AvailableStatus: {
+    width: 10,
+    height: 10,
+    borderRadius: 50,
+    backgroundColor: 'green',
+    alignSelf: 'center',
+  },
+  notRentingStatus: {
+    width: 10,
+    height: 10,
+    borderRadius: 50,
+    backgroundColor: 'black',
+    alignSelf: 'center',
+  },
+  unknownStatus: {
+    width: 10,
+    height: 10,
+    borderRadius: 50,
+    backgroundColor: 'gray',
+    alignSelf: 'center',
   },
 });
 

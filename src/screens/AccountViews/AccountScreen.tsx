@@ -53,7 +53,7 @@ const AccountScreen: React.FC<AccountProps> = ({navigation}) => {
   const handleContact = async () => {
     const client = StreamChat.getInstance('pn73rx5c7g26');
     const adminId = '0bXFuQZ3OmRA09Tr311JSBizUjs2';
-    const filter = {type: 'messaging', members: {$in: [adminId]}};
+    const filter = {type: 'messaging', members: {$eq: [adminId, userId]}};
     const channels = await client.queryChannels(filter);
 
     if (channels.length > 0) {

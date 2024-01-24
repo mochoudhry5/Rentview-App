@@ -74,7 +74,8 @@ const PropertiesScreen: React.FC<PropertiesProps> = ({navigation}) => {
               <ScrollView
                 horizontal={false}
                 style={{marginBottom: 30}}
-                contentContainerStyle={{flexGrow: 1}}>
+                contentContainerStyle={{flexGrow: 1}}
+                showsVerticalScrollIndicator={false}>
                 {allProperties.map(property => (
                   <AdvancedRentalCard
                     key={property.homeId}
