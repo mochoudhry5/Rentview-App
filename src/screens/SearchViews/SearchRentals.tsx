@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   TextInput,
   ScrollView,
+  Alert,
 } from 'react-native';
 import {
   doc,
@@ -50,7 +51,7 @@ const SearchRentals: React.FC<SearchRentalsProps> = ({navigation}) => {
   const [recentSearches, setRecentSearches] = useState<RecentSearchType[]>([]);
   const userInfoRef = doc(db, 'UserReviews', userId);
   const insets = useSafeAreaInsets();
-  const searches: string[] = [];
+  let searches: string[] = [];
 
   useEffect(() => {
     const subscribe = onSnapshot(userInfoRef, docSnapshot => {
@@ -67,7 +68,6 @@ const SearchRentals: React.FC<SearchRentalsProps> = ({navigation}) => {
               const docRef = doc(db, 'HomeReviews', search);
               const homeSnapshot = await getDoc(docRef);
               let homePic = '';
-
               if (homeSnapshot.exists()) {
                 if (homeSnapshot.data().homePictures) {
                   homePic = homeSnapshot.data().homePictures[0].uri;
@@ -276,6 +276,27 @@ const SearchRentals: React.FC<SearchRentalsProps> = ({navigation}) => {
     setResultsFound(true);
   };
 
+  const handleLogoutAttempt = () => {
+    Alert.alert(
+      'Clear Recent History',
+      'Would you like to clear all local history?',
+      [
+        {text: 'Cancel', style: 'cancel'},
+        {text: 'Yes', onPress: clearHistory, style: 'destructive'},
+      ],
+    );
+  };
+
+  const clearHistory = async () => {
+    const userInfoRef = doc(db, 'UserReviews', userId);
+
+    searches = [];
+    setRecentSearches([]);
+
+    await updateDoc(userInfoRef, {
+      recentSearchs: null,
+    });
+  };
   return (
     <SafeAreaView style={styles.container}>
       <>
@@ -322,7 +343,14 @@ const SearchRentals: React.FC<SearchRentalsProps> = ({navigation}) => {
           }}
         />
         <View style={{marginTop: '15%'}}>
-          <Text style={styles.recentSearches}>Recently Viewed Homes</Text>
+          <View style={{flexDirection: 'row'}}>
+            <Text style={styles.recentSearches}>Recently Viewed Homes</Text>
+            <TouchableOpacity
+              onPress={handleLogoutAttempt}
+              style={{marginTop: 25, position: 'absolute', right: 15}}>
+              <Text style={{color: 'blue'}}>Clear</Text>
+            </TouchableOpacity>
+          </View>
           {isLoading ? (
             <ActivityIndicator
               style={{marginTop: '0%'}}

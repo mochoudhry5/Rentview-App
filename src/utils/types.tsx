@@ -11,6 +11,8 @@ export type AccountStackParamList = {
   RentalDescription: {homeId: string; ownerId: string};
   PropertiesScreen: undefined;
   PostRentalScreen: {homeId: string; homeDetails: DocumentData};
+  ContactScreen: undefined;
+  ChatRoom: undefined;
 };
 
 export type SearchStackParamList = {

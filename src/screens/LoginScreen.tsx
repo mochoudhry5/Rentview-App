@@ -25,18 +25,6 @@ configureGoogle();
 type LoginProps = NativeStackScreenProps<OtherStackParamList, 'Login'>;
 
 const Login: React.FC<LoginProps> = () => {
-  const [email, setEmail] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
-
-  const handleLogin = async () => {
-    try {
-      await signInWithEmailAndPassword(auth, email, password);
-      await addUserToDb();
-    } catch (error) {
-      console.error('Login failed:', error);
-    }
-  };
-
   const signinWithGoogle = async () => {
     const {idToken} = await signInGoogle.signIn();
     const googleCredential = GoogleAuthProvider.credential(idToken);
@@ -91,7 +79,7 @@ const Login: React.FC<LoginProps> = () => {
             uri: 'https://i.ibb.co/j82DCcR/search.png',
           }}
         />
-        <Text style={styles.googleButtonText}>Continue with Google </Text>
+        <Text style={styles.googleButtonText}>___PLACEHOLDER__</Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.googleButton} onPress={signinWithGoogle}>
         <Image
@@ -100,7 +88,7 @@ const Login: React.FC<LoginProps> = () => {
             uri: 'https://i.ibb.co/j82DCcR/search.png',
           }}
         />
-        <Text style={styles.googleButtonText}>Continue with Google</Text>
+        <Text style={styles.googleButtonText}>___PLACEHOLDER__</Text>
       </TouchableOpacity>
     </View>
   );

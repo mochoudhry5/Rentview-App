@@ -7,6 +7,8 @@ import ActivityScreen from '../screens/AccountViews/ActivityScreen';
 import RentalDescriptionScreen from '../screens/SearchViews/RentalDescriptionScreen';
 import PropertiesScreen from '../screens/AccountViews/PropertiesScreen';
 import PostRentalScreen from '../screens/SearchViews/PostRentalScreen';
+import ContactScreen from '../screens/AccountViews/ContactScreen';
+import ChatRoom from '../screens/ChatViews/ChatRoom';
 
 const Stack = createStackNavigator<AccountStackParamList>();
 
@@ -45,6 +47,21 @@ const AccountStack = () => {
         options={{
           title: 'Profile',
           headerBackTitleVisible: false,
+        }}
+      />
+      <Stack.Screen
+        name="ContactScreen"
+        component={ContactScreen}
+        options={{
+          title: 'Contact Admin',
+          headerBackTitleVisible: false,
+        }}
+      />
+      <Stack.Screen
+        name="ChatRoom"
+        component={ChatRoom}
+        options={{
+          title: 'Chat Room',
         }}
       />
       <Stack.Screen
