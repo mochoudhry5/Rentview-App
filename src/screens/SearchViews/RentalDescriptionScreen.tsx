@@ -252,7 +252,6 @@ const RentalDescription: React.FC<RentalDescriptionProps> = ({
 
       await channel.create();
 
-      console.log(messageText);
       await channel.sendMessage({
         text: messageText,
         customField: '123',

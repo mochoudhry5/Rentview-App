@@ -107,7 +107,8 @@ const PostRentalScreen: React.FC<PostPropertyScreen> = ({
       totalBedrooms === '' ||
       statusOfRental === 'Unknown' ||
       totalSquareFeet === '' ||
-      rentalArea === ''
+      rentalArea === '' ||
+      images.length < 3
     ) {
       setValidEntry(false);
     } else {
@@ -585,6 +586,13 @@ const PostRentalScreen: React.FC<PostPropertyScreen> = ({
                   alignSelf: 'center',
                   marginTop: 18,
                 }}>
+                  <Text
+                  style={{
+                    color: 'red',
+                    fontSize: 18,
+                  }}>
+                  {images.length < 3 ? 'Upload Minimum of 3 Images' : ''}
+                </Text>
                 <Text
                   style={{
                     color: 'red',

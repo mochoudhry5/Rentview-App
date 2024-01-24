@@ -23,7 +23,7 @@ const ImageCarousel = ({images, setImages}: Props) => {
       cropping: true,
       multiple: true,
       maxFiles: 10,
-      minFiles: 1,
+      minFiles: 3,
       includeBase64: true,
     })
       .then(response => {

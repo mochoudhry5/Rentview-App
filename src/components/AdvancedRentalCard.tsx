@@ -10,7 +10,6 @@ type Props = {
 };
 
 const AdvancedRentalCard: React.FC<Props> = ({rental, handleView}) => {
-  console.log(rental);
   return (
     <Card>
       {rental.homePictures !== null ? (
@@ -42,12 +41,12 @@ const AdvancedRentalCard: React.FC<Props> = ({rental, handleView}) => {
           onPress={() => {
             handleView(rental.homeId);
           }}>
-          <Text style={{fontWeight: 'bold', color: 'white'}}>
+          <Text style={{fontWeight: 'bold', color: '#347544'}}>
             Manage Property
           </Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.unclaim}>
-          <Text style={{fontWeight: 'bold', color: 'red'}}>Unclaim</Text>
+          <Text style={{fontWeight: 'bold', color: 'white'}}>Unclaim</Text>
         </TouchableOpacity>
       </View>
     </Card>
@@ -60,14 +59,14 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   viewProperty: {
-    backgroundColor: '#1f3839',
+    borderColor:'#347544',
     borderWidth: 1,
     borderRadius: 20,
     padding: 5,
   },
   unclaim: {
-    backgroundColor: 'white',
-    borderColor: 'red',
+    backgroundColor: '#848484',
+    borderColor: '#848484',
     borderWidth: 1,
     borderRadius: 20,
     padding: 5,

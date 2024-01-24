@@ -98,7 +98,7 @@ const MyReviews: React.FC<MyReviewProps> = ({navigation}) => {
                     onPress={() => {
                       handleViewProperty(review.homeId);
                     }}>
-                    <Text style={{fontWeight: 'bold', color: '#424242'}}>
+                    <Text style={{fontWeight: 'bold', color: '#347544'}}>
                       View Property
                     </Text>
                   </TouchableOpacity>
@@ -152,7 +152,7 @@ const MyReviews: React.FC<MyReviewProps> = ({navigation}) => {
 const styles = StyleSheet.create({
   viewProperty: {
     alignItems: 'center',
-    backgroundColor: '#347544',
+    backgroundColor: 'white',
     borderWidth: 1,
     width: '30%',
     height: 25,

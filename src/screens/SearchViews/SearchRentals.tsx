@@ -276,7 +276,7 @@ const SearchRentals: React.FC<SearchRentalsProps> = ({navigation}) => {
     setResultsFound(true);
   };
 
-  const handleLogoutAttempt = () => {
+  const handleClearHistory = () => {
     Alert.alert(
       'Clear Recent History',
       'Would you like to clear all local history?',
@@ -345,11 +345,23 @@ const SearchRentals: React.FC<SearchRentalsProps> = ({navigation}) => {
         <View style={{marginTop: '15%'}}>
           <View style={{flexDirection: 'row'}}>
             <Text style={styles.recentSearches}>Recently Viewed Homes</Text>
-            <TouchableOpacity
-              onPress={handleLogoutAttempt}
-              style={{marginTop: 25, position: 'absolute', right: 15}}>
-              <Text style={{color: 'black'}}>Clear</Text>
-            </TouchableOpacity>
+            <View style={styles.claimButton}>
+              <TouchableOpacity
+                style={styles.roundButton1}
+                onPress={handleClearHistory}>
+                <Text
+                  style={{
+                    color: 'white',
+                    fontWeight: 'bold',
+                    paddingLeft: 10,
+                    paddingRight: 10,
+                    paddingBottom: 2,
+                    paddingTop: 2,
+                  }}>
+                  Clear
+                </Text>
+              </TouchableOpacity>
+            </View>
           </View>
           {isLoading ? (
             <ActivityIndicator
@@ -378,18 +390,20 @@ const SearchRentals: React.FC<SearchRentalsProps> = ({navigation}) => {
               }}>
               <Card
                 containerStyle={{
-                  borderRadius: 20,
-                  width: 370,
-                  backgroundColor: '#1f3839',
+                  borderRadius: 10,
+                  width: '90%',
+                  backgroundColor: '#F0F0F0',
                 }}>
                 <Text
                   style={{
                     fontWeight: 'bold',
                     fontSize: 14,
                     textAlign: 'center',
-                    color: 'white',
+                    color: 'black',
+                    borderColor:'#F0F0F0',
+              
                   }}>
-                  No History...Begin your journey with RentView!
+                  Begin your journey with RentView!
                 </Text>
               </Card>
             </View>
@@ -505,7 +519,7 @@ const SearchRentals: React.FC<SearchRentalsProps> = ({navigation}) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor:'white'
+    backgroundColor: 'white',
   },
   button: {
     backgroundColor: '#3498db',
@@ -545,6 +559,16 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginTop: '5%',
     marginLeft: 10,
+  },
+  roundButton1: {
+    borderRadius: 50,
+    backgroundColor: '#5B5B5B',
+    justifyContent: 'center',
+  },
+  claimButton: {
+    position: 'absolute',
+    marginTop: 25,
+    right: 15,
   },
 });
 
