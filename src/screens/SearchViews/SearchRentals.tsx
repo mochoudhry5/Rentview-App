@@ -54,44 +54,50 @@ const SearchRentals: React.FC<SearchRentalsProps> = ({navigation}) => {
   let searches: string[] = [];
 
   useEffect(() => {
-    const subscribe = onSnapshot(userInfoRef, docSnapshot => {
-      if (docSnapshot.exists()) {
-        if (docSnapshot.data().fullName != null) {
-          setIsModalVisible(false);
+    const subscribe = onSnapshot(
+      userInfoRef,
+      docSnapshot => {
+        if (docSnapshot.exists()) {
+          if (docSnapshot.data().fullName != null) {
+            setIsModalVisible(false);
+          } else {
+            setIsModalVisible(true);
+          }
+          if (docSnapshot.data().recentSearchs) {
+            docSnapshot.data().recentSearchs.map(async (search: string) => {
+              if (!searches.includes(search)) {
+                searches.push(search);
+                const docRef = doc(db, 'HomeReviews', search);
+                const homeSnapshot = await getDoc(docRef);
+                let homePic = '';
+                if (homeSnapshot.exists()) {
+                  if (homeSnapshot.data().homePictures) {
+                    homePic = homeSnapshot.data().homePictures[0].uri;
+                  } else {
+                    homePic =
+                      'https://t4.ftcdn.net/jpg/04/00/24/31/240_F_400243185_BOxON3h9avMUX10RsDkt3pJ8iQx72kS3.jpg';
+                  }
+                  const obj: RecentSearchType = {
+                    homeId: search,
+                    ownerId: homeSnapshot.data().owner.userId,
+                    homePicture: homePic,
+                    homeAddress: homeSnapshot.data().address.fullAddress,
+                  };
+
+                  setRecentSearches(prev => [obj, ...prev]);
+                }
+              }
+            });
+          }
         } else {
           setIsModalVisible(true);
         }
-        if (docSnapshot.data().recentSearchs) {
-          docSnapshot.data().recentSearchs.map(async (search: string) => {
-            if (!searches.includes(search)) {
-              searches.push(search);
-              const docRef = doc(db, 'HomeReviews', search);
-              const homeSnapshot = await getDoc(docRef);
-              let homePic = '';
-              if (homeSnapshot.exists()) {
-                if (homeSnapshot.data().homePictures) {
-                  homePic = homeSnapshot.data().homePictures[0].uri;
-                } else {
-                  homePic =
-                    'https://t4.ftcdn.net/jpg/04/00/24/31/240_F_400243185_BOxON3h9avMUX10RsDkt3pJ8iQx72kS3.jpg';
-                }
-                const obj: RecentSearchType = {
-                  homeId: search,
-                  ownerId: homeSnapshot.data().owner.userId,
-                  homePicture: homePic,
-                  homeAddress: homeSnapshot.data().address.fullAddress,
-                };
-
-                setRecentSearches(prev => [obj, ...prev]);
-              }
-            }
-          });
-        }
-      } else {
-        setIsModalVisible(true);
-      }
-      setIsLoading(false);
-    });
+        setIsLoading(false);
+      },
+      errors => {
+        console.log(errors);
+      },
+    );
     return () => subscribe();
   }, []);
 
@@ -400,8 +406,7 @@ const SearchRentals: React.FC<SearchRentalsProps> = ({navigation}) => {
                     fontSize: 14,
                     textAlign: 'center',
                     color: 'black',
-                    borderColor:'#F0F0F0',
-              
+                    borderColor: '#F0F0F0',
                   }}>
                   Begin your journey with RentView!
                 </Text>
