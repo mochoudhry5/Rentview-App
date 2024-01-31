@@ -101,8 +101,10 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   googleButton: {
-    backgroundColor: 'grey',
-    borderRadius: 4,
+    backgroundColor: 'white',
+    borderColor:'#347544',
+    borderWidth:2,
+    borderRadius: 10,
     paddingHorizontal: 34,
     paddingVertical: 10,
     flexDirection: 'row',

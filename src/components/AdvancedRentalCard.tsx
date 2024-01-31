@@ -46,7 +46,7 @@ const AdvancedRentalCard: React.FC<Props> = ({rental, handleView}) => {
           </Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.unclaim}>
-          <Text style={{fontWeight: 'bold', color: 'white'}}>Unclaim</Text>
+          <Text style={{fontWeight: 'bold', color: 'white', paddingLeft:10, paddingRight:10}}>Unclaim</Text>
         </TouchableOpacity>
       </View>
     </Card>

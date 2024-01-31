@@ -283,10 +283,12 @@ const RentalDescription: React.FC<RentalDescriptionProps> = ({
               <Modal.Container>
                 <Modal.Header title="Claim this home?" />
                 <Modal.Body>
+                  <Text></Text>
                   <Text>
                     Are you sure you want to claim this home? By clicking
                     Confirm you accept all terms and agreements.
                   </Text>
+                  <Text></Text>
                 </Modal.Body>
                 <Modal.Footer>
                   <View
@@ -296,6 +298,18 @@ const RentalDescription: React.FC<RentalDescriptionProps> = ({
                       justifyContent: 'space-evenly',
                     }}>
                     <TouchableOpacity
+                      style={styles.modalConfirmButton}
+                      onPress={handleClaimHome}>
+                      <Text
+                        style={{
+                          fontSize: 16,
+                          fontWeight: 'bold',
+                          color: '#347544',
+                        }}>
+                        Confirm
+                      </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
                       style={styles.modalCancelButton}
                       onPress={() => {
                         setIsModalVisible(!isModalVisible);
@@ -304,21 +318,9 @@ const RentalDescription: React.FC<RentalDescriptionProps> = ({
                         style={{
                           fontSize: 16,
                           fontWeight: 'bold',
-                          color: '#4C4E52',
-                        }}>
-                        Cancel
-                      </Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                      style={styles.modalConfirmButton}
-                      onPress={handleClaimHome}>
-                      <Text
-                        style={{
-                          fontSize: 16,
-                          fontWeight: 'bold',
                           color: 'white',
                         }}>
-                        Confirm
+                        Cancel
                       </Text>
                     </TouchableOpacity>
                   </View>
@@ -400,7 +402,7 @@ const RentalDescription: React.FC<RentalDescriptionProps> = ({
                   )}
                   <View
                     style={{
-                      backgroundColor: '#1f3839',
+                      backgroundColor: '#347544',
                       borderRadius: 5,
                       alignSelf: 'center',
                     }}>
@@ -1161,8 +1163,9 @@ const styles = StyleSheet.create({
   },
   modalConfirmButton: {
     alignItems: 'center',
-    backgroundColor: '#1f3839',
+    backgroundColor: 'white',
     borderWidth: 1,
+    borderColor:'#347544',
     borderRadius: 50,
     width: '45%',
     paddingTop: '2%',
@@ -1170,7 +1173,8 @@ const styles = StyleSheet.create({
   },
   modalCancelButton: {
     alignItems: 'center',
-    backgroundColor: 'white',
+    backgroundColor: '#848484',
+    borderColor:'#848484',
     borderWidth: 1,
     borderRadius: 50,
     width: '45%',

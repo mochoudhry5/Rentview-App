@@ -558,7 +558,7 @@ const PostRentalScreen: React.FC<PostPropertyScreen> = ({
           borderColor: 'gray',
         }}>
         <TouchableOpacity style={styles.saveButton} onPress={handlePostSubmit}>
-          <Text style={{fontSize: 16, fontWeight: 'bold', color: 'white'}}>
+          <Text style={{fontSize: 16, fontWeight: 'bold', color: '#347544'}}>
             Save
           </Text>
         </TouchableOpacity>
@@ -683,10 +683,11 @@ const styles = StyleSheet.create({
   },
   saveButton: {
     alignItems: 'center',
-    backgroundColor: '#1f3839',
-    borderWidth: 1,
+    backgroundColor: 'white',
+    borderColor:'#347544',
+    borderWidth: 1.5,
     width: '92%',
-    height: '50%',
+    height: '40%',
     alignSelf: 'center',
     justifyContent: 'center',
     borderRadius: 20,
