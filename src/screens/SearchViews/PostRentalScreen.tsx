@@ -182,6 +182,16 @@ const PostRentalScreen: React.FC<PostPropertyScreen> = ({
   return (
     <View style={{flex: 1, paddingTop: '2%', backgroundColor: 'white'}}>
       <ScrollView>
+        <Text
+          style={{
+            fontSize: 18,
+            fontWeight: 'bold',
+            marginTop: '2%',
+            marginLeft: '4%',
+          }}>
+          Upload Images{' '}
+          <Text style={{color: 'gray', fontSize: 12}}>(Min. 3 images)</Text>
+        </Text>
         <TinyImageViewer images={images} setImages={setImages} />
         <Text
           style={{
@@ -190,7 +200,8 @@ const PostRentalScreen: React.FC<PostPropertyScreen> = ({
             marginTop: '2%',
             marginLeft: '4%',
           }}>
-          Renting Out
+          Renting Out{' '}
+          <Text style={{color: 'gray', fontSize: 12}}>(required)</Text>
         </Text>
         <Dropdown
           style={styles.dropdown}
@@ -214,7 +225,8 @@ const PostRentalScreen: React.FC<PostPropertyScreen> = ({
             marginBottom: '2%',
             marginTop: '2%',
           }}>
-          Monthly Rent
+          Monthly Rent{' '}
+          <Text style={{color: 'gray', fontSize: 12}}>(required)</Text>
         </Text>
         <TextInput
           style={[styles.dropdown, {fontSize: 18}]}
@@ -232,7 +244,8 @@ const PostRentalScreen: React.FC<PostPropertyScreen> = ({
               marginLeft: '4%',
               marginTop: '2%',
             }}>
-            Status of Rental
+            Status of Rental{' '}
+            <Text style={{color: 'gray', fontSize: 12}}>(required)</Text>
           </Text>
           <Dropdown
             style={styles.dropdown}
@@ -256,7 +269,8 @@ const PostRentalScreen: React.FC<PostPropertyScreen> = ({
               marginBottom: '2%',
               marginTop: '2%',
             }}>
-            Square Feet
+            Square Feet{' '}
+            <Text style={{color: 'gray', fontSize: 12}}>(required)</Text>
           </Text>
           <TextInput
             style={[styles.dropdown, {fontSize: 18}]}
@@ -274,7 +288,8 @@ const PostRentalScreen: React.FC<PostPropertyScreen> = ({
               marginBottom: '2%',
               marginTop: '2%',
             }}>
-            Bedrooms
+            Bedrooms{' '}
+            <Text style={{color: 'gray', fontSize: 12}}>(required)</Text>
           </Text>
           <TextInput
             style={[styles.dropdown, {fontSize: 18}]}
@@ -292,7 +307,8 @@ const PostRentalScreen: React.FC<PostPropertyScreen> = ({
               marginBottom: '2%',
               marginTop: '2%',
             }}>
-            Bathrooms
+            Bathrooms{' '}
+            <Text style={{color: 'gray', fontSize: 12}}>(required)</Text>
           </Text>
           <TextInput
             style={[styles.dropdown, {fontSize: 18}]}
@@ -536,7 +552,8 @@ const PostRentalScreen: React.FC<PostPropertyScreen> = ({
               marginTop: '5%',
               marginLeft: '4%',
             }}>
-            Property Description
+            Property Description{' '}
+            <Text style={{color: 'gray', fontSize: 12}}>(required)</Text>
           </Text>
           <TextInput
             style={styles.propertyDescription}
@@ -557,8 +574,43 @@ const PostRentalScreen: React.FC<PostPropertyScreen> = ({
           borderTopWidth: 0.2,
           borderColor: 'gray',
         }}>
-        <TouchableOpacity style={styles.saveButton} onPress={handlePostSubmit}>
-          <Text style={{fontSize: 16, fontWeight: 'bold', color: '#347544'}}>
+        <TouchableOpacity
+          style={
+            !rentalArea ||
+            !monthlyRent ||
+            !statusOfRental ||
+            !totalSquareFeet ||
+            !totalBedrooms ||
+            !totalBathrooms ||
+            !propertyDescription ||
+            images.length < 3
+              ? styles.disabledSave
+              : styles.saveButton
+          }
+          onPress={handlePostSubmit}
+          disabled={
+            !rentalArea ||
+            !monthlyRent ||
+            !statusOfRental ||
+            !totalSquareFeet ||
+            !totalBedrooms ||
+            !totalBathrooms ||
+            !propertyDescription ||
+            images.length < 3
+          }>
+          <Text
+            style={
+              !rentalArea ||
+              !monthlyRent ||
+              !statusOfRental ||
+              !totalSquareFeet ||
+              !totalBedrooms ||
+              !totalBathrooms ||
+              !propertyDescription ||
+              images.length < 3
+                ? styles.disabledText
+                : styles.saveText
+            }>
             Save
           </Text>
         </TouchableOpacity>
@@ -586,7 +638,7 @@ const PostRentalScreen: React.FC<PostPropertyScreen> = ({
                   alignSelf: 'center',
                   marginTop: 18,
                 }}>
-                  <Text
+                <Text
                   style={{
                     color: 'red',
                     fontSize: 18,
@@ -683,8 +735,19 @@ const styles = StyleSheet.create({
   },
   saveButton: {
     alignItems: 'center',
+    backgroundColor: '#347544',
+    borderColor: '#347544',
+    borderWidth: 1.5,
+    width: '92%',
+    height: '40%',
+    alignSelf: 'center',
+    justifyContent: 'center',
+    borderRadius: 20,
+  },
+  disabledSave: {
+    alignItems: 'center',
     backgroundColor: 'white',
-    borderColor:'#347544',
+    borderColor: '#347544',
     borderWidth: 1.5,
     width: '92%',
     height: '40%',
@@ -719,6 +782,16 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginTop: '5%',
     marginBottom: '5%',
+  },
+  saveText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  disabledText: {
+    color: '#347544',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });
 

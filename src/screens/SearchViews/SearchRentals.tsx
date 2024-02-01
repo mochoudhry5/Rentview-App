@@ -348,7 +348,7 @@ const SearchRentals: React.FC<SearchRentalsProps> = ({navigation}) => {
             },
           }}
         />
-        <View style={{marginTop: '15%'}}>
+        <ScrollView style={{marginTop: '15%'}}>
           <View style={{flexDirection: 'row'}}>
             <Text style={styles.recentSearches}>Recently Viewed Homes</Text>
             <View style={styles.claimButton}>
@@ -413,7 +413,31 @@ const SearchRentals: React.FC<SearchRentalsProps> = ({navigation}) => {
               </Card>
             </View>
           ) : null}
-        </View>
+           <Text style={styles.recentSearches}>Nearby Rentals</Text>
+           <View
+              style={{
+                alignItems: 'center',
+                marginTop: 10,
+              }}>
+              <Card
+                containerStyle={{
+                  borderRadius: 10,
+                  width: '90%',
+                  backgroundColor: '#F0F0F0',
+                }}>
+                <Text
+                  style={{
+                    fontWeight: 'bold',
+                    fontSize: 14,
+                    textAlign: 'center',
+                    color: 'black',
+                    borderColor: '#F0F0F0',
+                  }}>
+                  Coming Soon!
+                </Text>
+              </Card>
+            </View>
+        </ScrollView>
         <View>
           <Modal isVisible={isModalVisible} animationIn={'bounceIn'}>
             <Modal.Container>

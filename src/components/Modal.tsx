@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: '#ffffff',
     borderRadius: 30,
-    borderWidth: 1,
+    borderWidth: 1.5,
     borderColor: '#000',
     borderStyle: 'solid',
   },
