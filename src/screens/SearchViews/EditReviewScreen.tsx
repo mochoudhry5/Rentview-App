@@ -547,7 +547,7 @@ const makeStyles = (fontScale: any) =>
     },
     submitButton: {
       alignItems: 'center',
-      backgroundColor: '#1f3839',
+      backgroundColor: '#347544',
       borderWidth: 1,
       width: '92%',
       height: '35%',
@@ -555,6 +555,7 @@ const makeStyles = (fontScale: any) =>
       justifyContent: 'center',
       borderRadius: 20,
       marginBottom: '10%',
+      borderColor: '#347544',
     },
     bottomSheetShadow: {
       backgroundColor: 'white',

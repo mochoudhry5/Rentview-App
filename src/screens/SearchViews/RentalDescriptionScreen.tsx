@@ -77,6 +77,7 @@ const RentalDescription: React.FC<RentalDescriptionProps> = ({
   const [yesRecommendation, setYesRecommendation] = useState<number>(0);
   const [overallRating, setOverallRating] = useState<number>(0);
   const [landlordRating, setLandlordRating] = useState<number>(0);
+  const [houseQuality, setHouseQuality] = useState<number>(0);
   const [street, setStreet] = useState<string>('');
   const [city, setCity] = useState<string>('');
   const [state, setState] = useState<string>('');
@@ -132,6 +133,7 @@ const RentalDescription: React.FC<RentalDescriptionProps> = ({
         setLandlordRating(
           docSnapshot.data().landlordService.avgLandlordService,
         );
+        setHouseQuality(docSnapshot.data().houseQuality.avgHouseQuality);
         setOwnerUserId(docSnapshot.data().owner.userId);
         setTotalBathrooms(docSnapshot.data().totalBathrooms);
         setTotalBedrooms(docSnapshot.data().totalBedrooms);
@@ -963,7 +965,7 @@ const RentalDescription: React.FC<RentalDescriptionProps> = ({
                       style={{
                         textAlign: 'center',
                         fontSize: 14,
-                        color: '#1f3839',
+                        color: '#347544',
                         fontStyle: 'italic',
                         fontWeight: 'bold',
                         width: '60%',
@@ -990,7 +992,7 @@ const RentalDescription: React.FC<RentalDescriptionProps> = ({
                       style={{
                         textAlign: 'center',
                         fontSize: 14,
-                        color: '#1f3839',
+                        color: '#347544',
                         fontStyle: 'italic',
                         fontWeight: 'bold',
                         width: '80%',
@@ -1005,6 +1007,41 @@ const RentalDescription: React.FC<RentalDescriptionProps> = ({
                           fontSize: 12,
                         }}>
                         {landlordRating.toFixed(1)}
+                      </Text>
+                    ) : (
+                      <Text
+                        style={{
+                          textAlign: 'center',
+                          fontWeight: 'bold',
+                          fontSize: 12,
+                        }}>
+                        N/A
+                      </Text>
+                    )}
+                  </View>
+                </View>
+                <View
+                  style={{flexDirection: 'row', justifyContent: 'flex-start'}}>
+                  <View style={styles.rating1}>
+                    <Text
+                      style={{
+                        textAlign: 'center',
+                        fontSize: 14,
+                        color: '#347544',
+                        fontStyle: 'italic',
+                        fontWeight: 'bold',
+                        width: '70%',
+                      }}>
+                      House Quality
+                    </Text>
+                    {totalReviews > 0 && houseQuality > 0 ? (
+                      <Text
+                        style={{
+                          textAlign: 'center',
+                          fontWeight: 'bold',
+                          fontSize: 12,
+                        }}>
+                        {houseQuality.toFixed(1)}
                       </Text>
                     ) : (
                       <Text
@@ -1165,7 +1202,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: 'white',
     borderWidth: 1,
-    borderColor:'#347544',
+    borderColor: '#347544',
     borderRadius: 50,
     width: '45%',
     paddingTop: '2%',
@@ -1174,7 +1211,7 @@ const styles = StyleSheet.create({
   modalCancelButton: {
     alignItems: 'center',
     backgroundColor: '#848484',
-    borderColor:'#848484',
+    borderColor: '#848484',
     borderWidth: 1,
     borderRadius: 50,
     width: '45%',

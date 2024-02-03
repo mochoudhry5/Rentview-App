@@ -140,7 +140,7 @@ const ProfileScreen: React.FC<ProfileProps> = ({route, navigation}) => {
           borderColor: 'gray',
         }}>
         <TouchableOpacity style={styles.saveButton} onPress={updateProfileInfo}>
-          <Text style={{fontWeight: 'bold', color: '#347544', fontSize: 16}}>
+          <Text style={{fontWeight: 'bold', color: 'white', fontSize: 16}}>
             Save
           </Text>
         </TouchableOpacity>
@@ -175,8 +175,8 @@ const styles = StyleSheet.create({
   },
   saveButton: {
     alignItems: 'center',
-    backgroundColor: 'white',
-    borderColor:'#347544',
+    backgroundColor: '#347544',
+    borderColor: '#347544',
     borderWidth: 1.5,
     width: '92%',
     height: '50%',

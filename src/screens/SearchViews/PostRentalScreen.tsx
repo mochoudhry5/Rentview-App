@@ -6,6 +6,8 @@ import {
   TouchableOpacity,
   StyleSheet,
   SafeAreaView,
+  ActivityIndicator,
+  Modal,
 } from 'react-native';
 import {
   getDownloadURL,
@@ -21,7 +23,6 @@ import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {db, auth} from '../../config/firebase';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {ImageType, SearchStackParamList} from '../../utils/types';
-import {Modal} from '../../components/Modal';
 
 type PostPropertyScreen = NativeStackScreenProps<
   SearchStackParamList,
@@ -85,12 +86,14 @@ const PostRentalScreen: React.FC<PostPropertyScreen> = ({
   );
   const [isYard, setIsYard] = useState<boolean>(homeDetails.yard);
   const [isPool, setIsPool] = useState<boolean>(homeDetails.pool);
+  const [isModalVisible, setIsModalVisible] = useState(false);
   const pictureUris: ImageType[] = [];
   const user = auth.currentUser;
   const userId = user?.uid ? user.uid : '';
   const [validEntry, setValidEntry] = useState<boolean>(true);
 
   const handlePostSubmit = async () => {
+    setIsModalVisible(true);
     const homeInfoRef = doc(db, 'HomeReviews', route.params.homeId);
     const homeInfoSnapshot = await getDoc(homeInfoRef);
     const userInfoRef = doc(
@@ -153,6 +156,7 @@ const PostRentalScreen: React.FC<PostPropertyScreen> = ({
         ownerId: userId,
       });
     }
+    setIsModalVisible(false);
   };
 
   async function uploadImages() {
@@ -182,6 +186,28 @@ const PostRentalScreen: React.FC<PostPropertyScreen> = ({
   return (
     <View style={{flex: 1, paddingTop: '2%', backgroundColor: 'white'}}>
       <ScrollView>
+        <View style={styles.centeredView}>
+          <Modal
+            animationType="fade"
+            visible={isModalVisible}
+            transparent={true}
+            onRequestClose={() => {
+              setIsModalVisible(!isModalVisible);
+            }}>
+            <View style={styles.centeredView}>
+              <View style={styles.modalView}>
+                <ActivityIndicator
+                  style={{
+                    alignContent: 'center',
+                    justifyContent: 'center',
+                  }}
+                  color="#1f3839"
+                />
+                <Text style={styles.modalText}>Uploading your Rental</Text>
+              </View>
+            </View>
+          </Modal>
+        </View>
         <Text
           style={{
             fontSize: 18,
@@ -615,97 +641,6 @@ const PostRentalScreen: React.FC<PostPropertyScreen> = ({
           </Text>
         </TouchableOpacity>
       </SafeAreaView>
-      <View>
-        <Modal
-          isVisible={!validEntry}
-          animationIn={'bounce'}
-          onBackdropPress={closeModal}>
-          <Modal.Container>
-            <Modal.Header title="Information Missing" />
-            <Modal.Body>
-              <Text
-                style={{
-                  marginLeft: '5%',
-                  marginTop: '5%',
-                  color: 'black',
-                  fontSize: 20,
-                  textAlign: 'center',
-                }}>
-                This posting is missing the following information:
-              </Text>
-              <View
-                style={{
-                  alignSelf: 'center',
-                  marginTop: 18,
-                }}>
-                <Text
-                  style={{
-                    color: 'red',
-                    fontSize: 18,
-                  }}>
-                  {images.length < 3 ? 'Upload Minimum of 3 Images' : ''}
-                </Text>
-                <Text
-                  style={{
-                    color: 'red',
-                    fontSize: 18,
-                  }}>
-                  {rentalArea === '' ? 'Renting Out' : ''}
-                </Text>
-                <Text
-                  style={{
-                    color: 'red',
-                    fontSize: 18,
-                  }}>
-                  {monthlyRent === '' ? 'Monthly Rent' : ''}
-                </Text>
-                <Text
-                  style={{
-                    color: 'red',
-                    fontSize: 18,
-                  }}>
-                  {statusOfRental === 'Unknown' ? 'Status Of Rental' : ''}
-                </Text>
-                <Text
-                  style={{
-                    color: 'red',
-                    fontSize: 18,
-                  }}>
-                  {totalSquareFeet === '' ? 'Square Feet' : ''}
-                </Text>
-                <Text
-                  style={{
-                    color: 'red',
-                    fontSize: 18,
-                  }}>
-                  {totalBedrooms === '' ? 'Bedrooms' : ''}
-                </Text>
-                <Text
-                  style={{
-                    color: 'red',
-                    fontSize: 18,
-                  }}>
-                  {totalBathrooms === '' ? 'Bathrooms' : ''}
-                </Text>
-              </View>
-            </Modal.Body>
-            <Modal.Footer>
-              <TouchableOpacity
-                style={styles.submitButton}
-                onPress={closeModal}>
-                <Text
-                  style={{
-                    fontSize: 16,
-                    fontWeight: 'bold',
-                    color: 'white',
-                  }}>
-                  Okay
-                </Text>
-              </TouchableOpacity>
-            </Modal.Footer>
-          </Modal.Container>
-        </Modal>
-      </View>
     </View>
   );
 };
@@ -792,6 +727,28 @@ const styles = StyleSheet.create({
     color: '#347544',
     fontSize: 16,
     fontWeight: 'bold',
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalView: {
+    backgroundColor: 'white',
+    borderRadius: 10,
+    padding: '5%',
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+  },
+  textStyle: {
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  modalText: {
+    marginLeft: '2%',
+    textAlign: 'center',
   },
 });
 

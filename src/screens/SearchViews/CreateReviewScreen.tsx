@@ -27,11 +27,11 @@ const CreateReviewScreen: React.FC<CreateReviewProps> = ({
   navigation,
 }) => {
   const [userHouseQuality, setUserHouseQuality] = useState<number>(5);
-  const [userRecommend, setUserRecommend] = useState<boolean>(false);
+  const [userRecommend, setUserRecommend] = useState<boolean>(true);
   const [userOverallRating, setUserOverallRating] = useState<number>(5);
   const [userLandlordRating, setUserLandlordRating] = useState<number>(5);
   const [text, onChangeText] = useState<string>('');
-  const [thumbsUp, setThumbsUp] = useState<string>('thumbs-up-outline');
+  const [thumbsUp, setThumbsUp] = useState<string>('thumbs-up');
   const [thumbsDown, setThumbsDown] = useState<string>('thumbs-down-outline');
   const [ownerId, setOwnerId] = useState<string>('');
   const [isAnonymous, setIsAnonymous] = useState<boolean>(false);
@@ -211,10 +211,7 @@ const CreateReviewScreen: React.FC<CreateReviewProps> = ({
       setThumbsDown('thumbs-down-outline');
       setThumbsUp('thumbs-up');
       setUserRecommend(true);
-    } else {
-      setThumbsUp('thumbs-up-outline');
-      setUserRecommend(false);
-    }
+    } 
   };
 
   const handleNoClick = () => {
@@ -222,10 +219,7 @@ const CreateReviewScreen: React.FC<CreateReviewProps> = ({
       setThumbsDown('thumbs-down');
       setThumbsUp('thumbs-up-outline');
       setUserRecommend(false);
-    } else {
-      setThumbsDown('thumbs-down-outline');
-      setUserRecommend(false);
-    }
+    } 
   };
 
   return (
@@ -432,8 +426,9 @@ const CreateReviewScreen: React.FC<CreateReviewProps> = ({
         }}>
         <TouchableOpacity
           style={styles.submitButton}
-          onPress={handleReviewSubmit}>
-          <Text style={{fontSize: 16, fontWeight: 'bold', color: '#347544'}}>
+          onPress={handleReviewSubmit}
+          disabled={!userRecommend}>
+          <Text style={{fontSize: 16, fontWeight: 'bold', color: 'white'}}>
             Publish Review
           </Text>
         </TouchableOpacity>
@@ -457,7 +452,7 @@ const makeStyles = (fontScale: any) =>
     },
     submitButton: {
       alignItems: 'center',
-      backgroundColor: 'white',
+      backgroundColor: '#347544',
       borderWidth: 1.5,
       width: '92%',
       height: '50%',
